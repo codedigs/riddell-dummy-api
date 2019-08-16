@@ -31,3 +31,10 @@ $router->group([
 ], function() use($router) {
     $router->get("/", "CutController@getCuts");
 });
+
+$router->group([
+    'prefix' => "designs",
+    'middleware' => ["auth"]
+], function() use($router) {
+    $router->get("/", "DesignController@getDesigns");
+});
