@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'name' => env("APP_NAME"),
     'key' => env("APP_KEY"),
     'locale' => env("APP_LOCALE", "en"),
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Riddell (Dummy) API</title>
+    <title>{{ config("app.name") }}</title>
 
     <link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
 
@@ -39,7 +39,7 @@
 <body>
     <div class="container">
         <div class="content">
-            <div class="title">Riddell API</div>
+            <div class="title">{{ config("app.name") }}</div>
         </div>
     </div>
 </body>
