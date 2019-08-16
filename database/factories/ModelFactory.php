@@ -12,8 +12,11 @@
 */
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
+    $email = $faker->email;
+
     return [
         'name' => $faker->name,
-        'email' => $faker->email,
+        'email' => $email,
+        'password' => password_hash($email, PASSWORD_DEFAULT)
     ];
 });

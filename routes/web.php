@@ -14,3 +14,20 @@
 $router->get('/', function () use ($router) {
     return view("home");
 });
+
+// todo: limit login attempt
+$router->post("/login", "LoginController@login");
+
+$router->group([
+    'prefix' => "carts/cart-items",
+    'middleware' => ["auth", "cart"]
+], function() use($router) {
+    $router->get("/", "CartItemController@getCartItems");
+});
+
+$router->group([
+    'prefix' => "cuts",
+    'middleware' => ["auth"]
+], function() use($router) {
+    $router->get("/", "CutController@getCuts");
+});

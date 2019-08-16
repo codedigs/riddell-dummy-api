@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\User;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,8 +33,33 @@ class AuthServiceProvider extends ServiceProvider
         // the User instance via an API token or any other method necessary.
 
         $this->app['auth']->viaRequest('api', function ($request) {
-            if ($request->input('api_token')) {
-                return User::where('api_token', $request->input('api_token'))->first();
+            $authorization = $request->header("Authorization");
+
+            if (!is_null($authorization))
+            {
+                list($type, $api_token) = explode(" ", $authorization);
+
+                if (strtolower($type) === "bearer")
+                {
+                    if (!is_null($api_token))
+                    {
+                        $user = User::findBy('api_token', $api_token)->first();
+
+                        if (!is_null($user))
+                        {
+                            $app_config = config('app');
+                            $jwt_config = config('jwt');
+
+                            try {
+                                JWT::decode($api_token, $app_config['key'], [$jwt_config['algorithm']]);
+
+                                return $user;
+                            } catch (ExpiredException $e) {
+                                \Log::warning("Warning: Api Token is already expired.");
+                            }
+                        }
+                    }
+                }
             }
         });
     }

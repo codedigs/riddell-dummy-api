@@ -18,7 +18,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'name', 'email', 'api_token'
     ];
 
     /**
@@ -29,4 +29,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+    public function scopeFindBy($query, $field, $value)
+    {
+        return $query->where($field, $value);
+    }
+
+    public function saveApiToken($api_token)
+    {
+        $this->api_token = $api_token;
+        return $this->save();
+    }
 }
