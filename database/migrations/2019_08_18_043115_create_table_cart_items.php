@@ -15,8 +15,8 @@ class CreateTableCartItems extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigIncrements('cut_id')->nullable()->default(null);
-            $table->bigIncrements('design_id')->nullable()->default(null);
+            $table->bigInteger('cut_id')->nullable()->default(null);
+            $table->bigInteger('design_id')->nullable()->default(null);
             $table->string('customizer_url')->nullable()->default(null);
             $table->boolean('is_approved')->default(0);
             $table->boolean('has_change_request')->default(0);
