@@ -28,10 +28,10 @@ $router->group([
 
 // designs
 $router->group([
-    'prefix' => "designs",
+    'prefix' => "styles",
     'middleware' => "auth"
 ], function() use($router) {
-    $router->get("/", "DesignController@getDesigns");
+    $router->get("/", "StyleController@getStyles");
 });
 
 // carts

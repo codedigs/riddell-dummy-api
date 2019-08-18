@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Design;
+use App\Models\Style;
 
-class DesignController extends Controller
+class StyleController extends Controller
 {
-    public function getDesigns()
+    public function getStyles()
     {
-        $designs = Design::all();
+        $designs = Style::all();
 
         return response()->json([
             'success' => true,

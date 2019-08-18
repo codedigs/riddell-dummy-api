@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Design;
+use App\Models\Style;
 use Illuminate\Database\Seeder;
 
-class DesignsTableSeeder extends Seeder
+class StylesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,49 +14,49 @@ class DesignsTableSeeder extends Seeder
     {
         $data = [
             [
-                'name' => "Design 1",
+                'name' => "Style 1",
                 'image' => "/riddell/img/Football-Picker/Inspiration@2x.png"
             ],
             [
-                'name' => "Design 2",
+                'name' => "Style 2",
                 'image' => "/riddell/img/Football-Picker/download@2x.png"
             ],
             [
-                'name' => "Design 3",
+                'name' => "Style 3",
                 'image' => "/riddell/img/Football-Picker/download%20(1)@2x.png"
             ],
             [
-                'name' => "Design 4",
+                'name' => "Style 4",
                 'image' => "/riddell/img/Football-Picker/download%20(3)@2x.png"
             ],
             [
-                'name' => "Design 5",
+                'name' => "Style 5",
                 'image' => "/riddell/img/Football-Picker/download%20(2)@2x.png"
             ],
             [
-                'name' => "Design 6",
+                'name' => "Style 6",
                 'image' => "/riddell/img/Football-Picker/Inspiration@2x.png"
             ],
             [
-                'name' => "Design 7",
+                'name' => "Style 7",
                 'image' => "/riddell/img/Football-Picker/download@2x.png"
             ],
             [
-                'name' => "Design 8",
+                'name' => "Style 8",
                 'image' => "/riddell/img/Football-Picker/download%20(1)@2x.png"
             ],
             [
-                'name' => "Design 9",
+                'name' => "Style 9",
                 'image' => "/riddell/img/Football-Picker/download%20(3)@2x.png"
             ],
             [
-                'name' => "Design 10",
+                'name' => "Style 10",
                 'image' => "/riddell/img/Football-Picker/download%20(2)@2x.png"
             ],
         ];
 
         foreach ($data as $datum) {
-            Design::create([
+            Style::create([
                 'name' => $datum['name'],
                 'image' => $datum['image']
             ]);

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableDesigns extends Migration
+class CreateTableStyles extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTableDesigns extends Migration
      */
     public function up()
     {
-        Schema::create('designs', function (Blueprint $table) {
+        Schema::create('styles', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('image')->nullable()->default(null);
             $table->string('name', 30)->nullable()->default(null);
@@ -28,6 +28,6 @@ class CreateTableDesigns extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('designs');
+        Schema::dropIfExists('styles');
     }
 }
