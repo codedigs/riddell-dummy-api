@@ -14,7 +14,7 @@ class CreateTableCuts extends Migration
     public function up()
     {
         Schema::create('cuts', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('image')->nullable()->default(null);
             $table->string('name', 30)->nullable()->default(null);
             $table->timestamps();

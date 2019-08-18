@@ -14,7 +14,7 @@ class CreateTableDesigns extends Migration
     public function up()
     {
         Schema::create('designs', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('image')->nullable()->default(null);
             $table->string('name', 30)->nullable()->default(null);
             $table->timestamps();
