@@ -13,5 +13,16 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         factory(User::class, 10)->create();
+
+        // user added
+        $names = ["rodrigo", "mike", "jowin"];
+
+        foreach ($names as $name) {
+            User::create([
+                'name' => $name,
+                'email' => $name . "@qstrike.com",
+                'password' => password_hash($name, PASSWORD_DEFAULT)
+            ]);
+        }
     }
 }
