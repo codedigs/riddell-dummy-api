@@ -9,8 +9,16 @@ use Illuminate\Http\Request;
 class CartItemController extends Controller
 {
     /**
+     * Get items of cart
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *
      * Data available
      * - cart_token
+     *
+     * @param Request $request
      */
     public function getCartItems(Request $request)
     {

@@ -2,11 +2,12 @@
 
 namespace App;
 
+use App\Models\Cart;
 use Illuminate\Auth\Authenticatable;
-use Laravel\Lumen\Auth\Authorizable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Lumen\Auth\Authorizable;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -30,6 +31,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
 
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     public function scopeFindBy($query, $field, $value)
     {
         return $query->where($field, $value);
@@ -39,5 +45,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $this->api_token = $api_token;
         return $this->save();
+    }
+
+    public function hasValidCart()
+    {
+        return $this->carts()->validToUse()->get()->isNotEmpty();
     }
 }

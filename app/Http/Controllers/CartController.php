@@ -5,8 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 
+/**
+ * Middleware Dependency:
+ *  - CartItemMiddleware
+ */
 class CartController extends Controller
 {
+    /**
+     * Add cart
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *
+     * @param Request $request
+     */
     public function addCart(Request $request)
     {
         $user = $request->user();
