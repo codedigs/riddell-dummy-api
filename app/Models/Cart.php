@@ -13,7 +13,7 @@ class Cart extends Model
     // const SAVE_ORDER_ACTION = "save_order";
     // const SUBMITTED_FLAG = 1;
 
-    protected $fillable = ["token", "is_active", "is_cancelled", "is_checkout", "is_completed", "is_abandoned", "user_id"];
+    protected $fillable = ["token", "is_active", "is_completed", "is_abandoned", "user_id"];
 
     public function cart_items()
     {
