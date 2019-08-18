@@ -66,4 +66,9 @@ class LoginController extends Controller
             'message' => "Invalid email and password."
         ]);
     }
+
+    public function getAuthenticated()
+    {
+        //
+    }
 }

@@ -52,3 +52,8 @@ $router->group([
     // $router->put("{cart_item_id:[\d]+}/update", ['middleware' => "cart_item", 'uses' => "CartItemController@updateBuilderCustomizationItem"]);
     // $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@deleteToCart"]);
 });
+
+$router->get("/authenticated-user", [ // authenticated with cart
+    'middleware' => ["auth", "cart"],
+    'uses' => "GetterController@getAuthenticatedUser"
+]);
