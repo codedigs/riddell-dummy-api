@@ -15,6 +15,11 @@ class CartItem extends Model
         return $this->belongsTo(Cart::class);
     }
 
+    public function coach_request_logs()
+    {
+        return $this->hasMany(CoachRequestLog::class);
+    }
+
     // public function cart_item_players()
     // {
     //     return $this->hasMany(CartItemPlayer::class);

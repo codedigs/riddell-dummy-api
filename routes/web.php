@@ -48,6 +48,18 @@ $router->group([
     'middleware' => ["auth", "cart"]
 ], function() use($router) {
     $router->get("/", "CartItemController@getCartItems");
+    $router->post("/add", "CartItemController@store");
+
+    // $router->put("{cart_item_id:[\d]+}/update", ['middleware' => "cart_item", 'uses' => "CartItemController@updateBuilderCustomizationItem"]);
+    // $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@deleteToCart"]);
+});
+
+// coach request logs
+$router->group([
+    'prefix' => "carts/items/{cart_item_id}",
+    'middleware' => ["auth", "cart", "cart_item"]
+], function() use($router) {
+    $router->get("/logs", "CoachRequestLogController@getAll");
 
     // $router->put("{cart_item_id:[\d]+}/update", ['middleware' => "cart_item", 'uses' => "CartItemController@updateBuilderCustomizationItem"]);
     // $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@deleteToCart"]);
