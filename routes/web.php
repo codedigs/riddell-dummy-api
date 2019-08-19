@@ -53,7 +53,11 @@ $router->group([
     // $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@deleteToCart"]);
 });
 
-$router->get("/authenticated-user", [ // authenticated with cart
-    'middleware' => ["auth", "cart"],
-    'uses' => "GetterController@getAuthenticatedUser"
-]);
+// users
+$router->group([
+    'prefix' => "auth-user",
+    'middleware' => "auth"
+], function() use($router) {
+    $router->get("/", "AuthUserController@getAuthenticatedUser");
+    $router->get("/cart", "AuthUserController@getCurrentCart");
+});
