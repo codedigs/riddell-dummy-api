@@ -39,6 +39,7 @@ class CartItemController extends Controller
      * Dependency
      *  - Authenticate Middleware
      *  - Cart Middleware
+     *  - CartItem Middleware
      *
      * Data available
      * - cart_token
@@ -120,18 +121,169 @@ class CartItemController extends Controller
                     ]
                 );
             }
-            else
-            {
-                return response()->json([
-                    'success' => false,
-                    'message' => "cut_id is required"
-                ]);
-            }
+
+            return response()->json([
+                'success' => false,
+                'message' => "cut_id is required"
+            ]);
         }
 
         return response()->json([
             'success' => false,
             'message' => "design_id, customizer_url, is_approved, has_change_request and has_pending_approval must be define."
+        ]);
+    }
+
+    /**
+     * Update cut id
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - cart_token
+     * - cut_id
+     *
+     * @param Request $request
+     */
+    public function updateCutId(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+
+        $cut_id = $request->get('cut_id');
+
+        if (isset($cut_id))
+        {
+            if (!empty($cut_id))
+            {
+                $cartItem->cut_id = $cut_id;
+
+                return response()->json(
+                    $cartItem->save() ?
+                    [
+                        'success' => true,
+                        'message' => "Successfully update cut id"
+                    ] :
+                    [
+                        'success' => false,
+                        'message' => "Cannot update cut id this time. Please try again later."
+                    ]
+                );
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => "Cut id must not empty"
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Cut id must be define"
+        ]);
+    }
+
+    /**
+     * Update style id
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - cart_token
+     * - style_id
+     *
+     * @param Request $request
+     */
+    public function updateStyleId(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+
+        $style_id = $request->get('style_id');
+
+        if (isset($style_id))
+        {
+            if (!empty($style_id))
+            {
+                $cartItem->style_id = $style_id;
+
+                return response()->json(
+                    $cartItem->save() ?
+                    [
+                        'success' => true,
+                        'message' => "Successfully update style id"
+                    ] :
+                    [
+                        'success' => false,
+                        'message' => "Cannot update style id this time. Please try again later."
+                    ]
+                );
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => "Style id must not empty"
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Style id must be define"
+        ]);
+    }
+
+    /**
+     * Update customizer url
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - cart_token
+     * - customizer_url
+     *
+     * @param Request $request
+     */
+    public function updateCustomizerUrl(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+
+        $customizer_url = $request->get('customizer_url');
+
+        if (isset($customizer_url))
+        {
+            if (!empty($customizer_url))
+            {
+                $cartItem->customizer_url = $customizer_url;
+
+                return response()->json(
+                    $cartItem->save() ?
+                    [
+                        'success' => true,
+                        'message' => "Successfully update customizer url"
+                    ] :
+                    [
+                        'success' => false,
+                        'message' => "Cannot update customizer url this time. Please try again later."
+                    ]
+                );
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => "Customizer url must not empty"
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Customizer url must be define"
         ]);
     }
 }

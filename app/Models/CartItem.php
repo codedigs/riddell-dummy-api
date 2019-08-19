@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CartItem extends Model
 {
-    protected $fillable = ["cut_id", "design_id", "customizer_url", "is_approved", "has_change_request", "has_pending_approval", "cart_id"];
+    protected $fillable = ["cut_id", "style_id", "customizer_url", "is_approved", "has_change_request", "has_pending_approval", "cart_id"];
 
     const STATUS_REVIEW_CHANGES = "review changes";
     const STATUS_APPROVED = "approved";

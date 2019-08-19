@@ -88,13 +88,11 @@ class CoachRequestLogController extends Controller
                     'message' => "Cannot create log this time. Please try again later."
                 ]);
             }
-            else
-            {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Cannot create log without any value on cut, style, customizer, roster and application size"
-                ]);
-            }
+
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot create log without any value on cut, style, customizer, roster and application size"
+            ]);
         }
 
         return response()->json([

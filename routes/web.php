@@ -16,7 +16,7 @@ $router->get('/', function () use ($router) {
 });
 
 // todo: limit login attempt
-$router->post("/login", "LoginController@login");
+$router->post("login", "LoginController@login");
 
 // cuts
 $router->group([
@@ -39,7 +39,7 @@ $router->group([
     'prefix' => "carts",
     'middleware' => "auth"
 ], function() use($router) {
-    $router->post("/add-cart", "CartController@addCart");
+    $router->post("add-cart", "CartController@addCart");
 });
 
 // cart items
@@ -48,10 +48,12 @@ $router->group([
     'middleware' => ["auth", "cart"]
 ], function() use($router) {
     $router->get("/", "CartItemController@getCartItems");
-    $router->get("/{cart_item_id:[\d]+}", ['middleware' => "cart_item", 'uses' => "CartItemController@show"]);
-    $router->post("/add", "CartItemController@store");
+    $router->get("{cart_item_id:[\d]+}", ['middleware' => "cart_item", 'uses' => "CartItemController@show"]);
+    $router->post("add", "CartItemController@store");
 
-    // $router->put("{cart_item_id:[\d]+}/update", ['middleware' => "cart_item", 'uses' => "CartItemController@updateBuilderCustomizationItem"]);
+    $router->put("{cart_item_id:[\d]+}/update-cut-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateCutId"]);
+    $router->put("{cart_item_id:[\d]+}/update-style-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateStyleId"]);
+    $router->put("{cart_item_id:[\d]+}/update-customizer-url", ['middleware' => "cart_item", 'uses' => "CartItemController@updateCustomizerUrl"]);
     // $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@deleteToCart"]);
 });
 
@@ -61,7 +63,7 @@ $router->group([
     'middleware' => ["auth", "cart", "cart_item"]
 ], function() use($router) {
     $router->get("/", "CoachRequestLogController@getAll");
-    $router->post("/add", "CoachRequestLogController@store");
+    $router->post("add", "CoachRequestLogController@store");
 
     // $router->put("{cart_item_id:[\d]+}/update", ['middleware' => "cart_item", 'uses' => "CartItemController@updateBuilderCustomizationItem"]);
     // $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@deleteToCart"]);
@@ -73,5 +75,5 @@ $router->group([
     'middleware' => "auth"
 ], function() use($router) {
     $router->get("/", "AuthUserController@getAuthenticatedUser");
-    $router->get("/cart", "AuthUserController@getCurrentCart");
+    $router->get("cart", "AuthUserController@getCurrentCart");
 });
