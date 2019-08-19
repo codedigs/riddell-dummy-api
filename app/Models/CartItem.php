@@ -16,6 +16,9 @@ class CartItem extends Model
     const STATUS_GET_APPROVAL = "get approval";
     const STATUS_INCOMPLETE = "incomplete";
 
+    const TRUTHY_FLAG = 1;
+    const FALSY_FLAG = 0;
+
     public function cart()
     {
         return $this->belongsTo(Cart::class);
@@ -31,7 +34,7 @@ class CartItem extends Model
         switch(true) {
             case is_null($this->cut_id):
             case is_null($this->design_id):
-            case is_null($this->customizer):
+            case is_null($this->customizer_url):
             // roster
             // application sizes
                 return static::STATUS_INCOMPLETE;
@@ -50,6 +53,15 @@ class CartItem extends Model
         }
 
         return null;
+    }
+
+    public function markAsCoachHasChangeRequest()
+    {
+        $this->is_approved = static::FALSY_FLAG;
+        $this->has_change_request = static::TRUTHY_FLAG;
+        $this->has_pending_approval = static::FALSY_FLAG;
+
+        return $this->save();
     }
 
     // public function cart_item_players()

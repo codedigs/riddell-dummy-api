@@ -73,17 +73,20 @@ class CoachRequestLogController extends Controller
                     'application_size_note' => $params['application_size_note']
                 ]);
 
-                return response()->json(
-                    $result instanceof CoachRequestLog ?
-                    [
+                if ($result instanceof CoachRequestLog)
+                {
+                    $cartItem->markAsCoachHasChangeRequest();
+
+                    return response()->json([
                         'success' => true,
                         'message' => "Successfully create log"
-                    ] :
-                    [
-                        'success' => false,
-                        'message' => "Cannot create log this time. Please try again later."
-                    ]
-                );
+                    ]);
+                }
+
+                return response()->json([
+                    'success' => false,
+                    'message' => "Cannot create log this time. Please try again later."
+                ]);
             }
             else
             {

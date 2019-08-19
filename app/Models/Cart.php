@@ -12,7 +12,7 @@ class Cart extends Model
     const CART_TOKEN_PREFIX = "cart_token_";
     // const SAVE_ORDER_ACTION = "save_order";
     // const SUBMITTED_FLAG = 1;
-    const TRUTH_FLAG = 1;
+    const TRUTHY_FLAG = 1;
 
     protected $fillable = ["token", "is_active", "is_completed", "is_abandoned", "user_id"];
 
@@ -91,7 +91,7 @@ class Cart extends Model
         $cart = static::create([
             'user_id' => null,
             'token' => $unique_token,
-            'is_active' => static::TRUTH_FLAG
+            'is_active' => static::TRUTHY_FLAG
         ]);
 
         return $cart;
