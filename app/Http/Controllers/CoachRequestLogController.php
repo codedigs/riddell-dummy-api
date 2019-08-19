@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CartItem;
 use App\Models\CoachRequestLog;
 use Illuminate\Http\Request;
+use Validator;
 
 class CoachRequestLogController extends Controller
 {
@@ -53,51 +54,56 @@ class CoachRequestLogController extends Controller
      */
     public function store(Request $request, $cart_item_id)
     {
-        $cartItem = CartItem::find($cart_item_id);
-
         $params = $request->all();
 
-        if (isset($params['cut_note'], $params['style_note'], $params['customizer_note'], $params['roster_note'], $params['application_size_note']))
+        $validator = Validator::make($params, [
+            'cut_note' => "string",
+            'style_note' => "string",
+            'customizer_note' => "string",
+            'roster_note' => "string",
+            'application_size_note' => "string"
+        ]);
+
+        if ($validator->fails())
         {
-            if (!empty($params['cut_note']) ||
-                !empty($params['style_note']) ||
-                !empty($params['customizer_note']) ||
-                !empty($params['roster_note']) ||
-                !empty($params['application_size_note']))
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        if (!empty($params['cut_note']) ||
+            !empty($params['style_note']) ||
+            !empty($params['customizer_note']) ||
+            !empty($params['roster_note']) ||
+            !empty($params['application_size_note']))
+        {
+            $cartItem = CartItem::find($cart_item_id);
+
+            $result = $cartItem->coach_request_logs()->create([
+                'cut_note' => $params['cut_note'],
+                'style_note' => $params['style_note'],
+                'customizer_note' => $params['customizer_note'],
+                'roster_note' => $params['roster_note'],
+                'application_size_note' => $params['application_size_note']
+            ]);
+
+            if ($result instanceof CoachRequestLog)
             {
-                $result = $cartItem->coach_request_logs()->create([
-                    'cut_note' => $params['cut_note'],
-                    'style_note' => $params['style_note'],
-                    'customizer_note' => $params['customizer_note'],
-                    'roster_note' => $params['roster_note'],
-                    'application_size_note' => $params['application_size_note']
-                ]);
-
-                if ($result instanceof CoachRequestLog)
-                {
-                    $cartItem->markAsCoachHasChangeRequest();
-
-                    return response()->json([
-                        'success' => true,
-                        'message' => "Successfully create log"
-                    ]);
-                }
+                $cartItem->markAsCoachHasChangeRequest();
 
                 return response()->json([
-                    'success' => false,
-                    'message' => "Cannot create log this time. Please try again later."
+                    'success' => true,
+                    'message' => "Successfully create log"
                 ]);
             }
 
             return response()->json([
                 'success' => false,
-                'message' => "Cannot create log without any value on cut, style, customizer, roster and application size"
+                'message' => "Cannot create log this time. Please try again later."
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => "cut_note, style_note, customizer_note, roster_note, and application_size_note must be define."
+            'message' => "Cannot create log without any value on cut, style, customizer, roster and application size"
         ]);
     }
 }
