@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
+use Validator;
 
 class CartItemController extends Controller
 {
@@ -87,51 +88,45 @@ class CartItemController extends Controller
      */
     public function store(Request $request)
     {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'cut_id' => "required|numeric",
+            'design_id' => "numeric",
+            'customizer_url' => "url",
+            'is_approved' => "boolean",
+            'has_change_request' => "boolean",
+            'has_pending_approval' => "boolean"
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
         $cart_token = $request->get('cart_token');
         $cart = Cart::findByToken($cart_token);
 
-        $params = $request->all();
-
-        if (isset($params['design_id'],
-            $params['customizer_url'],
-            $params['is_approved'],
-            $params['has_change_request'],
-            $params['has_pending_approval']))
-        {
-            if (!empty($params['cut_id']))
-            {
-                $result = $cart->cart_items()->create([
-                    'cut_id' => $params['cut_id'],
-                    'design_id' => isset($params['design_id']) ? $params['design_id'] : null,
-                    'customizer_url' => isset($params['customizer_url']) ? $params['customizer_url'] : null,
-                    'is_approved' => isset($params['is_approved']) ? $params['is_approved'] : 0,
-                    'has_change_request' => isset($params['has_change_request']) ? $params['has_change_request'] : 0,
-                    'has_pending_approval' => isset($params['has_pending_approval']) ? $params['has_pending_approval'] : 0
-                ]);
-
-                return response()->json(
-                    $result instanceof CartItem ?
-                    [
-                        'success' => true,
-                        'message' => "Successfully create cart item"
-                    ] :
-                    [
-                        'success' => false,
-                        'message' => "Cannot create cart item this time. Please try again later."
-                    ]
-                );
-            }
-
-            return response()->json([
-                'success' => false,
-                'message' => "cut_id is required"
-            ]);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => "design_id, customizer_url, is_approved, has_change_request and has_pending_approval must be define."
+        $result = $cart->cart_items()->create([
+            'cut_id' => $params['cut_id'],
+            'design_id' => isset($params['design_id']) ? $params['design_id'] : null,
+            'customizer_url' => isset($params['customizer_url']) ? $params['customizer_url'] : null,
+            'is_approved' => isset($params['is_approved']) ? $params['is_approved'] : 0,
+            'has_change_request' => isset($params['has_change_request']) ? $params['has_change_request'] : 0,
+            'has_pending_approval' => isset($params['has_pending_approval']) ? $params['has_pending_approval'] : 0
         ]);
+
+        return response()->json(
+            $result instanceof CartItem ?
+            [
+               'success' => true,
+               'message' => "Successfully create cart item"
+            ] :
+            [
+               'success' => false,
+               'message' => "Cannot create cart item this time. Please try again later."
+            ]
+        );
     }
 
     /**
@@ -150,39 +145,31 @@ class CartItemController extends Controller
      */
     public function updateCutId(Request $request, $cart_item_id)
     {
-        $cartItem = CartItem::find($cart_item_id);
+        $params = $request->all();
 
-        $cut_id = $request->get('cut_id');
+        $validator = Validator::make($params, [
+            'cut_id' => "required|numeric"
+        ]);
 
-        if (isset($cut_id))
+        if ($validator->fails())
         {
-            if (!empty($cut_id))
-            {
-                $cartItem->cut_id = $cut_id;
-
-                return response()->json(
-                    $cartItem->save() ?
-                    [
-                        'success' => true,
-                        'message' => "Successfully update cut id"
-                    ] :
-                    [
-                        'success' => false,
-                        'message' => "Cannot update cut id this time. Please try again later."
-                    ]
-                );
-            }
-
-            return response()->json([
-                'success' => false,
-                'message' => "Cut id must not empty"
-            ]);
+            return $this->respondWithErrorMessage($validator);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => "Cut id must be define"
-        ]);
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->cut_id = $params['cut_id'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update cut id"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update cut id this time. Please try again later."
+            ]
+        );
     }
 
     /**
@@ -201,39 +188,31 @@ class CartItemController extends Controller
      */
     public function updateStyleId(Request $request, $cart_item_id)
     {
-        $cartItem = CartItem::find($cart_item_id);
+        $params = $request->all();
 
-        $style_id = $request->get('style_id');
+        $validator = Validator::make($params, [
+            'style_id' => "required|numeric"
+        ]);
 
-        if (isset($style_id))
+        if ($validator->fails())
         {
-            if (!empty($style_id))
-            {
-                $cartItem->style_id = $style_id;
-
-                return response()->json(
-                    $cartItem->save() ?
-                    [
-                        'success' => true,
-                        'message' => "Successfully update style id"
-                    ] :
-                    [
-                        'success' => false,
-                        'message' => "Cannot update style id this time. Please try again later."
-                    ]
-                );
-            }
-
-            return response()->json([
-                'success' => false,
-                'message' => "Style id must not empty"
-            ]);
+            return $this->respondWithErrorMessage($validator);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => "Style id must be define"
-        ]);
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->style_id = $params['style_id'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update style id"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update style id this time. Please try again later."
+            ]
+        );
     }
 
     /**
@@ -252,38 +231,30 @@ class CartItemController extends Controller
      */
     public function updateCustomizerUrl(Request $request, $cart_item_id)
     {
-        $cartItem = CartItem::find($cart_item_id);
+        $params = $request->all();
 
-        $customizer_url = $request->get('customizer_url');
+        $validator = Validator::make($params, [
+            'customizer_url' => "required|url"
+        ]);
 
-        if (isset($customizer_url))
+        if ($validator->fails())
         {
-            if (!empty($customizer_url))
-            {
-                $cartItem->customizer_url = $customizer_url;
-
-                return response()->json(
-                    $cartItem->save() ?
-                    [
-                        'success' => true,
-                        'message' => "Successfully update customizer url"
-                    ] :
-                    [
-                        'success' => false,
-                        'message' => "Cannot update customizer url this time. Please try again later."
-                    ]
-                );
-            }
-
-            return response()->json([
-                'success' => false,
-                'message' => "Customizer url must not empty"
-            ]);
+            return $this->respondWithErrorMessage($validator);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => "Customizer url must be define"
-        ]);
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->customizer_url = $params['customizer_url'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update customizer url"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update customizer url this time. Please try again later."
+            ]
+        );
     }
 }
