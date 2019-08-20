@@ -54,7 +54,7 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/update-cut-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateCutId"]);
     $router->put("{cart_item_id:[\d]+}/update-style-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateStyleId"]);
     $router->put("{cart_item_id:[\d]+}/update-customizer-url", ['middleware' => "cart_item", 'uses' => "CartItemController@updateCustomizerUrl"]);
-    // $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@deleteToCart"]);
+    $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@delete"]);
 });
 
 // coach request logs

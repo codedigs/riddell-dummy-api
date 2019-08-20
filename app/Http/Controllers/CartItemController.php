@@ -258,4 +258,36 @@ class CartItemController extends Controller
             ]
         );
     }
+
+    /**
+     * Delete cart item
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - cart_token
+     * - customizer_url
+     *
+     * @param Request $request
+     */
+    public function delete(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+        $is_deleted = $cartItem->delete();
+
+        return response()->json(
+            $is_deleted ?
+            [
+                'success' => true,
+                'message' => "Successfully delete item"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot delete item this time. Please try again later."
+            ]
+        );
+    }
 }
