@@ -44,7 +44,7 @@ class CartItem extends Model
     {
         switch(true) {
             case is_null($this->cut_id):
-            case is_null($this->design_id):
+            case is_null($this->style_id):
             case is_null($this->customizer_url):
             // roster
             // application sizes
