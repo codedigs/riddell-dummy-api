@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use App\Models\Cart;
-// use App\Models\CartItemPlayer;
+use App\Models\Cut;
+use App\Models\Style;
 use Illuminate\Database\Eloquent\Model;
 
 class CartItem extends Model
@@ -27,6 +28,16 @@ class CartItem extends Model
     public function coach_request_logs()
     {
         return $this->hasMany(CoachRequestLog::class);
+    }
+
+    public function getCut()
+    {
+        return Cut::find($this->cut_id);
+    }
+
+    public function getStyle()
+    {
+        return Style::find($this->style_id);
     }
 
     public function getStatus()

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Transformers\CartItemTransformer;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -26,11 +27,11 @@ class CartItemController extends Controller
         $cart_token = $request->get('cart_token');
         $cart = Cart::findByToken($cart_token);
 
-        $data = $cart->cart_items->toArray();
+        $cartItems = transformer($cart->cart_items, new CartItemTransformer)->toArray();
 
         return response()->json([
             'success' => true,
-            'data' => $data
+            'data' => $cartItems['data']
         ]);
     }
 
