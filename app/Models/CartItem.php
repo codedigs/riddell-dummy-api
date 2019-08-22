@@ -11,7 +11,7 @@ use Log;
 
 class CartItem extends Model
 {
-    protected $fillable = ["cut_id", "style_id", "customizer_url", "is_approved", "has_change_request", "has_pending_approval", "cart_id"];
+    protected $fillable = ["cut_id", "style_id", "design_id", "is_approved", "has_change_request", "has_pending_approval", "cart_id"];
 
     const STATUS_REVIEW_CHANGES = "review changes";
     const STATUS_APPROVED = "approved";
@@ -55,12 +55,17 @@ class CartItem extends Model
         return Style::find($this->style_id);
     }
 
+    public function getDesignId()
+    {
+        return $this->design_id;
+    }
+
     public function getStatus()
     {
         switch(true) {
             case is_null($this->cut_id):
             case is_null($this->style_id):
-            case is_null($this->customizer_url):
+            case is_null($this->design_id):
             // roster
             // application sizes
                 return static::STATUS_INCOMPLETE;

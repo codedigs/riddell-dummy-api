@@ -79,8 +79,8 @@ class CartItemController extends Controller
      * Data available
      * - cart_token
      * - cut_id
+     * - style_id (optional)
      * - design_id (optional)
-     * - customizer_url (optional)
      * - is_approved (optional)
      * - has_change_request (optional)
      * - has_pending_approval (optional)
@@ -93,8 +93,8 @@ class CartItemController extends Controller
 
         $validator = Validator::make($params, [
             'cut_id' => "required|numeric",
+            'style_id' => "numeric",
             'design_id' => "numeric",
-            'customizer_url' => "url",
             'is_approved' => "boolean",
             'has_change_request' => "boolean",
             'has_pending_approval' => "boolean"
@@ -110,8 +110,8 @@ class CartItemController extends Controller
 
         $result = $cart->cart_items()->create([
             'cut_id' => $params['cut_id'],
+            'style_id' => isset($params['style_id']) ? $params['style_id'] : null,
             'design_id' => isset($params['design_id']) ? $params['design_id'] : null,
-            'customizer_url' => isset($params['customizer_url']) ? $params['customizer_url'] : null,
             'is_approved' => isset($params['is_approved']) ? $params['is_approved'] : 0,
             'has_change_request' => isset($params['has_change_request']) ? $params['has_change_request'] : 0,
             'has_pending_approval' => isset($params['has_pending_approval']) ? $params['has_pending_approval'] : 0
@@ -269,7 +269,6 @@ class CartItemController extends Controller
      *
      * Data available
      * - cart_token
-     * - customizer_url
      *
      * @param Request $request
      */

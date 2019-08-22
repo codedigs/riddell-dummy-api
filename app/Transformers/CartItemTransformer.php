@@ -20,7 +20,7 @@ class CartItemTransformer extends TransformerAbstract
 
         $data = [
             'id' => $cartItem->id,
-            'customizer_url' => $cartItem->customizer_url,
+            'design_id' => $cartItem->getDesignId(),
             'status' => $cartItem->getStatus()
         ];
 
