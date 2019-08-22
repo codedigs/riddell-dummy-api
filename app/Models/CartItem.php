@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Api\Clients\CutApi;
 use App\Api\Clients\StyleApi;
 use App\Models\Cart;
 use App\Models\Cut;
@@ -33,40 +32,45 @@ class CartItem extends Model
         return $this->hasMany(CoachRequestLog::class);
     }
 
-    public function getCut()
+    // public function getCut()
+    // {
+    //     // return Cut::find($this->cut_id);
+    //     $cutApi = new CutApi;
+    //     $result = $cutApi->getById($this->cut_id);
+
+    //     if ($result->success)
+    //     {
+    //         if (isset($result->master_3d_block_patterns))
+    //         {
+    //             return $result->master_3d_block_patterns;
+    //         }
+    //     }
+
+    //     Log::error("Error: " . $result->message);
+    //     return null;
+    // }
+
+    // public function getStyle()
+    // {
+    //     // return Cut::find($this->cut_id);
+    //     $styleApi = new StyleApi;
+    //     $result = $styleApi->getById($this->style_id);
+
+    //     if ($result->success)
+    //     {
+    //         if (isset($result->lookup_to_style))
+    //         {
+    //             return $result->lookup_to_style;
+    //         }
+    //     }
+
+    //     Log::error("Error: " . $result->message);
+    //     return null;
+    // }
+
+    public function getStyleId()
     {
-        // return Cut::find($this->cut_id);
-        $cutApi = new CutApi;
-        $result = $cutApi->getById($this->cut_id);
-
-        if ($result->success)
-        {
-            if (isset($result->master_3d_block_patterns))
-            {
-                return $result->master_3d_block_patterns;
-            }
-        }
-
-        Log::error("Error: " . $result->message);
-        return null;
-    }
-
-    public function getStyle()
-    {
-        // return Cut::find($this->cut_id);
-        $styleApi = new StyleApi;
-        $result = $styleApi->getById($this->style_id);
-
-        if ($result->success)
-        {
-            if (isset($result->lookup_to_style))
-            {
-                return $result->lookup_to_style;
-            }
-        }
-
-        Log::error("Error: " . $result->message);
-        return null;
+        return $this->style_id;
     }
 
     public function getDesignId()

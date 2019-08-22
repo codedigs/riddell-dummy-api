@@ -3,6 +3,8 @@
 namespace App\Transformers;
 
 use App\Models\CartItem;
+use App\Models\Cut;
+use App\Models\Style;
 use League\Fractal\TransformerAbstract;
 
 class CartItemTransformer extends TransformerAbstract
@@ -15,11 +17,14 @@ class CartItemTransformer extends TransformerAbstract
      */
     public function transform(CartItem $cartItem)
     {
-        $cut = $cartItem->getCut();
-        $style = $cartItem->getStyle();
+        $cut = Cut::getById($cartItem->cut_id);
+        // $style = Style::getByCutId($cartItem->style_id);
+
+        // $style = $cartItem->getStyle();
 
         $data = [
             'id' => $cartItem->id,
+            'style_id' => $cartItem->getStyleId(), // temporary
             'design_id' => $cartItem->getDesignId(),
             'status' => $cartItem->getStatus()
         ];
@@ -34,15 +39,15 @@ class CartItemTransformer extends TransformerAbstract
             ];
         }
 
-        if (!is_null($style))
-        {
-            $data['style'] = [
-                'id' => $style->id,
-                // 'name' => $style->getName(),
-                // 'image' => $style->getImage()
-                'image' => "/riddell/img/Football-Picker/Inspiration@2x.png"
-            ];
-        }
+        // if (!is_null($style))
+        // {
+        //     $data['style'] = [
+        //         'id' => $style->id,
+        //         // 'name' => $style->getName(),
+        //         // 'image' => $style->getImage()
+        //         'image' => "/riddell/img/Football-Picker/Inspiration@2x.png"
+        //     ];
+        // }
 
         return $data;
     }
