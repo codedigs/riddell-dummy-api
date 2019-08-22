@@ -38,7 +38,7 @@ class CartItemTransformer extends TransformerAbstract
         {
             $data['style'] = [
                 'id' => $style->id,
-                'name' => $style->getName(),
+                // 'name' => $style->getName(),
                 // 'image' => $style->getImage()
                 'image' => "/riddell/img/Football-Picker/Inspiration@2x.png"
             ];

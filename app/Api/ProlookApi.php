@@ -12,7 +12,7 @@ class ProlookApi extends Client
     public function __construct($api_token=null)
     {
         $settings = [
-            'base_uri' => config("qx7.api_host")
+            'base_uri' => config("prolook.api_host")
         ];
 
         parent::__construct($settings);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Api\Clients\CutApi;
+use App\Api\Clients\StyleApi;
 use App\Models\Cart;
 use App\Models\Cut;
 use App\Models\Style;
@@ -36,7 +37,7 @@ class CartItem extends Model
     {
         // return Cut::find($this->cut_id);
         $cutApi = new CutApi;
-        $result = $cutApi->getById(16);
+        $result = $cutApi->getById($this->cut_id);
 
         if ($result->success)
         {
@@ -52,7 +53,20 @@ class CartItem extends Model
 
     public function getStyle()
     {
-        return Style::find($this->style_id);
+        // return Cut::find($this->cut_id);
+        $styleApi = new StyleApi;
+        $result = $styleApi->getById($this->style_id);
+
+        if ($result->success)
+        {
+            if (isset($result->lookup_to_style))
+            {
+                return $result->lookup_to_style;
+            }
+        }
+
+        Log::error("Error: " . $result->message);
+        return null;
     }
 
     public function getDesignId()
