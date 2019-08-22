@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
         factory(User::class, 10)->create();
 
         // user added
-        $names = ["rodrigo", "mike", "jowin"];
+        $names = ["rodrigo", "mike", "jowin", "johnjay", "elmer"];
 
         foreach ($names as $name) {
             User::create([
