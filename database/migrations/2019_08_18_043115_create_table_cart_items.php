@@ -17,7 +17,7 @@ class CreateTableCartItems extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('cut_id')->nullable()->default(null);
             $table->bigInteger('style_id')->nullable()->default(null);
-            $table->string('customizer_url')->nullable()->default(null);
+            $table->bigInteger('design_id')->nullable()->default(null);
             $table->boolean('is_approved')->default(0);
             $table->boolean('has_change_request')->default(0);
             $table->boolean('has_pending_approval')->default(0);

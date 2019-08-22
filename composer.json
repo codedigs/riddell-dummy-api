@@ -10,7 +10,9 @@
         "vlucas/phpdotenv": "~2.2",
         "firebase/php-jwt": "^5.0",
         "doctrine/dbal": "^2.9",
-        "league/fractal": "^0.18.0"
+        "league/fractal": "^0.18.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "webmozart/json": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

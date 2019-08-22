@@ -217,7 +217,7 @@ class CartItemController extends Controller
     }
 
     /**
-     * Update customizer url
+     * Update design id
      *
      * Dependency
      *  - Authenticate Middleware
@@ -226,16 +226,16 @@ class CartItemController extends Controller
      *
      * Data available
      * - cart_token
-     * - customizer_url
+     * - design_id
      *
      * @param Request $request
      */
-    public function updateCustomizerUrl(Request $request, $cart_item_id)
+    public function updateDesignId(Request $request, $cart_item_id)
     {
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'customizer_url' => "required|url"
+            'design_id' => "required|numeric"
         ]);
 
         if ($validator->fails())
@@ -244,17 +244,17 @@ class CartItemController extends Controller
         }
 
         $cartItem = CartItem::find($cart_item_id);
-        $cartItem->customizer_url = $params['customizer_url'];
+        $cartItem->design_id = $params['design_id'];
 
         return response()->json(
             $cartItem->save() ?
             [
                 'success' => true,
-                'message' => "Successfully update customizer url"
+                'message' => "Successfully update design id"
             ] :
             [
                 'success' => false,
-                'message' => "Cannot update customizer url this time. Please try again later."
+                'message' => "Cannot update design id this time. Please try again later."
             ]
         );
     }

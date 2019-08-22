@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Api\Clients\CutApi;
 use App\Models\Cart;
 use App\Models\Cut;
 use App\Models\Style;
 use Illuminate\Database\Eloquent\Model;
+use Log;
 
 class CartItem extends Model
 {
@@ -32,7 +34,20 @@ class CartItem extends Model
 
     public function getCut()
     {
-        return Cut::find($this->cut_id);
+        // return Cut::find($this->cut_id);
+        $cutApi = new CutApi;
+        $result = $cutApi->getById(16);
+
+        if ($result->success)
+        {
+            if (isset($result->master_3d_block_patterns))
+            {
+                return $result->master_3d_block_patterns;
+            }
+        }
+
+        Log::error("Error: " . $result->message);
+        return null;
     }
 
     public function getStyle()

@@ -28,8 +28,9 @@ class CartItemTransformer extends TransformerAbstract
         {
             $data['cut'] = [
                 'id' => $cut->id,
-                'name' => $cut->getName(),
-                'image' => $cut->getImage()
+                'name' => $cut->block_pattern_name,
+                // 'image' => $cut->getImage()
+                'image' => "/riddell/img/Cuts/cut-7.png"
             ];
         }
 
@@ -38,7 +39,8 @@ class CartItemTransformer extends TransformerAbstract
             $data['style'] = [
                 'id' => $style->id,
                 'name' => $style->getName(),
-                'image' => $style->getImage()
+                // 'image' => $style->getImage()
+                'image' => "/riddell/img/Football-Picker/Inspiration@2x.png"
             ];
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\Clients\CutApi;
 use App\Models\Cut;
 
 class CutController extends Controller
