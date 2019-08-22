@@ -26,6 +26,10 @@ class CartItemTransformer extends TransformerAbstract
             'id' => $cartItem->id,
             'style_id' => $cartItem->getStyleId(), // temporary
             'design_id' => $cartItem->getDesignId(),
+            'front_image' => $cartItem->front_image,
+            'back_image' => $cartItem->back_image,
+            'left_image' => $cartItem->left_image,
+            'right_image' => $cartItem->right_image,
             'status' => $cartItem->getStatus()
         ];
 

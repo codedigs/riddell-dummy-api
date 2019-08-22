@@ -260,6 +260,58 @@ class CartItemController extends Controller
     }
 
     /**
+     * Update thumbnails
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - cart_token
+     * - front_image
+     * - back_image
+     * - left_image
+     * - right_image
+     *
+     * @param Request $request
+     */
+    public function updateThumbnails(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'front_image' => "required|url",
+            'back_image' => "required|url",
+            'left_image' => "required|url",
+            'right_image' => "required|url",
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->front_image = $params['front_image'];
+        $cartItem->back_image = $params['back_image'];
+        $cartItem->left_image = $params['left_image'];
+        $cartItem->right_image = $params['right_image'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update thumbnails"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update thumbnails this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
      * Delete cart item
      *
      * Dependency
