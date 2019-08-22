@@ -121,7 +121,8 @@ class CartItemController extends Controller
             $result instanceof CartItem ?
             [
                'success' => true,
-               'message' => "Successfully create cart item"
+               'message' => "Successfully create cart item",
+               'new_cart_item_id' => $result->id
             ] :
             [
                'success' => false,
