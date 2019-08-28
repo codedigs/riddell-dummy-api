@@ -21,14 +21,14 @@ class LoginController extends Controller
                 $app_config = config('app');
                 $jwt_config = config('jwt');
 
-                if (!is_null($user->api_token))
+                if (!is_null($user->access_token))
                 {
                     try {
-                        $decoded = JWT::decode($user->api_token, $app_config['key'], [$jwt_config['algorithm']]);
+                        $decoded = JWT::decode($user->access_token, $app_config['key'], [$jwt_config['algorithm']]);
 
                         return response()->json([
                             'success' => true,
-                            'api_token' => $user->api_token
+                            'access_token' => $user->access_token
                         ]);
                     } catch (ExpiredException $e) {
                         goto generateNewApiTokenKey;
@@ -47,17 +47,17 @@ class LoginController extends Controller
                     'payload' => compact('name', 'email')
                 ];
 
-                $api_token = JWT::encode($token, $app_config['key'], $jwt_config['algorithm']);
+                $access_token = JWT::encode($token, $app_config['key'], $jwt_config['algorithm']);
 
-                if ($user->saveApiToken($api_token))
+                if ($user->saveAccessToken($access_token))
                 {
                     return response()->json([
                         'success' => true,
-                        'api_token' => $api_token
+                        'access_token' => $access_token
                     ]);
                 }
 
-                \Log::error("Error: saveApiToken method in User model not working properly.");
+                \Log::error("Error: saveAccessToken method in User model not working properly.");
             }
         }
 

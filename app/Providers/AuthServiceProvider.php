@@ -37,13 +37,13 @@ class AuthServiceProvider extends ServiceProvider
 
             if (!is_null($authorization))
             {
-                list($type, $api_token) = explode(" ", $authorization);
+                list($type, $access_token) = explode(" ", $authorization);
 
                 if (strtolower($type) === "bearer")
                 {
-                    if (!is_null($api_token))
+                    if (!is_null($access_token))
                     {
-                        $user = User::findBy('api_token', $api_token)->first();
+                        $user = User::findBy('access_token', $access_token)->first();
 
                         if (!is_null($user))
                         {
@@ -51,11 +51,11 @@ class AuthServiceProvider extends ServiceProvider
                             $jwt_config = config('jwt');
 
                             try {
-                                JWT::decode($api_token, $app_config['key'], [$jwt_config['algorithm']]);
+                                JWT::decode($access_token, $app_config['key'], [$jwt_config['algorithm']]);
 
                                 return $user;
                             } catch (ExpiredException $e) {
-                                \Log::warning("Warning: Api Token is already expired.");
+                                \Log::warning("Warning: Access Token is already expired.");
                             }
                         }
                     }

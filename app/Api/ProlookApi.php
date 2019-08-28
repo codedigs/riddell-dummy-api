@@ -9,7 +9,7 @@ class ProlookApi extends Client
 {
     protected $decoder;
 
-    public function __construct($api_token=null)
+    public function __construct($access_token=null)
     {
         $settings = [
             'base_uri' => config("prolook.api_host")

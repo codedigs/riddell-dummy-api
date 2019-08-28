@@ -19,7 +19,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'api_token'
+        'name', 'email', 'access_token'
     ];
 
     /**
@@ -41,9 +41,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $query->where($field, $value);
     }
 
-    public function saveApiToken($api_token)
+    public function saveAccessToken($access_token)
     {
-        $this->api_token = $api_token;
+        $this->access_token = $access_token;
         return $this->save();
     }
 
