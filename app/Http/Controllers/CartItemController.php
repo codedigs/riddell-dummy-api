@@ -356,6 +356,38 @@ class CartItemController extends Controller
     }
 
     /**
+     * Mark as approved
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - cart_token
+     *
+     * @param Request $request
+     */
+    public function approved(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $cartItem = CartItem::find($cart_item_id);
+
+        return response()->json(
+            $cartItem->approved() ?
+            [
+                'success' => true,
+                'message' => "Successfully approved"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot approved this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
      * Delete cart item
      *
      * Dependency

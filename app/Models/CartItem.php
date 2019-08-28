@@ -113,6 +113,12 @@ class CartItem extends Model
         return $this->save();
     }
 
+    public function approved()
+    {
+        $this->is_approved = static::TRUTHY_FLAG;
+        return $this->save();
+    }
+
     // public function cart_item_players()
     // {
     //     return $this->hasMany(CartItemPlayer::class);

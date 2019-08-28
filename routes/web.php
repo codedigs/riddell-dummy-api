@@ -56,6 +56,9 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/update-design-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateDesignId"]);
     $router->put("{cart_item_id:[\d]+}/update-thumbnails", ['middleware' => "cart_item", 'uses' => "CartItemController@updateThumbnails"]);
     $router->put("{cart_item_id:[\d]+}/update-application-size", ['middleware' => "cart_item", 'uses' => "CartItemController@updateApplicationSize"]);
+
+    $router->put("{cart_item_id:[\d]+}/approved", ['middleware' => "cart_item", 'uses' => "CartItemController@approved"]);
+
     $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@delete"]);
 });
 
