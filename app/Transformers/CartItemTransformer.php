@@ -30,6 +30,7 @@ class CartItemTransformer extends TransformerAbstract
             'back_image' => $cartItem->back_image,
             'left_image' => $cartItem->left_image,
             'right_image' => $cartItem->right_image,
+            'application_size' => $cartItem->application_size,
             'status' => $cartItem->getStatus()
         ];
 

@@ -313,6 +313,49 @@ class CartItemController extends Controller
     }
 
     /**
+     * Update application size
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - cart_token
+     * - application_size
+     *
+     * @param Request $request
+     */
+    public function updateApplicationSize(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'application_size' => "required|json",
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->application_size = $params['application_size'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update application size"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update application size this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
      * Delete cart item
      *
      * Dependency

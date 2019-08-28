@@ -22,6 +22,7 @@ class CreateTableCartItems extends Migration
             $table->string('back_image')->nullable()->default(null);
             $table->string('left_image')->nullable()->default(null);
             $table->string('right_image')->nullable()->default(null);
+            $table->json('application_size')->nullable()->default(null);
             $table->boolean('is_approved')->default(0);
             $table->boolean('has_change_request')->default(0);
             $table->boolean('has_pending_approval')->default(0);
