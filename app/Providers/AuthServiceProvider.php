@@ -67,8 +67,7 @@ class AuthServiceProvider extends ServiceProvider
                         $result = $riddellApi->getUserCart();
 
                         // check if valid token
-                        // if ($result->success)
-                        if (isset($result->success))
+                        if ($result->success)
                         {
                             $data = $result->data;
 
