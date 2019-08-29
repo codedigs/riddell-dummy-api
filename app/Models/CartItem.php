@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Models\Cart;
-use App\Models\Cut;
-use App\Models\Style;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
 
 class CartItem extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ["cut_id", "style_id", "design_id", "is_approved", "has_change_request", "has_pending_approval", "line_item_id", "pl_cart_id_fk"];
 
     const STATUS_REVIEW_CHANGES = "review changes";
@@ -35,42 +36,6 @@ class CartItem extends Model
     {
         return $query->where($field, $value);
     }
-
-    // public function getCut()
-    // {
-    //     // return Cut::find($this->cut_id);
-    //     $cutApi = new CutApi;
-    //     $result = $cutApi->getById($this->cut_id);
-
-    //     if ($result->success)
-    //     {
-    //         if (isset($result->master_3d_block_patterns))
-    //         {
-    //             return $result->master_3d_block_patterns;
-    //         }
-    //     }
-
-    //     Log::error("Error: " . $result->message);
-    //     return null;
-    // }
-
-    // public function getStyle()
-    // {
-    //     // return Cut::find($this->cut_id);
-    //     $styleApi = new StyleApi;
-    //     $result = $styleApi->getById($this->style_id);
-
-    //     if ($result->success)
-    //     {
-    //         if (isset($result->lookup_to_style))
-    //         {
-    //             return $result->lookup_to_style;
-    //         }
-    //     }
-
-    //     Log::error("Error: " . $result->message);
-    //     return null;
-    // }
 
     public function getStyleId()
     {

@@ -27,8 +27,6 @@ class CartItemController extends Controller
         $user = $request->user();
         $currentCart = $user->getCurrentCart();
 
-        $pl_cart_id = $request->get('pl_cart_id');
-
         $cartItems = transformer($currentCart->cart_items, new CartItemTransformer)->toArray();
 
         return response()->json([
@@ -91,6 +89,9 @@ class CartItemController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+        $currentCart = $user->getCurrentCart();
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
@@ -108,9 +109,8 @@ class CartItemController extends Controller
         }
 
         $pl_cart_id = $request->get('pl_cart_id');
-        $cart = Cart::findByToken($pl_cart_id);
 
-        $result = $cart->cart_items()->create([
+        $result = $currentCart->cart_items()->create([
             'cut_id' => $params['cut_id'],
             'style_id' => isset($params['style_id']) ? $params['style_id'] : null,
             'design_id' => isset($params['design_id']) ? $params['design_id'] : null,

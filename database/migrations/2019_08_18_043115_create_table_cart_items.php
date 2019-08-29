@@ -30,6 +30,7 @@ class CreateTableCartItems extends Migration
             $table->string('line_item_id')->nullable()->default(null);
             $table->string('pl_cart_id_fk')->nullable()->default(null);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Schema::table('cart_items', function(Blueprint $table) {

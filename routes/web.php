@@ -16,31 +16,7 @@ $router->get('/', function () use ($router) {
 });
 
 // todo: limit login attempt
-$router->post("login", "LoginController@login");
-
-// cuts
-$router->group([
-    'prefix' => "cuts",
-    'middleware' => "auth"
-], function() use($router) {
-    $router->get("/", "CutController@getCuts");
-});
-
-// designs
-$router->group([
-    'prefix' => "styles",
-    'middleware' => "auth"
-], function() use($router) {
-    $router->get("/", "StyleController@getStyles");
-});
-
-// carts
-$router->group([
-    'prefix' => "carts",
-    'middleware' => "auth"
-], function() use($router) {
-    $router->post("add-cart", "CartController@addCart");
-});
+// $router->post("login", "LoginController@login");
 
 // cart items
 $router->group([
@@ -69,9 +45,6 @@ $router->group([
 ], function() use($router) {
     $router->get("/", "CoachRequestLogController@getAll");
     $router->post("add", "CoachRequestLogController@store");
-
-    // $router->put("{cart_item_id:[\d]+}/update", ['middleware' => "cart_item", 'uses' => "CartItemController@updateBuilderCustomizationItem"]);
-    // $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@deleteToCart"]);
 });
 
 // users

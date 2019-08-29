@@ -12,10 +12,10 @@ class CartItemMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $pl_cart_id = $request->get('pl_cart_id');
-        $cart = Cart::findByProlookCartId($pl_cart_id);
+        $user = $request->user();
+        $currentCart = $user->getCurrentCart();
 
-        $cart_item_ids = $cart->cart_items->pluck("id")->toArray();
+        $cart_item_ids = $currentCart->cart_items->pluck("id")->toArray();
 
         $cart_item_id = $request->route()[2]['cart_item_id'];
 

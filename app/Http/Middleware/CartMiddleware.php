@@ -12,24 +12,12 @@ class CartMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $pl_cart_id = $request->get('pl_cart_id');
+        $user = $request->user();
+        $currentCart = $user->getCurrentCart();
 
-        // is cart token defined
-        if (!is_null($pl_cart_id))
+        if (!is_null($currentCart))
         {
-            $cart = Cart::findByProlookCartId($pl_cart_id);
-
-            // is cart token valid
-            if (!is_null($cart))
-            {
-                $user = $request->user();
-
-                // is user the owner of cart
-                if ($cart->user->id === $user->id)
-                {
-                    return $next($request);
-                }
-            }
+            return $next($request);
         }
 
         return response()->json([

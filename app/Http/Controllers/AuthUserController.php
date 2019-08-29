@@ -34,7 +34,7 @@ class AuthUserController extends Controller
             !is_null($cart) ?
             [
                 'success' => true,
-                'cart_token' => $cart->token
+                'pl_cart_id' => $cart->pl_cart_id
             ] :
             [
                 'success' => false,

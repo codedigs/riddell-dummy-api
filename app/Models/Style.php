@@ -8,18 +8,6 @@ use Log;
 
 class Style extends Model
 {
-    protected $fillable = ["image", "name"];
-
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
     public static function getByCutId($cut_id)
     {
         $styleApi = new StyleApi;
