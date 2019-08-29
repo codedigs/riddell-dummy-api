@@ -18,16 +18,18 @@ class CartItemController extends Controller
      *  - Cart Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      *
      * @param Request $request
      */
     public function getCartItems(Request $request)
     {
-        $cart_token = $request->get('cart_token');
-        $cart = Cart::findByToken($cart_token);
+        $user = $request->user();
+        $currentCart = $user->getCurrentCart();
 
-        $cartItems = transformer($cart->cart_items, new CartItemTransformer)->toArray();
+        $pl_cart_id = $request->get('pl_cart_id');
+
+        $cartItems = transformer($currentCart->cart_items, new CartItemTransformer)->toArray();
 
         return response()->json([
             'success' => true,
@@ -44,7 +46,7 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      *
      * @param Request $request
      */
@@ -77,7 +79,7 @@ class CartItemController extends Controller
      *  - Cart Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      * - cut_id
      * - style_id (optional)
      * - design_id (optional)
@@ -105,8 +107,8 @@ class CartItemController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
-        $cart_token = $request->get('cart_token');
-        $cart = Cart::findByToken($cart_token);
+        $pl_cart_id = $request->get('pl_cart_id');
+        $cart = Cart::findByToken($pl_cart_id);
 
         $result = $cart->cart_items()->create([
             'cut_id' => $params['cut_id'],
@@ -140,7 +142,7 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      * - cut_id
      *
      * @param Request $request
@@ -183,7 +185,7 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      * - style_id
      *
      * @param Request $request
@@ -226,7 +228,7 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      * - design_id
      *
      * @param Request $request
@@ -269,7 +271,7 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      * - front_image
      * - back_image
      * - left_image
@@ -321,7 +323,7 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      * - application_size
      *
      * @param Request $request
@@ -364,7 +366,7 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      *
      * @param Request $request
      */
@@ -396,7 +398,7 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - cart_token
+     * - pl_cart_id
      *
      * @param Request $request
      */

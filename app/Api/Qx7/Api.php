@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Api;
+namespace App\Api\Qx7;
 
 use GuzzleHttp\Client;
 use Webmozart\Json\JsonDecoder;
 
-class ProlookApi extends Client
+class Api extends Client
 {
     protected $decoder;
 
     public function __construct($access_token=null)
     {
         $settings = [
-            'base_uri' => config("prolook.api_host")
+            'base_uri' => config("qx7.api_host")
         ];
 
         parent::__construct($settings);

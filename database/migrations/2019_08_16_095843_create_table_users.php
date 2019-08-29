@@ -18,6 +18,7 @@ class CreateTableUsers extends Migration
             $table->string("name", 50);
             $table->string("email", 50);
             $table->string("password")->nullable()->default(null); // PASSWORD_DEFAULT
+            $table->bigInteger('user_id')->nullable()->default(null);
             $table->text("access_token")->nullable()->default(null);
             $table->timestamps();
         });

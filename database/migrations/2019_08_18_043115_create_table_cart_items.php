@@ -27,15 +27,14 @@ class CreateTableCartItems extends Migration
             $table->boolean('has_change_request')->default(0);
             $table->boolean('has_pending_approval')->default(0);
 
-            $table->bigInteger('cart_id')->nullable()->default(null);
+            $table->string('line_item_id')->nullable()->default(null);
+            $table->string('pl_cart_id_fk')->nullable()->default(null);
             $table->timestamps();
         });
 
-        Schema::table('cart_items', function(Blueprint $table) {
-            $table->bigInteger('cart_id')->unsigned()->change();
-
-            $table->foreign('cart_id')->references('id')->on('carts');
-        });
+        // Schema::table('cart_items', function(Blueprint $table) {
+        //     $table->foreign('pl_cart_id_fk')->references('pl_cart_id')->on('carts');
+        // });
     }
 
     /**

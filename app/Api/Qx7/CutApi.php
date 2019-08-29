@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Api\Clients;
+namespace App\Api\Qx7;
 
-use App\Api\Qx7Api;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 
-class CutApi extends Qx7Api
+class CutApi extends Api
 {
     public function getAll()
     {

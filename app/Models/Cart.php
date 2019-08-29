@@ -14,11 +14,11 @@ class Cart extends Model
     // const SUBMITTED_FLAG = 1;
     const TRUTHY_FLAG = 1;
 
-    protected $fillable = ["token", "is_active", "is_completed", "is_abandoned", "user_id"];
+    protected $fillable = ["pl_cart_id", "is_active", "is_completed", "is_abandoned", "user_id"];
 
     public function cart_items()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->hasMany(CartItem::class, "pl_cart_id_fk", "pl_cart_id");
     }
 
     public function user()
@@ -72,9 +72,9 @@ class Cart extends Model
     //     }
     // }
 
-    public static function findByToken($token)
+    public static function findByProlookCartId($pl_cart_id)
     {
-        return static::where('token', $token)
+        return static::where('pl_cart_id', $pl_cart_id)
                 ->validToUse()
                 ->get()
                 ->last();
@@ -84,18 +84,18 @@ class Cart extends Model
      * @param  User|null $user
      * @return Cart
      */
-    public static function takeCart()
-    {
-        $unique_token = static::generateUniqueToken();
+    // public static function takeCart()
+    // {
+    //     $unique_token = static::generateUniqueToken();
 
-        $cart = static::create([
-            'user_id' => null,
-            'token' => $unique_token,
-            'is_active' => static::TRUTHY_FLAG
-        ]);
+    //     $cart = static::create([
+    //         'user_id' => null,
+    //         'token' => $unique_token,
+    //         'is_active' => static::TRUTHY_FLAG
+    //     ]);
 
-        return $cart;
-    }
+    //     return $cart;
+    // }
 
     // public static function exceedInLifeSpan($timeout)
     // {
@@ -103,23 +103,23 @@ class Cart extends Model
     //     return $duration >= static::LIFE_SPAN;
     // }
 
-    public static function generateUniqueToken()
-    {
-        $allCarts = static::all();
+    // public static function generateUniqueToken()
+    // {
+    //     $allCarts = static::all();
 
-        if (!$allCarts->isEmpty())
-        {
-            $cart_tokens = $allCarts->pluck('token');
+    //     if (!$allCarts->isEmpty())
+    //     {
+    //         $cart_tokens = $allCarts->pluck('token');
 
-            do {
-                $unique_token = uniqid(static::CART_TOKEN_PREFIX);
-            } while (in_array($unique_token, $cart_tokens->toArray()));
+    //         do {
+    //             $unique_token = uniqid(static::CART_TOKEN_PREFIX);
+    //         } while (in_array($unique_token, $cart_tokens->toArray()));
 
-            return $unique_token;
-        }
+    //         return $unique_token;
+    //     }
 
-        return uniqid(static::CART_TOKEN_PREFIX);
-    }
+    //     return uniqid(static::CART_TOKEN_PREFIX);
+    // }
 
     // public static function abandon($cart_token)
     // {

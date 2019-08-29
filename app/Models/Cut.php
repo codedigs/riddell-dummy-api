@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Api\Clients\CutApi;
+use App\Api\Qx7\CutApi;
 use Illuminate\Database\Eloquent\Model;
 use Log;
 

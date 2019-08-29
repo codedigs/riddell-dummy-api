@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Api\Clients\StyleApi;
+use App\Api\Prolook\StyleApi;
 use Illuminate\Database\Eloquent\Model;
 use Log;
 

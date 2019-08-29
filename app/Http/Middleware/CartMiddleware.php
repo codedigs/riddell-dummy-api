@@ -12,12 +12,12 @@ class CartMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $cart_token = $request->get('cart_token');
+        $pl_cart_id = $request->get('pl_cart_id');
 
         // is cart token defined
-        if (!is_null($cart_token))
+        if (!is_null($pl_cart_id))
         {
-            $cart = Cart::findByToken($cart_token);
+            $cart = Cart::findByProlookCartId($pl_cart_id);
 
             // is cart token valid
             if (!is_null($cart))

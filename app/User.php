@@ -19,7 +19,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'access_token'
+        'name',
+        'email',
+        'user_id', // for prolook user id
+        'access_token'
     ];
 
     /**
@@ -47,8 +50,24 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->save();
     }
 
+    public function saveUserId($user_id)
+    {
+        $this->user_id = $user_id;
+        return $this->save();
+    }
+
     public function hasValidCart()
     {
         return $this->carts()->validToUse()->get()->isNotEmpty();
+    }
+
+    public function getCurrentCart()
+    {
+        return $this->carts()->validToUse()->get()->last();
+    }
+
+    public function hasUserId()
+    {
+        return !is_null($this->user_id);
     }
 }

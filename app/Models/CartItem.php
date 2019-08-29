@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Api\Clients\StyleApi;
 use App\Models\Cart;
 use App\Models\Cut;
 use App\Models\Style;
@@ -11,7 +10,7 @@ use Log;
 
 class CartItem extends Model
 {
-    protected $fillable = ["cut_id", "style_id", "design_id", "is_approved", "has_change_request", "has_pending_approval", "cart_id"];
+    protected $fillable = ["cut_id", "style_id", "design_id", "is_approved", "has_change_request", "has_pending_approval", "line_item_id", "pl_cart_id_fk"];
 
     const STATUS_REVIEW_CHANGES = "review changes";
     const STATUS_APPROVED = "approved";
@@ -24,12 +23,17 @@ class CartItem extends Model
 
     public function cart()
     {
-        return $this->belongsTo(Cart::class);
+        return $this->belongsTo(Cart::class, "pl_cart_id", "pl_cart_id_fk");
     }
 
     public function coach_request_logs()
     {
         return $this->hasMany(CoachRequestLog::class);
+    }
+
+    public function scopeFindBy($query, $field, $value)
+    {
+        return $query->where($field, $value);
     }
 
     // public function getCut()

@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Api\Clients;
+namespace App\Api\Prolook;
 
-use App\Api\ProlookApi;
-use App\Api\Qx7Api;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 
-class StyleApi extends ProlookApi
+class StyleApi extends Api
 {
     // public function getAll()
     // {

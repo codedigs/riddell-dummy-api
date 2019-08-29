@@ -12,8 +12,8 @@ class CartItemMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $cart_token = $request->get('cart_token');
-        $cart = Cart::findByToken($cart_token);
+        $pl_cart_id = $request->get('pl_cart_id');
+        $cart = Cart::findByProlookCartId($pl_cart_id);
 
         $cart_item_ids = $cart->cart_items->pluck("id")->toArray();
 

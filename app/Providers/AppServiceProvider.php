@@ -17,5 +17,6 @@ class AppServiceProvider extends ServiceProvider
         app()->configure("jwt");
         app()->configure("prolook");
         app()->configure("qx7");
+        app()->configure("riddell");
     }
 }
