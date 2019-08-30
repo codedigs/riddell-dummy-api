@@ -118,7 +118,9 @@ class AuthServiceProvider extends ServiceProvider
                             // add cart item if not exist in cart
                             $items = $data->items;
                             foreach ($items as $item) {
-                                $cartItem = CartItem::findBy('line_item_id', $item->line_item_id)->first();
+                                $cartItem = CartItem::withTrashed()
+                                                    ->findBy('line_item_id', $item->line_item_id)
+                                                    ->first();
 
                                 if (is_null($cartItem))
                                 {
