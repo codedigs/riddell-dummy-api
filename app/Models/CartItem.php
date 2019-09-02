@@ -58,8 +58,8 @@ class CartItem extends Model
             case is_null($this->cut_id):
             case is_null($this->style_id):
             case is_null($this->design_id):
-            // roster
-            // application sizes
+            case $this->roster === "{}";
+            case $this->application_size === "{}";
                 return static::STATUS_INCOMPLETE;
 
             case $this->is_approved && !$this->has_change_request && !$this->has_pending_approval:

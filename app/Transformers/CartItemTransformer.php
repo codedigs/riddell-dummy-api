@@ -19,13 +19,16 @@ class CartItemTransformer extends TransformerAbstract
     {
         $data = [
             'id' => $cartItem->id,
-            // 'style_id' => $cartItem->getStyleId(), // temporary
             'design_id' => $cartItem->getDesignId(),
             'front_image' => $cartItem->front_image,
             'back_image' => $cartItem->back_image,
             'left_image' => $cartItem->left_image,
             'right_image' => $cartItem->right_image,
+            'roster' => $cartItem->roster,
             'application_size' => $cartItem->application_size,
+            'design_status' => $cartItem->design_status,
+            'pdf_url' => $cartItem->pdf_url,
+            'signature_image' => $cartItem->signature_image,
             'line_item_id' => $cartItem->line_item_id,
             'pl_cart_id' => $cartItem->pl_cart_id_fk,
             'status' => $cartItem->getStatus()

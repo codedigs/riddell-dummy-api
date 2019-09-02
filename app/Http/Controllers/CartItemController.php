@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Transformers\CartItemTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Validator;
 
 class CartItemController extends Controller
@@ -16,9 +17,6 @@ class CartItemController extends Controller
      * Dependency
      *  - Authenticate Middleware
      *  - Cart Middleware
-     *
-     * Data available
-     * - pl_cart_id
      *
      * @param Request $request
      */
@@ -42,9 +40,6 @@ class CartItemController extends Controller
      *  - Authenticate Middleware
      *  - Cart Middleware
      *  - CartItem Middleware
-     *
-     * Data available
-     * - pl_cart_id
      *
      * @param Request $request
      */
@@ -77,7 +72,6 @@ class CartItemController extends Controller
      *  - Cart Middleware
      *
      * Data available
-     * - pl_cart_id
      * - cut_id
      * - style_id (optional)
      * - design_id (optional)
@@ -107,8 +101,6 @@ class CartItemController extends Controller
         {
             return $this->respondWithErrorMessage($validator);
         }
-
-        $pl_cart_id = $request->get('pl_cart_id');
 
         $result = $currentCart->cart_items()->create([
             'cut_id' => $params['cut_id'],
@@ -142,7 +134,6 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - pl_cart_id
      * - cut_id
      *
      * @param Request $request
@@ -185,7 +176,6 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - pl_cart_id
      * - style_id
      *
      * @param Request $request
@@ -228,7 +218,6 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - pl_cart_id
      * - design_id
      *
      * @param Request $request
@@ -271,7 +260,6 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - pl_cart_id
      * - front_image
      * - back_image
      * - left_image
@@ -315,6 +303,48 @@ class CartItemController extends Controller
     }
 
     /**
+     * Update roster
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - roster
+     *
+     * @param Request $request
+     */
+    public function updateRoster(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'roster' => "required|json",
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->roster = $params['roster'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update roster"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update roster this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
      * Update application size
      *
      * Dependency
@@ -323,7 +353,6 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - pl_cart_id
      * - application_size
      *
      * @param Request $request
@@ -358,7 +387,7 @@ class CartItemController extends Controller
     }
 
     /**
-     * Mark as approved
+     * Update design status
      *
      * Dependency
      *  - Authenticate Middleware
@@ -366,7 +395,133 @@ class CartItemController extends Controller
      *  - CartItem Middleware
      *
      * Data available
-     * - pl_cart_id
+     * - design_status
+     *
+     * @param Request $request
+     */
+    public function updateDesignStatus(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'design_status' => [
+                "required",
+                Rule::in(["incomplete", "configuration error", "complete"])
+            ],
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->design_status = $params['design_status'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update design status"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update design status this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
+     * Update pdf url
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - pdf_url
+     *
+     * @param Request $request
+     */
+    public function updatePdfUrl(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'pdf_url' => "required|url",
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->pdf_url = $params['pdf_url'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update pdf url"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update pdf url this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
+     * Update signature image
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - signature_image
+     *
+     * @param Request $request
+     */
+    public function updateSignatureImage(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'signature_image' => "required|url",
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem = CartItem::find($cart_item_id);
+        $cartItem->signature_image = $params['signature_image'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update signature image"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update signature image this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
+     * Mark as approved
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
      *
      * @param Request $request
      */
@@ -396,9 +551,6 @@ class CartItemController extends Controller
      *  - Authenticate Middleware
      *  - Cart Middleware
      *  - CartItem Middleware
-     *
-     * Data available
-     * - pl_cart_id
      *
      * @param Request $request
      */

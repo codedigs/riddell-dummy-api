@@ -31,7 +31,11 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/update-style-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateStyleId"]);
     $router->put("{cart_item_id:[\d]+}/update-design-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateDesignId"]);
     $router->put("{cart_item_id:[\d]+}/update-thumbnails", ['middleware' => "cart_item", 'uses' => "CartItemController@updateThumbnails"]);
+    $router->put("{cart_item_id:[\d]+}/update-roster", ['middleware' => "cart_item", 'uses' => "CartItemController@updateRoster"]);
     $router->put("{cart_item_id:[\d]+}/update-application-size", ['middleware' => "cart_item", 'uses' => "CartItemController@updateApplicationSize"]);
+    $router->put("{cart_item_id:[\d]+}/update-design-status", ['middleware' => "cart_item", 'uses' => "CartItemController@updateDesignStatus"]);
+    $router->put("{cart_item_id:[\d]+}/update-pdf-url", ['middleware' => "cart_item", 'uses' => "CartItemController@updatePdfUrl"]);
+    $router->put("{cart_item_id:[\d]+}/update-signature-image", ['middleware' => "cart_item", 'uses' => "CartItemController@updateSignatureImage"]);
 
     $router->put("{cart_item_id:[\d]+}/approved", ['middleware' => "cart_item", 'uses' => "CartItemController@approved"]);
 
