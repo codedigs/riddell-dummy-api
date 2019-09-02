@@ -19,6 +19,10 @@ class CartItem extends Model
     const STATUS_GET_APPROVAL = "get approval";
     const STATUS_INCOMPLETE = "incomplete";
 
+    const DESIGN_STATUS_INCOMPLETE = "incomplete";
+    const DESIGN_STATUS_CONFIG_ERROR = "configuration error";
+    const DESIGN_STATUS_COMPLETE = "complete";
+
     const TRUTHY_FLAG = 1;
     const FALSY_FLAG = 0;
 
@@ -58,8 +62,10 @@ class CartItem extends Model
             case is_null($this->cut_id):
             case is_null($this->style_id):
             case is_null($this->design_id):
-            case $this->roster === "{}";
-            case $this->application_size === "{}";
+            case $this->roster === "{}":
+            case $this->application_size === "{}":
+            case $this->designStatusIncomplete():
+            case $this->designStatusConfigError():
                 return static::STATUS_INCOMPLETE;
 
             case $this->is_approved && !$this->has_change_request && !$this->has_pending_approval:
@@ -76,6 +82,16 @@ class CartItem extends Model
         }
 
         return null;
+    }
+
+    public function designStatusIncomplete()
+    {
+        return $this->design_status === static::DESIGN_STATUS_INCOMPLETE;
+    }
+
+    public function designStatusConfigError()
+    {
+        return $this->design_status === static::DESIGN_STATUS_CONFIG_ERROR;
     }
 
     public function markAsCoachHasChangeRequest()
