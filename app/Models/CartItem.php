@@ -37,6 +37,11 @@ class CartItem extends Model
         return $query->where($field, $value);
     }
 
+    public function getCutId()
+    {
+        return $this->cut_id;
+    }
+
     public function getStyleId()
     {
         return $this->style_id;

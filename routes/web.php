@@ -55,3 +55,5 @@ $router->group([
     $router->get("/", "AuthUserController@getAuthenticatedUser");
     $router->get("cart", "AuthUserController@getCurrentCart");
 });
+
+$router->get("/cuts/{cut_id:[\d]+}/styles", "StyleController@getStylesByCutId");
