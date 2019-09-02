@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Cart;
+use App\Models\ClientInformation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
@@ -34,6 +35,11 @@ class CartItem extends Model
     public function coach_request_logs()
     {
         return $this->hasMany(CoachRequestLog::class);
+    }
+
+    public function client_information()
+    {
+        return $this->hasOne(ClientInformation::class);
     }
 
     public function scopeFindBy($query, $field, $value)

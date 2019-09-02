@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\ClientInformation;
 use App\Transformers\CartItemTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -89,9 +90,9 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'cut_id' => "required|numeric",
-            'style_id' => "numeric",
-            'design_id' => "numeric",
+            'cut_id' => "required|numeric|max:20",
+            'style_id' => "numeric|max:20",
+            'design_id' => "numeric|max:20",
             'is_approved' => "boolean",
             'has_change_request' => "boolean",
             'has_pending_approval' => "boolean"
@@ -143,7 +144,7 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'cut_id' => "required|numeric"
+            'cut_id' => "required|numeric|max:20"
         ]);
 
         if ($validator->fails())
@@ -185,7 +186,7 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'style_id' => "required|numeric"
+            'style_id' => "required|numeric|max:20"
         ]);
 
         if ($validator->fails())
@@ -227,7 +228,7 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'design_id' => "required|numeric"
+            'design_id' => "required|numeric|max:20"
         ]);
 
         if ($validator->fails())
@@ -272,10 +273,10 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'front_image' => "required|url",
-            'back_image' => "required|url",
-            'left_image' => "required|url",
-            'right_image' => "required|url",
+            'front_image' => "required|url|max:255",
+            'back_image' => "required|url|max:255",
+            'left_image' => "required|url|max:255",
+            'right_image' => "required|url|max:255",
         ]);
 
         if ($validator->fails())
@@ -449,7 +450,7 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'pdf_url' => "required|url",
+            'pdf_url' => "required|url|max:255",
         ]);
 
         if ($validator->fails())
@@ -491,7 +492,7 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'signature_image' => "required|url",
+            'signature_image' => "required|url|max:255",
         ]);
 
         if ($validator->fails())
@@ -511,6 +512,98 @@ class CartItemController extends Controller
             [
                 'success' => false,
                 'message' => "Cannot update signature image this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
+     * Update client information
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - school_name
+     * - first_name
+     * - last_name
+     * - email
+     * - address_1
+     * - address_2
+     * - city
+     * - state
+     * - zip_code
+     *
+     * @param Request $request
+     */
+    public function updateClientInformation(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'school_name' => "string|max:100",
+            'first_name' => "required|string|max:50",
+            'last_name' => "required|string|max:50",
+            'email' => "required|string|max:50",
+            'address_1' => "string|max:255",
+            'address_2' => "string|max:255",
+            'city' => "string|max:20",
+            'state' => "string|max:20",
+            'zip_code' => "numeric|digits_between:4,10"
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem = CartItem::find($cart_item_id);
+
+        if (is_null($cartItem->client_information))
+        {
+            // create client information
+            $clientInformation = $cartItem->client_information()->save(new ClientInformation([
+                'school_name' => $params['school_name'],
+                'first_name' => $params['first_name'],
+                'last_name' => $params['last_name'],
+                'email' => $params['email'],
+                'address_1' => $params['address_1'],
+                'address_2' => $params['address_2'],
+                'city' => $params['city'],
+                'state' => $params['state'],
+                'zip_code' => $params['zip_code'],
+            ]));
+
+            $saved = $clientInformation instanceof ClientInformation;
+        }
+        else
+        {
+            $clientInformation = $cartItem->client_information;
+
+            // update client information
+            $clientInformation->school_name = $params['school_name'];
+            $clientInformation->first_name = $params['first_name'];
+            $clientInformation->last_name = $params['last_name'];
+            $clientInformation->email = $params['email'];
+            $clientInformation->address_1 = $params['address_1'];
+            $clientInformation->address_2 = $params['address_2'];
+            $clientInformation->city = $params['city'];
+            $clientInformation->state = $params['state'];
+            $clientInformation->zip_code = $params['zip_code'];
+
+            $saved = $clientInformation->save();
+        }
+
+        return response()->json(
+            $saved ?
+            [
+                'success' => true,
+                'message' => "Successfully update client information"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update client information this time. Please try again later."
             ]
         );
     }
