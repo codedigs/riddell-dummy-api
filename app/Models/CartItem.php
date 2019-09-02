@@ -111,8 +111,13 @@ class CartItem extends Model
 
     public function approved()
     {
-        $this->is_approved = static::TRUTHY_FLAG;
-        return $this->save();
+        if ($this->getStatus() === static::STATUS_GET_APPROVAL)
+        {
+            $this->is_approved = static::TRUTHY_FLAG;
+            return $this->save();
+        }
+
+        return false;
     }
 
     // public function cart_item_players()
