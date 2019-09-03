@@ -67,7 +67,7 @@ class CartItem extends Model
         $host = config('riddell.host');
         $material_id = $this->style_id;
 
-        return "{$host}/builder/{$material_id}?cart_item_id=" . $this->id;
+        return "{$host}/builder/{$design_id}/{$material_id}?cart_item_id=" . $this->id;
     }
 
     public function getStatus()
