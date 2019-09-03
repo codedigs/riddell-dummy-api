@@ -83,7 +83,7 @@ class CartItem extends Model
         switch(true) {
             case is_null($this->cut_id):
             case is_null($this->style_id):
-            case is_null($this->design_id):
+            case is_null($this->design_id) || $this->design_id === 0:
             case $this->roster === "{}":
             case $this->application_size === "{}":
             case $this->designStatusIncomplete():
