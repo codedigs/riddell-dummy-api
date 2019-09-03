@@ -91,9 +91,9 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'cut_id' => "required|numeric|max:20",
-            'style_id' => "numeric|max:20",
-            'design_id' => "numeric|max:20",
+            'cut_id' => "required|numeric|digits_between:1,20",
+            'style_id' => "numeric|digits_between:1,20",
+            'design_id' => "numeric|digits_between:1,20",
             'is_approved' => "boolean",
             'has_change_request' => "boolean",
             'has_pending_approval' => "boolean"
@@ -145,7 +145,7 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'cut_id' => "required|numeric|max:20"
+            'cut_id' => "required|numeric|digits_between:1,20"
         ]);
 
         if ($validator->fails())
@@ -187,7 +187,7 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'style_id' => "required|numeric|max:20"
+            'style_id' => "required|numeric|digits_between:1,20"
         ]);
 
         if ($validator->fails())
@@ -229,7 +229,7 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'design_id' => "required|numeric|max:20"
+            'design_id' => "required|numeric|digits_between:1,20"
         ]);
 
         if ($validator->fails())
