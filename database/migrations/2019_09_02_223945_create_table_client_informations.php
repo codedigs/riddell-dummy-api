@@ -19,6 +19,7 @@ class CreateTableClientInformations extends Migration
             $table->string('first_name', 50)->nullable()->default(null);
             $table->string('last_name', 50)->nullable()->default(null);
             $table->string('email', 50)->nullable()->default(null);
+            $table->string('business_phone', 20)->nullable()->default(null);
             $table->string('address_1')->nullable()->default(null);
             $table->string('address_2')->nullable()->default(null);
             $table->string('city', 20)->nullable()->default(null);

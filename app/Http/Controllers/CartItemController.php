@@ -547,6 +547,7 @@ class CartItemController extends Controller
             'first_name' => "required|string|max:50",
             'last_name' => "required|string|max:50",
             'email' => "required|string|max:50",
+            'business_phone' => "required|string|max:20",
             'address_1' => "string|max:255",
             'address_2' => "string|max:255",
             'city' => "string|max:20",
@@ -569,6 +570,7 @@ class CartItemController extends Controller
                 'first_name' => $params['first_name'],
                 'last_name' => $params['last_name'],
                 'email' => $params['email'],
+                'business_phone' => $params['business_phone'],
                 'address_1' => $params['address_1'],
                 'address_2' => $params['address_2'],
                 'city' => $params['city'],
@@ -587,6 +589,7 @@ class CartItemController extends Controller
             $clientInformation->first_name = $params['first_name'];
             $clientInformation->last_name = $params['last_name'];
             $clientInformation->email = $params['email'];
+            $clientInformation->business_phone = $params['business_phone'];
             $clientInformation->address_1 = $params['address_1'];
             $clientInformation->address_2 = $params['address_2'];
             $clientInformation->city = $params['city'];
