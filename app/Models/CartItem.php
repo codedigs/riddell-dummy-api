@@ -67,7 +67,7 @@ class CartItem extends Model
         $host = config('riddell.host');
         $material_id = $this->style_id;
 
-        if (is_null($this->design_id)) // stock builder
+        if (is_null($this->design_id) || $this->design_id === 0) // stock builder
         {
             return "{$host}/builder/{$builder_design_id}/{$material_id}?cart_item_id=" . $this->id;
         }
