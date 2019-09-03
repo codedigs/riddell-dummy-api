@@ -51,6 +51,7 @@ class CartItemController extends Controller
 
         $cartItemData = $cartItem->toArray();
         $cartItemData['status'] = $itemStatus;
+        $cartItemData['customizer_url'] = $cartItem->getCustomizerUrl();
 
         unset($cartItemData['is_approved']);
         unset($cartItemData['has_change_request']);

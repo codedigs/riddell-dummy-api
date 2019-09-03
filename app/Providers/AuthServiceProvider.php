@@ -136,6 +136,9 @@ class AuthServiceProvider extends ServiceProvider
                                 // }
                             }
 
+                            // add extra data
+                            $user->hybris_access_token = $access_token;
+
                             return $user;
                         }
                     }

@@ -72,6 +72,33 @@ class Cart extends Model
     //     }
     // }
 
+    public function getCartItemsByHybrisFormat()
+    {
+        $items = $this->cart_items;
+
+        $rows = [];
+        if ($items->isNotEmpty())
+        {
+            foreach ($items as $item)
+            {
+                $rows[] = [
+                    'line_id' => $item->line_item_id,
+                    'cut_id' => $item->cut_id,
+                    'cut_name' => "",
+                    'style_id' => $item->style_id,
+                    'style_name' => "",
+                    'design_id' => $item->design_id,
+                    'design_status' => $item->getStatus(),
+                    'customizer_url' => $item->getCustomizerUrl(),
+                    'roster' => $item->roster,
+                    'active' => !$item->trashed() ? 1 : 0
+                ];
+            }
+        }
+
+        return $rows;
+    }
+
     public static function findByProlookCartId($pl_cart_id)
     {
         return static::where('pl_cart_id', $pl_cart_id)

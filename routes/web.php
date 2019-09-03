@@ -18,6 +18,14 @@ $router->get('/', function () use ($router) {
 // todo: limit login attempt
 // $router->post("login", "LoginController@login");
 
+// carts
+$router->group([
+    'prefix' => "carts",
+    'middleware' => ["auth", "cart"]
+], function() use($router) {
+    $router->put("/sync-to-hybris", "CartController@syncToHybris");
+});
+
 // cart items
 $router->group([
     'prefix' => "carts/items",
@@ -37,9 +45,7 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/update-pdf-url", ['middleware' => "cart_item", 'uses' => "CartItemController@updatePdfUrl"]);
     $router->put("{cart_item_id:[\d]+}/update-signature-image", ['middleware' => "cart_item", 'uses' => "CartItemController@updateSignatureImage"]);
     $router->put("{cart_item_id:[\d]+}/update-client-information", ['middleware' => "cart_item", 'uses' => "CartItemController@updateClientInformation"]);
-
     $router->put("{cart_item_id:[\d]+}/approved", ['middleware' => "cart_item", 'uses' => "CartItemController@approved"]);
-
     $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@delete"]);
 });
 

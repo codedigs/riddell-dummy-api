@@ -13,7 +13,6 @@ class AuthUserController extends Controller
         $userData = $user->toArray();
         unset($userData['created_at']);
         unset($userData['updated_at']);
-        unset($userData['access_token']);
 
         return response()->json([
             'success' => true,
