@@ -84,8 +84,8 @@ class CartItem extends Model
             case is_null($this->cut_id):
             case is_null($this->style_id):
             case is_null($this->design_id) || $this->design_id === 0:
-            case $this->roster === "{}":
-            case $this->application_size === "{}":
+            case is_null($this->roster) || $this->roster === "{}":
+            case is_null($this->roster) || $this->application_size === "{}":
 
             //  temporary comment these below
             // case $this->designStatusIncomplete():
@@ -127,9 +127,20 @@ class CartItem extends Model
         return $this->save();
     }
 
-    public function approved()
+    public function markAsPendingApproval()
     {
         if ($this->getStatus() === static::STATUS_GET_APPROVAL)
+        {
+            $this->has_pending_approval = static::TRUTHY_FLAG;
+            return $this->save();
+        }
+
+        return false;
+    }
+
+    public function approved()
+    {
+        if ($this->getStatus() === static::STATUS_PENDING_APPROVAL)
         {
             $this->is_approved = static::TRUTHY_FLAG;
             return $this->save();

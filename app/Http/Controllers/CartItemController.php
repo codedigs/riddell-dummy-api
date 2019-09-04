@@ -665,6 +665,35 @@ class CartItemController extends Controller
     }
 
     /**
+     * Mark as pending approval
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * @param Request $request
+     */
+    public function markAsPendingApproval(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $cartItem = CartItem::find($cart_item_id);
+
+        return response()->json(
+            $cartItem->markAsPendingApproval() ?
+            [
+                'success' => true,
+                'message' => "Successfully mark as pending approval"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot mark as pending approval this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
      * Delete cart item
      *
      * Dependency
