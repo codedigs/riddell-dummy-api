@@ -50,9 +50,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->save();
     }
 
-    public function saveUserId($user_id)
+    public function saveUserIdAndAccessToken($user_id, $access_token)
     {
         $this->user_id = $user_id;
+        $this->access_token = $access_token;
         return $this->save();
     }
 

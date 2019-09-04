@@ -96,7 +96,10 @@ class AuthServiceProvider extends ServiceProvider
                                 {
                                     if (isset($quickRegResult->data))
                                     {
-                                        $user->saveUserId($quickRegResult->data->user_id);
+                                        $user_id = $quickRegResult->data->user_id;
+                                        $prolook_access_token = $quickRegResult->accessToken;
+
+                                        $user->saveUserIdAndAccessToken($user_id, $prolook_access_token);
                                     }
                                 }
                             }
@@ -104,15 +107,19 @@ class AuthServiceProvider extends ServiceProvider
                             $currentCart = $user->getCurrentCart();
 
                             // assign cart to user if user has no cart
-                            if (!$user->hasValidCart())
+                            if (is_null($currentCart))
                             {
-                                $createdCart = Cart::create([
-                                    'user_id' => $user->id,
-                                    'pl_cart_id' => $data->pl_cart_id,
-                                    'is_active' => Cart::TRUTHY_FLAG
-                                ]);
+                                // double check if pl cart id exist
+                                $currentCart = Cart::findBy('pl_cart_id', $data->pl_cart_id)->first();
+                                if (is_null($currentCart))
+                                {
+                                    $user->carts()->save(new Cart([
+                                        'pl_cart_id' => $data->pl_cart_id,
+                                        'is_active' => Cart::TRUTHY_FLAG
+                                    ]));
 
-                                $currentCart = Cart::find($createdCart->id);
+                                    $currentCart = $user->getCurrentCart();
+                                }
                             }
 
                             // add cart item if not exist in cart

@@ -26,6 +26,11 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function scopeFindBy($query, $field, $value)
+    {
+        return $query->where($field, $value);
+    }
+
     /**
      * Valid cart basis
      *
