@@ -24,6 +24,41 @@ class CutApi extends Api
         }
     }
 
+    public function getAllByBrand($brand)
+    {
+        $result = $this->getAll();
+
+        if ($result->success)
+        {
+            $cutsObj = $result->master_3d_block_patterns;
+
+            $cuts = new \stdClass;
+            $cuts->success = true;
+            $cuts->master_3d_block_patterns = [];
+
+            foreach ($cutsObj as $cutObj)
+            {
+                if (isset($cutObj->brand))
+                {
+                    if (strtolower($cutObj->brand->brand) === $brand)
+                    {
+                        array_push($cuts->master_3d_block_patterns, [
+                            'id' => $cutObj->id,
+                            'block_pattern_name' => $cutObj->block_pattern_name,
+                            'image_thumbnail' => $cutObj->image_thumbnail,
+                            'sport' => $cutObj->sport->sport_name,
+                            'brand' => $brand
+                        ]);
+                    }
+                }
+            }
+
+            return $cuts;
+        }
+
+        return null;
+    }
+
     public function getById($id)
     {
         try {
