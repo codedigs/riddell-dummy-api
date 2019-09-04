@@ -612,6 +612,20 @@ class CartItemController extends Controller
         );
     }
 
+    public function getClientInformation(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+        $data = $cartItem->client_information->toArray();
+
+        unset($data['created_at']);
+        unset($data['updated_at']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
+
     /**
      * Mark as approved
      *

@@ -86,8 +86,10 @@ class CartItem extends Model
             case is_null($this->design_id) || $this->design_id === 0:
             case $this->roster === "{}":
             case $this->application_size === "{}":
-            case $this->designStatusIncomplete():
-            case $this->designStatusConfigError():
+
+            //  temporary comment these below
+            // case $this->designStatusIncomplete():
+            // case $this->designStatusConfigError():
                 return static::STATUS_INCOMPLETE;
 
             case $this->is_approved && !$this->has_change_request && !$this->has_pending_approval:
