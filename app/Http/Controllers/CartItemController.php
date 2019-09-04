@@ -52,6 +52,7 @@ class CartItemController extends Controller
         $cartItemData = $cartItem->toArray();
         $cartItemData['status'] = $itemStatus;
         $cartItemData['customizer_url'] = $cartItem->getCustomizerUrl();
+        $cartItemData['client_information'] = $cartItem->client_information;
 
         unset($cartItemData['is_approved']);
         unset($cartItemData['has_change_request']);
@@ -59,6 +60,14 @@ class CartItemController extends Controller
         unset($cartItemData['cart_id']);
         unset($cartItemData['created_at']);
         unset($cartItemData['updated_at']);
+
+        if (!is_null($cartItemData['client_information']))
+        {
+            unset($cartItemData['client_information']['id']);
+            unset($cartItemData['client_information']['cart_item_id']);
+            unset($cartItemData['client_information']['created_at']);
+            unset($cartItemData['client_information']['updated_at']);
+        }
 
         return response()->json([
             'success' => true,
