@@ -69,6 +69,16 @@ class CartItemTransformer extends TransformerAbstract
             }
         }
 
+        if (!is_null($cartItem->client_information))
+        {
+            $data['client_information'] = $cartItem->client_information;
+
+            unset($data['client_information']['id']);
+            unset($data['client_information']['cart_item_id']);
+            unset($data['client_information']['created_at']);
+            unset($data['client_information']['updated_at']);
+        }
+
         return $data;
     }
 }
