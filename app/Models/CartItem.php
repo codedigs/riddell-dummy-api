@@ -69,7 +69,8 @@ class CartItem extends Model
 
         if (is_null($this->design_id) || $this->design_id === 0) // stock builder
         {
-            return "{$host}/riddell/customize/{$material_id}?cart_item_id=" . $this->id;
+            // return "{$host}/riddell/customize/{$material_id}?cart_item_id=" . $this->id;
+            return "{$host}/builder/0/{$material_id}?cart_item_id=" . $this->id;
         }
         else // design id
         {
