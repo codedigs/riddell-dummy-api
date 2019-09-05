@@ -143,6 +143,7 @@ class CartItem extends Model
     {
         if ($this->getStatus() === static::STATUS_PENDING_APPROVAL)
         {
+            $this->has_pending_approval = static::FALSY_FLAG;
             $this->is_approved = static::TRUTHY_FLAG;
             return $this->save();
         }

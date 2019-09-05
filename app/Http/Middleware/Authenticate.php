@@ -38,7 +38,8 @@ class Authenticate
         if ($this->auth->guard($guard)->guest()) {
             return response()->json([
                 'success' => false,
-                'message' => "Unauthorized to access this endpoint."
+                'message' => "Unauthorized to access this endpoint.",
+                'status_code' => 401
             ], 401);
         }
 
