@@ -76,6 +76,26 @@ class UpdateUserIdSeeder extends Seeder
             [
                 'user_id' => 4775,
                 'email' => "test23@adams.com"
+            ],
+            [
+                'user_id' => 2,
+                'email' => "arthur@qstrike.com"
+            ],
+            [
+                'user_id' => 2210,
+                'email' => "jared@prolook.com"
+            ],
+            [
+                'user_id' => 81,
+                'email' => "dan@prolook.com"
+            ],
+            [
+                'user_id' => 309,
+                'email' => "dustin@prolook.com"
+            ],
+            [
+                'user_id' => 1056,
+                'email' => "devri@prolook.com"
             ]
         ];
 
