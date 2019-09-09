@@ -68,7 +68,8 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'under_maintenance' => App\Http\Middleware\UnderMaintenanceMiddleware::class,
     'cart' => App\Http\Middleware\CartMiddleware::class,
-    'cart_item' => App\Http\Middleware\CartItemMiddleware::class
+    'cart_item' => App\Http\Middleware\CartItemMiddleware::class,
+    'line_item'=> App\Http\Middleware\CartLineItemMiddleware::class
 ]);
 
 /*

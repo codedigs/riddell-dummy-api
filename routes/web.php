@@ -52,6 +52,7 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/pending-approval", ['middleware' => "cart_item", 'uses' => "CartItemController@markAsPendingApproval"]);
 
     $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@delete"]);
+    $router->delete("{line_item_id:[\d]+}/delete-by-line-item-id", ['middleware' => "line_item", 'uses' => "CartItemController@deleteByLineItemId"]);
 });
 
 // coach request logs

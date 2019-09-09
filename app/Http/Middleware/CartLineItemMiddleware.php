@@ -7,18 +7,18 @@ use Closure;
 /**
  * use Cart middleware before use this
  */
-class CartItemMiddleware
+class CartLineItemMiddleware
 {
     public function handle($request, Closure $next)
     {
         $user = $request->user();
         $currentCart = $user->getCurrentCart();
 
-        $cart_item_ids = $currentCart->cart_items->pluck("id")->toArray();
+        $line_item_ids = $currentCart->cart_items->pluck("line_item_id")->toArray();
 
-        $cart_item_id = $request->route()[2]['cart_item_id'];
+        $line_item_id = $request->route()[2]['line_item_id'];
 
-        if (in_array($cart_item_id, $cart_item_ids))
+        if (in_array($line_item_id, $line_item_ids))
         {
             return $next($request);
         }

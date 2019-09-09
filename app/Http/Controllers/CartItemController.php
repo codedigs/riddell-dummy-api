@@ -720,4 +720,32 @@ class CartItemController extends Controller
             ]
         );
     }
+
+    /**
+     * Delete cart item by line item id
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * @param Request $request
+     */
+    public function deleteByLineItemId(Request $request, $line_item_id)
+    {
+        $cartItem = CartItem::findBy('line_item_id', $line_item_id)->first();
+        $is_deleted = $cartItem->delete();
+
+        return response()->json(
+            $is_deleted ?
+            [
+                'success' => true,
+                'message' => "Successfully delete item"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot delete item this time. Please try again later."
+            ]
+        );
+    }
 }
