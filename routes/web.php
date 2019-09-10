@@ -26,6 +26,14 @@ $router->group([
     $router->put("/sync-to-hybris", "CartController@syncToHybris");
 });
 
+// client information
+$router->group([
+    'prefix' => "approval",
+    'middleware' => ["auth", "approval"]
+], function() use($router) {
+    $router->get("{approval_token}/client-information", "ApprovalController@getClientInformation");
+});
+
 // cart items
 $router->group([
     'prefix' => "carts/items",

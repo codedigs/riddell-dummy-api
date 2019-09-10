@@ -585,6 +585,7 @@ class CartItemController extends Controller
                 'city' => $params['city'],
                 'state' => $params['state'],
                 'zip_code' => $params['zip_code'],
+                'approval_token' => ClientInformation::generateUniqueApprovalToken()
             ]));
 
             $saved = $clientInformation instanceof ClientInformation;
@@ -612,6 +613,7 @@ class CartItemController extends Controller
             $saved ?
             [
                 'success' => true,
+                'approval_token' => $clientInformation->approval_token,
                 'message' => "Successfully update client information"
             ] :
             [
