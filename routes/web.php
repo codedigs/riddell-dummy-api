@@ -33,6 +33,7 @@ $router->group([
 ], function() use($router) {
     $router->get("client-information", "ApprovalController@getClientInformation");
     $router->put("update-roster", "ApprovalController@updateRoster");
+    $router->put("update-client-information", "ApprovalController@updateClientInformation");
 });
 
 // cart items
@@ -41,6 +42,7 @@ $router->group([
     'middleware' => ["auth", "cart"]
 ], function() use($router) {
     $router->get("/", "CartItemController@getCartItems");
+    $router->post("submit", "CartItemController@submit");
     $router->get("{cart_item_id:[\d]+}", ['middleware' => "cart_item", 'uses' => "CartItemController@show"]);
     $router->post("add", "CartItemController@store");
 

@@ -73,4 +73,44 @@ class ApprovalController extends Controller
             ]
         );
     }
+
+    public function updateClientInformation(Request $request)
+    {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+
+        $params = $request->all();
+
+        $validator = Validator::make($params, ClientInformation::$rules);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        // update client information
+        $clientInfo->school_name = isset($params['school_name']) ? $params['school_name'] : "";
+        $clientInfo->first_name = $params['first_name'];
+        $clientInfo->last_name = $params['last_name'];
+        $clientInfo->email = $params['email'];
+        $clientInfo->business_phone = $params['business_phone'];
+        $clientInfo->address_1 = isset($params['address_1']) ? $params['address_1'] : "";
+        $clientInfo->address_2 = isset($params['address_2']) ? $params['address_2'] : "";
+        $clientInfo->city = isset($params['city']) ? $params['city'] : "";
+        $clientInfo->state = isset($params['state']) ? $params['state'] : "";
+        $clientInfo->zip_code = isset($params['zip_code']) ? $params['zip_code'] : "";
+
+        $saved = $clientInfo->save();
+
+        return response()->json(
+            $saved ?
+            [
+                'success' => true,
+                'message' => "Successfully update client information"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update client information this time. Please try again later."
+            ]
+        );
+    }
 }

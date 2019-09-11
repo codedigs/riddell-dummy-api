@@ -12,6 +12,11 @@ use Validator;
 
 class CartItemController extends Controller
 {
+    public function submit(Request $request)
+    {
+
+    }
+
     /**
      * Get items of cart
      *
@@ -551,18 +556,7 @@ class CartItemController extends Controller
     {
         $params = $request->all();
 
-        $validator = Validator::make($params, [
-            'school_name' => "string|max:100",
-            'first_name' => "required|string|max:50",
-            'last_name' => "required|string|max:50",
-            'email' => "required|string|max:50",
-            'business_phone' => "required|string|max:20",
-            'address_1' => "string|max:255",
-            'address_2' => "string|max:255",
-            'city' => "string|max:20",
-            'state' => "string|max:20",
-            'zip_code' => "numeric|digits_between:4,10"
-        ]);
+        $validator = Validator::make($params, ClientInformation::$rules);
 
         if ($validator->fails())
         {
@@ -575,16 +569,16 @@ class CartItemController extends Controller
         {
             // create client information
             $clientInformation = $cartItem->client_information()->save(new ClientInformation([
-                'school_name' => $params['school_name'],
+                'school_name' => isset($params['school_name']) ? $params['school_name'] : "",
                 'first_name' => $params['first_name'],
                 'last_name' => $params['last_name'],
                 'email' => $params['email'],
                 'business_phone' => $params['business_phone'],
-                'address_1' => $params['address_1'],
-                'address_2' => $params['address_2'],
-                'city' => $params['city'],
-                'state' => $params['state'],
-                'zip_code' => $params['zip_code'],
+                'address_1' => isset($params['address_1']) ? $params['address_1'] : "",
+                'address_2' => isset($params['address_2']) ? $params['address_2'] : "",
+                'city' => isset($params['city']) ? $params['city'] : "",
+                'state' => isset($params['state']) ? $params['state'] : "",
+                'zip_code' => isset($params['zip_code']) ? $params['zip_code'] : "",
                 'approval_token' => ClientInformation::generateUniqueApprovalToken()
             ]));
 
@@ -595,16 +589,16 @@ class CartItemController extends Controller
             $clientInformation = $cartItem->client_information;
 
             // update client information
-            $clientInformation->school_name = $params['school_name'];
+            $clientInformation->school_name = isset($params['school_name']) ? $params['school_name'] : "";
             $clientInformation->first_name = $params['first_name'];
             $clientInformation->last_name = $params['last_name'];
             $clientInformation->email = $params['email'];
             $clientInformation->business_phone = $params['business_phone'];
-            $clientInformation->address_1 = $params['address_1'];
-            $clientInformation->address_2 = $params['address_2'];
-            $clientInformation->city = $params['city'];
-            $clientInformation->state = $params['state'];
-            $clientInformation->zip_code = $params['zip_code'];
+            $clientInformation->address_1 = isset($params['address_1']) ? $params['address_1'] : "";
+            $clientInformation->address_2 = isset($params['address_2']) ? $params['address_2'] : "";
+            $clientInformation->city = isset($params['city']) ? $params['city'] : "";
+            $clientInformation->state = isset($params['state']) ? $params['state'] : "";
+            $clientInformation->zip_code = isset($params['zip_code']) ? $params['zip_code'] : "";
 
             $saved = $clientInformation->save();
         }
