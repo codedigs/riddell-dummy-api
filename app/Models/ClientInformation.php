@@ -24,7 +24,7 @@ class ClientInformation extends Model
         $approval_tokens = static::all()->pluck('approval_token')->toArray();
 
         do {
-            $new_token = uniqid("", true);
+            $new_token = sha1(uniqid());
         } while (in_array($new_token, $approval_tokens));
 
         return $new_token;
