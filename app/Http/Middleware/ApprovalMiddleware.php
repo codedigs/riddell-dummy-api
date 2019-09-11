@@ -12,13 +12,21 @@ class ApprovalMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $approval_token = $request->route()[2]['approval_token'];
+        $authorization = $request->header("Authorization");
 
-        $clientInfo = ClientInformation::findBy('approval_token', $approval_token)->first();
-
-        if (!is_null($clientInfo))
+        if (!is_null($authorization))
         {
-            return $next($request);
+            list($type, $approval_token) = explode(" ", $authorization);
+
+            if (strtolower($type) === "bearer")
+            {
+                $clientInfo = ClientInformation::findBy('approval_token', $approval_token)->first();
+
+                if (!is_null($clientInfo))
+                {
+                    return $next($request);
+                }
+            }
         }
 
         return response()->json([

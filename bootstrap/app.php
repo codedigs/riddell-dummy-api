@@ -70,7 +70,8 @@ $app->routeMiddleware([
     'cart' => App\Http\Middleware\CartMiddleware::class,
     'cart_item' => App\Http\Middleware\CartItemMiddleware::class,
     'line_item'=> App\Http\Middleware\CartLineItemMiddleware::class,
-    'approval' => App\Http\Middleware\ApprovalMiddleware::class
+    'approval' => App\Http\Middleware\ApprovalMiddleware::class,
+    'approval_cart_item' => App\Http\Middleware\ApprovalCartItemMiddleware::class,
 ]);
 
 /*

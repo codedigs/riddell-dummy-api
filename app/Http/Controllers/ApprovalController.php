@@ -4,13 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\ClientInformation;
 use Illuminate\Http\Request;
+use Validator;
 
 class ApprovalController extends Controller
 {
-    public function getClientInformation($approval_token)
+    private $approval_token;
+
+    public function __construct(Request $request)
     {
-        $clientInfo = ClientInformation::findBy('approval_token', $approval_token)->first();
+        $authorization = $request->header("Authorization");
+        list($type, $approval_token) = explode(" ", $authorization);
+
+        $this->approval_token = $approval_token;
+    }
+
+    public function getClientInformation()
+    {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
         $cartItem = $clientInfo->cart_item;
+
         $cartItem->status = $cartItem->getStatus();
 
         unset($cartItem['is_approved']);
@@ -29,5 +41,36 @@ class ApprovalController extends Controller
             'success' => true,
             'data' => $clientInfo
         ]);
+    }
+
+    public function updateRoster(Request $request)
+    {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+        $cartItem = $clientInfo->cart_item;
+
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'roster' => "required|json",
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem->roster = $params['roster'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update roster"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update roster this time. Please try again later."
+            ]
+        );
     }
 }
