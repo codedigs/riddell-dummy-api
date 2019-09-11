@@ -14,6 +14,8 @@ class CartItem extends Model
 
     protected $fillable = ["cut_id", "style_id", "design_id", "is_approved", "has_change_request", "has_pending_approval", "line_item_id", "pl_cart_id_fk"];
 
+    protected $hidden = ["pl_cart_id_fk", "line_item_id"];
+
     const STATUS_REVIEW_CHANGES = "review changes";
     const STATUS_APPROVED = "approved";
     const STATUS_PENDING_APPROVAL = "pending approval";
