@@ -47,22 +47,6 @@ class AuthServiceProvider extends ServiceProvider
                 {
                     if (!is_null($access_token))
                     {
-                        // $user = User::findBy('access_token', $access_token)->first();
-
-                        // if (!is_null($user))
-                        // {
-                        //     $app_config = config('app');
-                        //     $jwt_config = config('jwt');
-
-                        //     try {
-                        //         JWT::decode($access_token, $app_config['key'], [$jwt_config['algorithm']]);
-
-                        //         return $user;
-                        //     } catch (ExpiredException $e) {
-                        //         \Log::warning("Warning: Access Token is already expired.");
-                        //     }
-                        // }
-
                         $riddellApi = new UserApi($access_token);
                         $result = $riddellApi->getUserCart();
 
@@ -101,8 +85,29 @@ class AuthServiceProvider extends ServiceProvider
 
                                         $user->saveUserIdAndAccessToken($user_id, $prolook_access_token);
                                     }
+
+                                    goto endQuickRegistrationProcess;
+                                }
+
+                                // else if email existing in prolook api
+                                $emailAvailableResult = $prolookApi->isEmailAvailable($user->email);
+
+                                if ($emailAvailableResult->success)
+                                {
+                                    if (isset($emailAvailableResult->user))
+                                    {
+                                        if (isset($emailAvailableResult->user->id))
+                                        {
+                                            $prolook_access_token = ""; // temporary empty
+
+                                            $user->saveUserIdAndAccessToken($emailAvailableResult->user->id, $prolook_access_token);
+                                        }
+                                    }
                                 }
                             }
+
+                            # end quick registration process
+                            endQuickRegistrationProcess:
 
                             $currentCart = $user->getCurrentCart();
 
