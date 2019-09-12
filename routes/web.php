@@ -34,6 +34,7 @@ $router->group([
     $router->get("client-information", "ApprovalController@getClientInformation");
     $router->put("update-roster", "ApprovalController@updateRoster");
     $router->put("update-client-information", "ApprovalController@updateClientInformation");
+    $router->put("update-signature-image", "ApprovalController@updateSignatureImage");
 });
 
 // cart items

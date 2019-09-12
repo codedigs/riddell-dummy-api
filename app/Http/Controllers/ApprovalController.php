@@ -46,7 +46,6 @@ class ApprovalController extends Controller
     public function updateRoster(Request $request)
     {
         $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
-        $cartItem = $clientInfo->cart_item;
 
         $params = $request->all();
 
@@ -59,6 +58,7 @@ class ApprovalController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
+        $cartItem = $clientInfo->cart_item;
         $cartItem->roster = $params['roster'];
 
         return response()->json(
@@ -110,6 +110,37 @@ class ApprovalController extends Controller
             [
                 'success' => false,
                 'message' => "Cannot update client information this time. Please try again later."
+            ]
+        );
+    }
+
+    public function updateSignatureImage(Request $request)
+    {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'signature_image' => "required|url|max:255",
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $cartItem = $clientInfo->cart_item;
+        $cartItem->signature_image = $params['signature_image'];
+
+        return response()->json(
+            $cartItem->save() ?
+            [
+                'success' => true,
+                'message' => "Successfully update signature image"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot update signature image this time. Please try again later."
             ]
         );
     }
