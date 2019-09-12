@@ -144,4 +144,22 @@ class ApprovalController extends Controller
             ]
         );
     }
+
+    public function approved(Request $request)
+    {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+        $cartItem = $clientInfo->cart_item;
+
+        return response()->json(
+            $cartItem->approved() ?
+            [
+                'success' => true,
+                'message' => "Successfully approved"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot approved this time. Please try again later."
+            ]
+        );
+    }
 }

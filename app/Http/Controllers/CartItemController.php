@@ -490,48 +490,6 @@ class CartItemController extends Controller
     }
 
     /**
-     * Update signature image
-     *
-     * Dependency
-     *  - Authenticate Middleware
-     *  - Cart Middleware
-     *  - CartItem Middleware
-     *
-     * Data available
-     * - signature_image
-     *
-     * @param Request $request
-     */
-    public function updateSignatureImage(Request $request, $cart_item_id)
-    {
-        $params = $request->all();
-
-        $validator = Validator::make($params, [
-            'signature_image' => "required|url|max:255",
-        ]);
-
-        if ($validator->fails())
-        {
-            return $this->respondWithErrorMessage($validator);
-        }
-
-        $cartItem = CartItem::find($cart_item_id);
-        $cartItem->signature_image = $params['signature_image'];
-
-        return response()->json(
-            $cartItem->save() ?
-            [
-                'success' => true,
-                'message' => "Successfully update signature image"
-            ] :
-            [
-                'success' => false,
-                'message' => "Cannot update signature image this time. Please try again later."
-            ]
-        );
-    }
-
-    /**
      * Update client information
      *
      * Dependency
@@ -629,35 +587,6 @@ class CartItemController extends Controller
             'success' => true,
             'data' => $data
         ]);
-    }
-
-    /**
-     * Mark as approved
-     *
-     * Dependency
-     *  - Authenticate Middleware
-     *  - Cart Middleware
-     *  - CartItem Middleware
-     *
-     * @param Request $request
-     */
-    public function approved(Request $request, $cart_item_id)
-    {
-        $params = $request->all();
-
-        $cartItem = CartItem::find($cart_item_id);
-
-        return response()->json(
-            $cartItem->approved() ?
-            [
-                'success' => true,
-                'message' => "Successfully approved"
-            ] :
-            [
-                'success' => false,
-                'message' => "Cannot approved this time. Please try again later."
-            ]
-        );
     }
 
     /**

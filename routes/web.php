@@ -35,6 +35,7 @@ $router->group([
     $router->put("update-roster", "ApprovalController@updateRoster");
     $router->put("update-client-information", "ApprovalController@updateClientInformation");
     $router->put("update-signature-image", "ApprovalController@updateSignatureImage");
+    $router->put("approved", "ApprovalController@approved");
 });
 
 // cart items
@@ -59,7 +60,6 @@ $router->group([
     $router->get("{cart_item_id:[\d]+}/client-information", ['middleware' => "cart_item", 'uses' => "CartItemController@getClientInformation"]);
     $router->put("{cart_item_id:[\d]+}/update-client-information", ['middleware' => "cart_item", 'uses' => "CartItemController@updateClientInformation"]);
 
-    $router->put("{cart_item_id:[\d]+}/approved", ['middleware' => "cart_item", 'uses' => "CartItemController@approved"]);
     $router->put("{cart_item_id:[\d]+}/pending-approval", ['middleware' => "cart_item", 'uses' => "CartItemController@markAsPendingApproval"]);
 
     $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@delete"]);
