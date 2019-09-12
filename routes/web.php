@@ -55,7 +55,6 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/update-application-size", ['middleware' => "cart_item", 'uses' => "CartItemController@updateApplicationSize"]);
     $router->put("{cart_item_id:[\d]+}/update-design-status", ['middleware' => "cart_item", 'uses' => "CartItemController@updateDesignStatus"]);
     $router->put("{cart_item_id:[\d]+}/update-pdf-url", ['middleware' => "cart_item", 'uses' => "CartItemController@updatePdfUrl"]);
-    $router->put("{cart_item_id:[\d]+}/update-signature-image", ['middleware' => "cart_item", 'uses' => "CartItemController@updateSignatureImage"]);
 
     $router->get("{cart_item_id:[\d]+}/client-information", ['middleware' => "cart_item", 'uses' => "CartItemController@getClientInformation"]);
     $router->put("{cart_item_id:[\d]+}/update-client-information", ['middleware' => "cart_item", 'uses' => "CartItemController@updateClientInformation"]);
