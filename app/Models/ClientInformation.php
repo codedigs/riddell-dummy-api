@@ -14,7 +14,7 @@ class ClientInformation extends Model
         'first_name' => "required|string|max:50",
         'last_name' => "required|string|max:50",
         'email' => "required|string|max:50",
-        'business_phone' => "required|string|max:20",
+        'business_phone' => "string|max:20",
         'address_1' => "string|max:255",
         'address_2' => "string|max:255",
         'city' => "string|max:20",

@@ -132,13 +132,8 @@ class CartItem extends Model
 
     public function markAsPendingApproval()
     {
-        if ($this->getStatus() === static::STATUS_GET_APPROVAL)
-        {
-            $this->has_pending_approval = static::TRUTHY_FLAG;
-            return $this->save();
-        }
-
-        return false;
+        $this->has_pending_approval = static::TRUTHY_FLAG;
+        return $this->save();
     }
 
     public function approved()
