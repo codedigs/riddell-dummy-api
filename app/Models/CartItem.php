@@ -29,6 +29,8 @@ class CartItem extends Model
     const TRUTHY_FLAG = 1;
     const FALSY_FLAG = 0;
 
+    const NO_IMAGE_PLACEHOLDER = "https://via.placeholder.com/1000x1100?text=No%20Image";
+
     public function cart()
     {
         return $this->belongsTo(Cart::class, "pl_cart_id", "pl_cart_id_fk");
@@ -109,6 +111,54 @@ class CartItem extends Model
         }
 
         return null;
+    }
+
+    public function getFrontThumbnail($placeholder=true)
+    {
+        $image = $this->front_image;
+
+        if (is_null($image) && $placeholder)
+        {
+            $image = static::NO_IMAGE_PLACEHOLDER;
+        }
+
+        return $image;
+    }
+
+    public function getBackThumbnail($placeholder=true)
+    {
+        $image = $this->back_image;
+
+        if (is_null($image) && $placeholder)
+        {
+            $image = static::NO_IMAGE_PLACEHOLDER;
+        }
+
+        return $image;
+    }
+
+    public function getLeftThumbnail($placeholder=true)
+    {
+        $image = $this->left_image;
+
+        if (is_null($image) && $placeholder)
+        {
+            $image = static::NO_IMAGE_PLACEHOLDER;
+        }
+
+        return $image;
+    }
+
+    public function getRightThumbnail($placeholder=true)
+    {
+        $image = $this->right_image;
+
+        if (is_null($image) && $placeholder)
+        {
+            $image = static::NO_IMAGE_PLACEHOLDER;
+        }
+
+        return $image;
     }
 
     public function designStatusIncomplete()

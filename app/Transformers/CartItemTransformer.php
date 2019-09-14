@@ -17,14 +17,16 @@ class CartItemTransformer extends TransformerAbstract
      */
     public function transform(CartItem $cartItem)
     {
+        https://via.placeholder.com/1000x1100?text=No%20Image
+
         $data = [
             'id' => $cartItem->id,
             'design_id' => $cartItem->getDesignId(),
             'customizer_url' => $cartItem->getCustomizerUrl(),
-            'front_image' => $cartItem->front_image,
-            'back_image' => $cartItem->back_image,
-            'left_image' => $cartItem->left_image,
-            'right_image' => $cartItem->right_image,
+            'front_image' => $cartItem->getFrontThumbnail(),
+            'back_image' => $cartItem->getBackThumbnail(),
+            'left_image' => $cartItem->getLeftThumbnail(),
+            'right_image' => $cartItem->getRightThumbnail(),
             'roster' => $cartItem->roster,
             'application_size' => $cartItem->application_size,
             'design_status' => $cartItem->design_status,

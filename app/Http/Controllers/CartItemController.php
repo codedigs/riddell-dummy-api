@@ -55,6 +55,13 @@ class CartItemController extends Controller
         $itemStatus = $cartItem->getStatus();
 
         $cartItemData = $cartItem->toArray();
+        $cartItemData['line_item_id'] = $cartItem->line_item_id;
+
+        $cartItemData['front_image'] = $cartItem->getFrontThumbnail();
+        $cartItemData['back_image'] = $cartItem->getBackThumbnail();
+        $cartItemData['left_image'] = $cartItem->getLeftThumbnail();
+        $cartItemData['right_image'] = $cartItem->getRightThumbnail();
+
         $cartItemData['status'] = $itemStatus;
         $cartItemData['customizer_url'] = $cartItem->getCustomizerUrl();
         $cartItemData['client_information'] = $cartItem->client_information;
@@ -560,6 +567,8 @@ class CartItemController extends Controller
 
             $saved = $clientInformation->save();
         }
+
+        // fsda
 
         return response()->json(
             $saved ?
