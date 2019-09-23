@@ -87,3 +87,12 @@ $router->group([
 // $router->get("/cuts/{brand}", "CutController@getAllByBrand");
 $router->get("/cuts", "CutController@getAll");
 $router->get("/cuts/{cut_id:[\d]+}/styles", "StyleController@getStylesByCutId");
+
+// states
+$router->group([
+    'prefix' => "states"
+], function() use($router) {
+    $router->get("/", "ZipCodeController@getStates");
+    $router->get("{state_code}/cities", "ZipCodeController@getCitiesByStateCode");
+    $router->get("{state_code}/cities/{city}/zip-codes", "ZipCodeController@getZipCodesByStateCodeAndCity");
+});
