@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\Riddell\CartApi;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\ClientInformation;
@@ -14,7 +15,17 @@ class CartItemController extends Controller
 {
     public function submit(Request $request)
     {
+        $user = $request->user();
+        $currentCart = $user->getCurrentCart();
 
+        $data = $currentCart->getCartItemsByOrderFormat();
+
+        // $cartApi = new CartApi($user->hybris_access_token);
+        // $result = $cartApi->submitOrder($data);
+
+        // dd($result);
+
+        return response()->json($data);
     }
 
     /**

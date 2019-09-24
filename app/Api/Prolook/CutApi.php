@@ -62,6 +62,15 @@ class CutApi extends Api
             $result->message = $response->getReasonPhrase();
 
             return $result;
+        } catch (ServerException $e) {
+            $response = $e->getResponse();
+
+            $result = new \stdClass;
+            $result->success = false;
+            $result->status_code = $response->getStatusCode();
+            $result->message = $response->getReasonPhrase();
+
+            return $result;
         }
     }
 

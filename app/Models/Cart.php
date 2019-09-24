@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Api\Prolook\MaterialApi;
+use App\Api\Prolook\SavedDesignApi;
 use App\Models\CartItem;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -104,6 +106,124 @@ class Cart extends Model
         }
 
         return $rows;
+    }
+
+    public function getCartItemsByOrderFormat()
+    {
+        $items = $this->cart_items;
+
+        $data = [];
+
+        // garbage data
+        $data['order'] = [
+            'client' => "",
+            'submitted' => "",
+            'sku' => "",
+            'material_id' => "",
+            'url' => "",
+            'user_name' => "",
+            'po_number' => "",
+            'magento_order_number' => "",
+            'brand' => "",
+            'test_order' => ""
+        ];
+        $data['athletic_director'] = [
+            'contact' => "",
+            'email' => "",
+            'phone' => "",
+            'fax' => ""
+        ];
+        $data['billing'] = [
+            'organization' => "",
+            'contact' => "",
+            'email' => "",
+            'address' => "",
+            'city' => "",
+            'state' => "",
+            'phone' => "",
+            'fax' => "",
+            'zip' => ""
+        ];
+        $data['shipping'] = [
+            'organization' => "",
+            'contact' => "",
+            'email' => "",
+            'address' => "",
+            'city' => "",
+            'state' => "",
+            'phone' => "",
+            'fax' => "",
+            'zip' => ""
+        ];
+
+        $materialApi = new MaterialApi;
+        $savedDesignApi = new SavedDesignApi;
+        $brand = config("app.brand");
+
+        $orderItems = [];
+        foreach ($items as $index => $item) {
+            if (!is_null($item->client_information))
+            {
+                $clientInfo = $item->client_information;
+
+                $shipping_info = [
+                    'school_name' => $clientInfo->school_name,
+                    'first_name' => $clientInfo->first_name,
+                    'last_name' => $clientInfo->last_name,
+                    'email' => $clientInfo->email,
+                    'business_phone' => $clientInfo->business_phone,
+                    'address_1' => $clientInfo->address_1,
+                    'address_2' => $clientInfo->address_2,
+                    'city' => $clientInfo->city,
+                    'state' => $clientInfo->state,
+                    "zip_code" => $clientInfo->zip_code
+                ];
+
+                $orderItems[$index]['shipping_info'] = $shipping_info;
+            }
+
+            $orderItems[$index]['brand'] = $brand;
+            $orderItems[$index]['item_id'] = $item->line_item_id;
+            $orderItems[$index]['type'] = "";
+            $orderItems[$index]['description'] = "";
+            $orderItems[$index]['builder_customization'] = "";
+            $orderItems[$index]['set_group_id'] = 0;
+            $orderItems[$index]['factory_order_id'] = "";
+            $orderItems[$index]['design_sheet'] = "";
+
+            $orderItems[$index]['roster'] = json_decode($item->roster);
+            $orderItems[$index]['sku'] = "";
+            $orderItems[$index]['material_id'] = $item->style_id;
+            $orderItems[$index]['url'] = $item->getCustomizerUrl();
+            $orderItems[$index]['price'] = "Call for Pricing";
+            $orderItems[$index]['applicationType'] = "";
+            $orderItems[$index]['application_type'] = "";
+            $orderItems[$index]['additional_attachments'] = "";
+            $orderItems[$index]['notes'] = "";
+
+            $materialResult = $materialApi->getById($item->style_id);
+            if ($materialResult->success)
+            {
+                $material = $materialResult->material;
+
+                $orderItems[$index]['type'] = $material->type;
+                $orderItems[$index]['description'] = $material->description;
+                $orderItems[$index]['applicationType'] = ucwords(str_replace("_", " ", $material->uniform_application_type), " ");
+                $orderItems[$index]['application_type'] = $material->uniform_application_type;
+            }
+
+            $savedDesignResult = $materialApi->getById($item->design_id);
+            if ($savedDesignResult->success)
+            {
+                $savedDesign = $savedDesignResult->saved_design;
+
+                $orderItems[$index]['builder_customization'] = $$savedDesign->builder_customizations;
+            }
+        }
+
+        $data['order_items'] = $orderItems;
+
+        return $data;
     }
 
     public static function findByProlookCartId($pl_cart_id)

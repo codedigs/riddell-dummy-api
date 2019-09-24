@@ -84,7 +84,6 @@ $router->group([
     $router->get("cart", "AuthUserController@getCurrentCart");
 });
 
-// $router->get("/cuts/{brand}", "CutController@getAllByBrand");
 $router->get("/cuts", "CutController@getAll");
 $router->get("/cuts/{cut_id:[\d]+}/styles", "StyleController@getStylesByCutId");
 
