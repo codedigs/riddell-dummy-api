@@ -9,9 +9,11 @@ class UserApi extends Api
 {
     public function quickRegistration($email)
     {
+        $brand_id = config("app.brand_id");
+
         try {
             $response = $this->post("api/user/quickRegistration", [
-                'json' => compact('email')
+                'json' => compact('email', 'brand_id'),
             ]);
             return $this->decoder->decode($response->getBody());
         } catch (ClientException $e) {
