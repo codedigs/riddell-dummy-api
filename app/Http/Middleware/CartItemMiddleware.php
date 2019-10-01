@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Cart;
 use Closure;
 
 /**
@@ -12,7 +13,7 @@ class CartItemMiddleware
     public function handle($request, Closure $next)
     {
         $user = $request->user();
-        $currentCart = $user->getCurrentCart();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
         $cart_item_ids = $currentCart->cart_items->pluck("id")->toArray();
 

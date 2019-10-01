@@ -16,7 +16,7 @@ class CartItemController extends Controller
     public function submit(Request $request)
     {
         $user = $request->user();
-        $currentCart = $user->getCurrentCart();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
         $data = $currentCart->getCartItemsByOrderFormat();
 
@@ -40,7 +40,7 @@ class CartItemController extends Controller
     public function getCartItems(Request $request)
     {
         $user = $request->user();
-        $currentCart = $user->getCurrentCart();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
         $cartItems = transformer($currentCart->cart_items, new CartItemTransformer)->toArray();
 
@@ -118,7 +118,7 @@ class CartItemController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
-        $currentCart = $user->getCurrentCart();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
         $params = $request->all();
 

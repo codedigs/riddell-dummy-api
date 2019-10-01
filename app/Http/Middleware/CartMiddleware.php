@@ -13,7 +13,7 @@ class CartMiddleware
     public function handle($request, Closure $next)
     {
         $user = $request->user();
-        $currentCart = $user->getCurrentCart();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
         if (!is_null($currentCart))
         {

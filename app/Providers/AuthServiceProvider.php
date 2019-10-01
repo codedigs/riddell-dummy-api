@@ -109,22 +109,17 @@ class AuthServiceProvider extends ServiceProvider
                             # end quick registration process
                             endQuickRegistrationProcess:
 
-                            $currentCart = $user->getCurrentCart();
+                            $currentCart = Cart::findBy('pl_cart_id', $data->pl_cart_id)->first();
 
-                            // assign cart to user if user has no cart
+                            // create cart if not exist
                             if (is_null($currentCart))
                             {
-                                // double check if pl cart id exist
-                                $currentCart = Cart::findBy('pl_cart_id', $data->pl_cart_id)->first();
-                                if (is_null($currentCart))
-                                {
-                                    $user->carts()->save(new Cart([
-                                        'pl_cart_id' => $data->pl_cart_id,
-                                        'is_active' => Cart::TRUTHY_FLAG
-                                    ]));
+                                $user->carts()->save(new Cart([
+                                    'pl_cart_id' => $data->pl_cart_id,
+                                    'is_active' => Cart::TRUTHY_FLAG
+                                ]));
 
-                                    $currentCart = $user->getCurrentCart();
-                                }
+                                $currentCart = Cart::findBy('pl_cart_id', $data->pl_cart_id)->first();
                             }
 
                             // add cart item if not exist in cart
@@ -150,6 +145,7 @@ class AuthServiceProvider extends ServiceProvider
 
                             // add extra data
                             $user->hybris_access_token = $access_token;
+                            $user->current_pl_cart_id = $data->pl_cart_id;
 
                             return $user;
                         }

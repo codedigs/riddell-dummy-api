@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\Riddell\CartApi;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -10,7 +11,7 @@ class CartController extends Controller
     public function syncToHybris(Request $request)
     {
         $user = $request->user();
-        $currentCart = $user->getCurrentCart();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
         $rows = $currentCart->getCartItemsByHybrisFormat();
 

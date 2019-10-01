@@ -62,10 +62,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->carts()->validToUse()->get()->isNotEmpty();
     }
 
-    public function getCurrentCart()
-    {
-        return $this->carts()->validToUse()->get()->last();
-    }
+    // public function getCurrentCart()
+    // {
+    //     return $this->carts()->validToUse()->get()->last();
+    // }
 
     public function hasUserId()
     {
