@@ -70,10 +70,11 @@ class AuthServiceProvider extends ServiceProvider
                                 $user = User::findBy('email', $data->user_email)->first();
                             }
 
-                            // use quick register to update user_id
                             if (!$user->hasUserId())
                             {
                                 $prolookApi = new ProlookUserApi;
+
+                                // use quick register to update user_id
                                 $quickRegResult = $prolookApi->quickRegistration($user->email);
 
                                 if ($quickRegResult->success)
@@ -96,11 +97,16 @@ class AuthServiceProvider extends ServiceProvider
                                 {
                                     if (isset($emailAvailableResult->user))
                                     {
-                                        if (isset($emailAvailableResult->user->id))
+                                        if (isset($emailAvailableResult->user->user_id))
                                         {
-                                            $prolook_access_token = ""; // temporary empty
+                                            $prolook_access_token = "";
 
-                                            $user->saveUserIdAndAccessToken($emailAvailableResult->user->id, $prolook_access_token);
+                                            if (isset($emailAvailableResult->user->access_token))
+                                            {
+                                                $prolook_access_token = $emailAvailableResult->user->access_token->access_token;
+                                            }
+
+                                            $user->saveUserIdAndAccessToken($emailAvailableResult->user->user_id, $prolook_access_token);
                                         }
                                     }
                                 }
