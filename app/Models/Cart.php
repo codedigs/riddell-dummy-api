@@ -212,12 +212,13 @@ class Cart extends Model
                 $orderItems[$index]['application_type'] = $material->uniform_application_type;
             }
 
-            $savedDesignResult = $materialApi->getById($item->design_id);
+            $savedDesignResult = $savedDesignApi->getById($item->design_id);
+
             if ($savedDesignResult->success)
             {
                 $savedDesign = $savedDesignResult->saved_design;
 
-                $orderItems[$index]['builder_customization'] = $$savedDesign->builder_customizations;
+                $orderItems[$index]['builder_customization'] = $savedDesign->builder_customizations;
             }
         }
 
