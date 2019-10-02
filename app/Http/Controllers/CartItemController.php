@@ -177,11 +177,11 @@ class CartItemController extends Controller
         $cartItem = CartItem::find($cart_item_id);
 
         // block request if item status was pending approval
-        if ($cartItem->isPendingApproval())
+        if ($cartItem->isPendingApproval() || $cartItem->isGetApproval())
         {
             return response()->json([
                 'success' => false,
-                'message' => "Cannot update cut id on pending approval status."
+                'message' => "Cannot update cut id on ".$cartItem->getStatus()." status."
             ]);
         }
 
@@ -229,11 +229,11 @@ class CartItemController extends Controller
         $cartItem = CartItem::find($cart_item_id);
 
         // block request if item status was pending approval
-        if ($cartItem->isPendingApproval())
+        if ($cartItem->isPendingApproval() || $cartItem->isGetApproval())
         {
             return response()->json([
                 'success' => false,
-                'message' => "Cannot update style id on pending approval status."
+                'message' => "Cannot update style id on ".$cartItem->getStatus()." status."
             ]);
         }
 
@@ -285,7 +285,7 @@ class CartItemController extends Controller
         {
             return response()->json([
                 'success' => false,
-                'message' => "Cannot update design id on pending approval status."
+                'message' => "Cannot update design id on ".$cartItem->getStatus()." status."
             ]);
         }
 
@@ -340,7 +340,7 @@ class CartItemController extends Controller
         {
             return response()->json([
                 'success' => false,
-                'message' => "Cannot update thumbnails on pending approval status."
+                'message' => "Cannot update thumbnails on ".$cartItem->getStatus()." status."
             ]);
         }
 
