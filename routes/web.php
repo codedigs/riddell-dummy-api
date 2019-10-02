@@ -61,6 +61,7 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/update-client-information", ['middleware' => "cart_item", 'uses' => "CartItemController@updateClientInformation"]);
 
     $router->put("{cart_item_id:[\d]+}/pending-approval", ['middleware' => "cart_item", 'uses' => "CartItemController@markAsPendingApproval"]);
+    $router->put("{cart_item_id:[\d]+}/incomplete", ['middleware' => "cart_item", 'uses' => "CartItemController@markAsIncomplete"]);
 
     $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => "cart_item", 'uses' => "CartItemController@delete"]);
     $router->delete("{line_item_id:[\d]+}/delete-by-line-item-id", ['middleware' => "line_item", 'uses' => "CartItemController@deleteByLineItemId"]);

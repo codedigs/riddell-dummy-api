@@ -185,6 +185,12 @@ class CartItem extends Model
         return $this->save();
     }
 
+    public function markAsIncomplete()
+    {
+        $this->has_pending_approval = static::FALSY_FLAG;
+        return $this->save();
+    }
+
     public function approved()
     {
         if ($this->getStatus() === static::STATUS_PENDING_APPROVAL)

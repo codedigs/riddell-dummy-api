@@ -639,6 +639,35 @@ class CartItemController extends Controller
     }
 
     /**
+     * Mark as incomplete
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * @param Request $request
+     */
+    public function markAsIncomplete(Request $request, $cart_item_id)
+    {
+        $params = $request->all();
+
+        $cartItem = CartItem::find($cart_item_id);
+
+        return response()->json(
+            $cartItem->markAsIncomplete() ?
+            [
+                'success' => true,
+                'message' => "Successfully mark as incomplete"
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot mark as incomplete this time. Please try again later."
+            ]
+        );
+    }
+
+    /**
      * Delete cart item
      *
      * Dependency
