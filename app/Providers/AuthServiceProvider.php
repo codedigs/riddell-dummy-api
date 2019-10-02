@@ -11,6 +11,7 @@ use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Log;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -107,6 +108,12 @@ class AuthServiceProvider extends ServiceProvider
                                             }
 
                                             $user->saveUserIdAndAccessToken($emailAvailableResult->user->user_id, $prolook_access_token);
+                                        }
+                                        else
+                                        {
+                                            // todo: Automatic bind in riddell brand if email registered but no brand
+                                            Log::warning("Warning: Email " . $emailAvailableResult->user->email . " is not bind in riddell brand.");
+                                            // exit("Error: Email " . $emailAvailableResult->user->email . " is invalid. Please try another one.");
                                         }
                                     }
                                 }
