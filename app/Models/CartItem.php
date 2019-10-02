@@ -85,10 +85,10 @@ class CartItem extends Model
     public function getStatus()
     {
         switch(true) {
-            case is_null($this->cut_id):
-            case is_null($this->style_id):
+            case is_null($this->cut_id) || $this->cut_id === 0:
+            case is_null($this->style_id) || $this->style_id === 0:
             case is_null($this->design_id) || $this->design_id === 0:
-            case is_null($this->roster) || $this->roster === "{}":
+            case is_null($this->roster) || $this->roster === "[]":
             case is_null($this->roster) || $this->application_size === "{}":
 
             //  temporary comment these below
@@ -110,6 +110,31 @@ class CartItem extends Model
         }
 
         return null;
+    }
+
+    public function isIncomplete()
+    {
+        return $this->getStatus() === static::STATUS_INCOMPLETE;
+    }
+
+    public function isApproved()
+    {
+        return $this->getStatus() === static::STATUS_APPROVED;
+    }
+
+    public function isReviewChanges()
+    {
+        return $this->getStatus() === static::STATUS_REVIEW_CHANGES;
+    }
+
+    public function isPendingApproval()
+    {
+        return $this->getStatus() === static::STATUS_PENDING_APPROVAL;
+    }
+
+    public function isGetApproval()
+    {
+        return $this->getStatus() === static::STATUS_GET_APPROVAL;
     }
 
     public function getFrontThumbnail($placeholder=true)
@@ -193,14 +218,9 @@ class CartItem extends Model
 
     public function approved()
     {
-        if ($this->getStatus() === static::STATUS_PENDING_APPROVAL)
-        {
-            $this->has_pending_approval = static::FALSY_FLAG;
-            $this->is_approved = static::TRUTHY_FLAG;
-            return $this->save();
-        }
-
-        return false;
+        $this->has_pending_approval = static::FALSY_FLAG;
+        $this->is_approved = static::TRUTHY_FLAG;
+        return $this->save();
     }
 
     // public function cart_item_players()

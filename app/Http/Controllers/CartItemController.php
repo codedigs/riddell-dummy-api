@@ -174,6 +174,17 @@ class CartItemController extends Controller
      */
     public function updateCutId(Request $request, $cart_item_id)
     {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // block request if item status was pending approval
+        if ($cartItem->isPendingApproval())
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update cut id on pending approval status."
+            ]);
+        }
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
@@ -185,7 +196,6 @@ class CartItemController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
-        $cartItem = CartItem::find($cart_item_id);
         $cartItem->cut_id = $params['cut_id'];
 
         return response()->json(
@@ -216,6 +226,17 @@ class CartItemController extends Controller
      */
     public function updateStyleId(Request $request, $cart_item_id)
     {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // block request if item status was pending approval
+        if ($cartItem->isPendingApproval())
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update style id on pending approval status."
+            ]);
+        }
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
@@ -227,7 +248,6 @@ class CartItemController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
-        $cartItem = CartItem::find($cart_item_id);
         $cartItem->style_id = $params['style_id'];
 
         return response()->json(
@@ -258,6 +278,17 @@ class CartItemController extends Controller
      */
     public function updateDesignId(Request $request, $cart_item_id)
     {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // block request if item status was pending approval
+        if ($cartItem->isPendingApproval())
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update design id on pending approval status."
+            ]);
+        }
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
@@ -269,7 +300,6 @@ class CartItemController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
-        $cartItem = CartItem::find($cart_item_id);
         $cartItem->design_id = $params['design_id'];
 
         return response()->json(
@@ -303,6 +333,17 @@ class CartItemController extends Controller
      */
     public function updateThumbnails(Request $request, $cart_item_id)
     {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // block request if item status was pending approval
+        if ($cartItem->isPendingApproval())
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update thumbnails on pending approval status."
+            ]);
+        }
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
@@ -317,7 +358,6 @@ class CartItemController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
-        $cartItem = CartItem::find($cart_item_id);
         $cartItem->front_image = $params['front_image'];
         $cartItem->back_image = $params['back_image'];
         $cartItem->left_image = $params['left_image'];
