@@ -210,13 +210,27 @@ class CartItem extends Model
         return $this->save();
     }
 
-    public function markAsIncomplete()
+    public function markAsIncomplete($remove_coach_link=true)
     {
+        if ($remove_coach_link)
+        {
+            if (!is_null($this->client_information))
+            {
+                $this->client_information->approval_token = null;
+                $this->client_information->save();
+            }
+        }
+
+        if ($this->is_approved)
+        {
+            $this->is_approved = static::FALSY_FLAG;
+        }
+
         $this->has_pending_approval = static::FALSY_FLAG;
         return $this->save();
     }
 
-    public function approved()
+    public function markAsApproved()
     {
         $this->has_pending_approval = static::FALSY_FLAG;
         $this->is_approved = static::TRUTHY_FLAG;

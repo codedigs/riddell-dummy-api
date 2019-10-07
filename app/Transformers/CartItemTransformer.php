@@ -37,7 +37,7 @@ class CartItemTransformer extends TransformerAbstract
             'status' => $cartItem->getStatus()
         ];
 
-        if ($cartItem->getCutId())
+        if (!is_null($cartItem->getCutId()))
         {
             $cutApi = new CutApi;
             $cut = $cutApi->getById($cartItem->cut_id);

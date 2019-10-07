@@ -615,6 +615,7 @@ class CartItemController extends Controller
             $clientInformation->city = isset($params['city']) ? $params['city'] : "";
             $clientInformation->state = isset($params['state']) ? $params['state'] : "";
             $clientInformation->zip_code = isset($params['zip_code']) ? $params['zip_code'] : "";
+            $clientInformation->approval_token = ClientInformation::generateUniqueApprovalToken();
 
             $saved = $clientInformation->save();
         }
