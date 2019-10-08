@@ -49,6 +49,7 @@ class StyleApi extends Api
                                 $cutStyle->info = new \stdClass;
                                 $cutStyle->info->name = $material->name;
                                 $cutStyle->info->thumbnail_path = $material->thumbnail_path;
+                                $cutStyle->info->sizing_config_prop = $material->sizing_config_prop;
                             }
                         }
                     }
