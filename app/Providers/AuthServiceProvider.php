@@ -74,9 +74,10 @@ class AuthServiceProvider extends ServiceProvider
                             if (!$user->hasUserId())
                             {
                                 $prolookApi = new ProlookUserApi;
+                                $FROM_HYBRIS = 1;
 
                                 // use quick register to update user_id
-                                $quickRegResult = $prolookApi->quickRegistration($user->email);
+                                $quickRegResult = $prolookApi->quickRegistration($user->email, $FROM_HYBRIS);
 
                                 if ($quickRegResult->success)
                                 {
@@ -98,6 +99,18 @@ class AuthServiceProvider extends ServiceProvider
                                 {
                                     if (isset($emailAvailableResult->user))
                                     {
+                                        // if not binded in riddell
+                                        if ($emailAvailableResult->user->brand_id !== config("riddell.brand_id"))
+                                        {
+                                            $bindToRiddellResult = $prolookApi->bindToRiddell($user->email);
+
+                                            if ($bindToRiddellResult->success)
+                                            {
+                                                // fetch info again after the binded process
+                                                $emailAvailableResult = $prolookApi->isEmailAvailable($user->email);
+                                            }
+                                        }
+
                                         if (isset($emailAvailableResult->user->user_id))
                                         {
                                             $prolook_access_token = "";
@@ -108,12 +121,6 @@ class AuthServiceProvider extends ServiceProvider
                                             }
 
                                             $user->saveUserIdAndAccessToken($emailAvailableResult->user->user_id, $prolook_access_token);
-                                        }
-                                        else
-                                        {
-                                            // todo: Automatic bind in riddell brand if email registered but no brand
-                                            Log::warning("Warning: Email " . $emailAvailableResult->user->email . " is not bind in riddell brand.");
-                                            // exit("Error: Email " . $emailAvailableResult->user->email . " is invalid. Please try another one.");
                                         }
                                     }
                                 }
