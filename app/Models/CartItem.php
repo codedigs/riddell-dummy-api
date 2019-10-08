@@ -36,9 +36,9 @@ class CartItem extends Model
         return $this->belongsTo(Cart::class, "pl_cart_id", "pl_cart_id_fk");
     }
 
-    public function coach_request_logs()
+    public function changes_logs()
     {
-        return $this->hasMany(CoachRequestLog::class);
+        return $this->hasMany(ChangeLog::class);
     }
 
     public function client_information()
@@ -195,9 +195,8 @@ class CartItem extends Model
         return $this->design_status === static::DESIGN_STATUS_CONFIG_ERROR;
     }
 
-    public function markAsCoachHasChangeRequest()
+    public function markAsHasChangeRequest()
     {
-        $this->is_approved = static::FALSY_FLAG;
         $this->has_change_request = static::TRUTHY_FLAG;
         $this->has_pending_approval = static::FALSY_FLAG;
 

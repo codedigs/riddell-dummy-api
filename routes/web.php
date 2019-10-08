@@ -67,13 +67,13 @@ $router->group([
     $router->delete("{line_item_id:[\d]+}/delete-by-line-item-id", ['middleware' => "line_item", 'uses' => "CartItemController@deleteByLineItemId"]);
 });
 
-// coach request logs
+// changes logs
 $router->group([
-    'prefix' => "carts/items/{cart_item_id:[\d]+}/logs",
+    'prefix' => "carts/items/{cart_item_id:[\d]+}/changes-logs",
     'middleware' => ["auth", "cart", "cart_item"]
 ], function() use($router) {
-    $router->get("/", "CoachRequestLogController@getAll");
-    $router->post("add", "CoachRequestLogController@store");
+    $router->get("/", "ChangeLogController@getAll");
+    $router->post("ask-for-change", "ChangeLogController@askForChange");
 });
 
 // users
