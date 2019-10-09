@@ -26,4 +26,13 @@ class ChangeLog extends Model
             'cart_item_id' => $cart_item_id
         ]);
     }
+
+    public static function createFixChanges($cart_item_id)
+    {
+        return static::create([
+            'role' => static::ROLE_SALES_REP,
+            'type' => static::TYPE_FIXED,
+            'cart_item_id' => $cart_item_id
+        ]);
+    }
 }

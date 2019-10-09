@@ -45,9 +45,9 @@ $router->group([
 ], function() use($router) {
     $router->get("/", "CartItemController@getCartItems");
     $router->post("submit", "CartItemController@submit");
-    $router->get("{cart_item_id:[\d]+}", ['middleware' => "cart_item", 'uses' => "CartItemController@show"]);
     $router->post("add", "CartItemController@store");
 
+    $router->get("{cart_item_id:[\d]+}", ['middleware' => "cart_item", 'uses' => "CartItemController@show"]);
     $router->put("{cart_item_id:[\d]+}/update-cut-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateCutId"]);
     $router->put("{cart_item_id:[\d]+}/update-style-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateStyleId"]);
     $router->put("{cart_item_id:[\d]+}/update-design-id", ['middleware' => "cart_item", 'uses' => "CartItemController@updateDesignId"]);
@@ -69,8 +69,8 @@ $router->group([
 
 // changes logs
 $router->group([
-    'prefix' => "carts/items/{cart_item_id:[\d]+}/changes-logs",
-    'middleware' => ["auth", "cart", "cart_item"]
+    'prefix' => "changes-logs",
+    'middleware' => ["approval", "approval_cart_item"]
 ], function() use($router) {
     $router->get("/", "ChangeLogController@getAll");
     $router->post("ask-for-change", "ChangeLogController@askForChange");
