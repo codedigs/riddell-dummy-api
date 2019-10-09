@@ -197,6 +197,7 @@ class CartItem extends Model
 
     public function markAsHasChangeRequest()
     {
+        $this->is_approved = static::FALSY_FLAG;
         $this->has_change_request = static::TRUTHY_FLAG;
         $this->has_pending_approval = static::FALSY_FLAG;
 
@@ -205,7 +206,10 @@ class CartItem extends Model
 
     public function markAsPendingApproval()
     {
+        $this->is_approved = static::FALSY_FLAG;
+        $this->has_change_request = static::FALSY_FLAG;
         $this->has_pending_approval = static::TRUTHY_FLAG;
+
         return $this->save();
     }
 
@@ -220,20 +224,19 @@ class CartItem extends Model
             }
         }
 
-        if ($this->is_approved)
-        {
-            $this->is_approved = static::FALSY_FLAG;
-        }
-
+        $this->is_approved = static::FALSY_FLAG;
         $this->has_change_request = static::FALSY_FLAG;
         $this->has_pending_approval = static::FALSY_FLAG;
+
         return $this->save();
     }
 
     public function markAsApproved()
     {
-        $this->has_pending_approval = static::FALSY_FLAG;
         $this->is_approved = static::TRUTHY_FLAG;
+        $this->has_change_request = static::FALSY_FLAG;
+        $this->has_pending_approval = static::FALSY_FLAG;
+
         return $this->save();
     }
 
