@@ -11,32 +11,52 @@ class CartApi extends Api
      * data format to be post
      *
         {
-            "pl_cart_id": "f1f4dbfbc6dd",
-            "user_id": 4732,
-            "user_email": "test@adams.com",
-            "rows": [
-                {
-                    "line_id": "0000490048_ce915",
-                    "cut_id": 88,
-                    "cut_name": "MOTION, Pant, Cut 1, Elastic Waist",
-                    "style_id": 5614,
-                    "style_name": "test style name",
-                    "design_id": 0,
-                    "design_status": "incomplete",
-                    "customizer_url": "http://www.test.com/01",
-                    "roster": {"sample roster": "sample data"},
-                    "active": 1
-                }
+            'prolook_order_id' => $currentCart->pl_cart_id,
+            'hybrisCartCode' => "",
+            'repEmail' => $user->email,
+            'repName' => "",
+            'repPhone' => "",
+            'contactName' => "",
+            'contactEmail' => "",
+            'status' => "PENDING",
+            "designs" => [
+                [
+                    'cutID' => "93",
+                    'cutName' => "CutOne",
+                    'customizerStyleID' => "5514",
+                    'customizerStyleName' => "StyleOne",
+                    'designID' => "123456",
+                    'designStatus' => "PENDING",
+                    'lineItemID' => "123456",
+                    'styleDescription' => "CutOne StyleOne",
+                    'url' => "http://"
+                ]
             ]
         }
      */
-    public function update($pl_cart_id, $user_id, $user_email, $line_items)
+    public function update($pl_cart_id, $user_email, $line_items)
     {
-        $rows = $line_items;
+        $designs = $line_items;
+        $STATUS = "PENDING";
+
+        $data = [
+            'prolook_order_id' => $pl_cart_id,
+            'hybrisCartCode' => "",
+            'repEmail' => $user_email,
+            'repName' => "",
+            'repPhone' => "",
+            'contactName' => "",
+            'contactEmail' => "",
+            'status' => $STATUS,
+            "designs" => $designs
+        ];
+
+        // return $data; // temporary
 
         try {
             $response = $this->put("api/customizer/cartupdate", [
-                'json' => compact("pl_cart_id", "user_id", "user_email", "rows")
+                // 'json' => compact("pl_cart_id", "user_id", "user_email", "rows")
+                'json' => $data
             ]);
 
             return $this->decoder->decode($response->getBody());

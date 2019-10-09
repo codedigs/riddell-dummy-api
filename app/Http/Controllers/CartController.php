@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function syncToHybris(Request $request)
+    public function save(Request $request)
     {
         $user = $request->user();
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
@@ -16,7 +16,7 @@ class CartController extends Controller
         $rows = $currentCart->getCartItemsByHybrisFormat();
 
         $cartApi = new CartApi($user->hybris_access_token);
-        $result = $cartApi->update($currentCart->pl_cart_id, $user->user_id, $user->email, $rows);
+        $result = $cartApi->update($currentCart->pl_cart_id, $user->email, $rows);
 
         // convert result to array
         $result = json_decode(json_encode($result), true);

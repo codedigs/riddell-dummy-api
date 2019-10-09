@@ -91,16 +91,16 @@ class Cart extends Model
             foreach ($items as $item)
             {
                 $rows[] = [
-                    'line_id' => $item->line_item_id,
-                    'cut_id' => $item->cut_id,
-                    'cut_name' => "",
-                    'style_id' => $item->style_id,
-                    'style_name' => "",
-                    'design_id' => $item->design_id,
-                    'design_status' => $item->getStatus(),
-                    'customizer_url' => $item->getCustomizerUrl(),
-                    'roster' => $item->roster,
-                    'active' => !$item->trashed() ? 1 : 0
+                    'cutID' => $item->cut_id,
+                    'cutName' => "Cut Name ". $item->cut_id ."(Dummy)",
+                    'customizerStyleID' => $item->style_id,
+                    'customizerStyleName' => "Customizer Style Name ".$item->style_id." (Dummy)",
+                    'designID' => $item->design_id,
+                    'designStatus' => $item->getStatus(),
+                    'lineItemID' => $item->line_item_id,
+                    'styleDescription' => "Style Description (Dummy)",
+                    'url' => $item->getCustomizerUrl(),
+                    'variants' => $item->roster
                 ];
             }
         }
