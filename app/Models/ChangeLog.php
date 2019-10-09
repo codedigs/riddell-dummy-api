@@ -16,6 +16,16 @@ class ChangeLog extends Model
     const TYPE_ASK_FOR_CHANGES = "ask for changes";
     const TYPE_QUICK_CHANGE = "quick change";
 
+    public function scopeExcludeQuickChange($query)
+    {
+        return $query->where("type", "<>", static::TYPE_QUICK_CHANGE);
+    }
+
+    public function isAskForChanges()
+    {
+        return $this->type === static::TYPE_ASK_FOR_CHANGES;
+    }
+
     public static function createAskForChanges($note, $attachments, $cart_item_id)
     {
         return static::create([

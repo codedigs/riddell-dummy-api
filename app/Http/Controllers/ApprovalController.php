@@ -6,6 +6,11 @@ use App\Models\ClientInformation;
 use Illuminate\Http\Request;
 use Validator;
 
+/**
+ * Dependency
+ *  - Approval Middleware
+ *  - ApprovalCartItem Middleware
+ */
 class ApprovalController extends Controller
 {
     private $approval_token;

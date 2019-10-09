@@ -225,6 +225,7 @@ class CartItem extends Model
             $this->is_approved = static::FALSY_FLAG;
         }
 
+        $this->has_change_request = static::FALSY_FLAG;
         $this->has_pending_approval = static::FALSY_FLAG;
         return $this->save();
     }

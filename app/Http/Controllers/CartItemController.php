@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Api\Riddell\CartApi;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\ChangeLog;
 use App\Models\ClientInformation;
 use App\Transformers\CartItemTransformer;
 use Illuminate\Http\Request;
@@ -762,5 +763,55 @@ class CartItemController extends Controller
                 'message' => "Cannot delete item this time. Please try again later."
             ]
         );
+    }
+
+    /**
+     * Add fix change log
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * @param Request $request
+     */
+    public function fixChanges(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // get last log
+        $log = $cartItem->changes_logs()
+                    ->excludeQuickChange()
+                    ->get()
+                    ->last();
+
+        try {
+            // block request if the last log not 'ask for changes'
+            if (is_null($log)) throw new \Exception("Cannot create log for 'fix changes' if coach has no request for changing.", 1);
+            if (!$log->isAskForChanges()) throw new \Exception("Cannot create log for 'fix changes' if coach has no request for changing.", 1);
+
+            $result = ChangeLog::createFixChanges($cart_item_id);
+
+            if ($result instanceof ChangeLog)
+            {
+                $cartItem = CartItem::find($cart_item_id);
+                $cartItem->markAsIncomplete(false); // false means not removing approval link
+
+                return response()->json([
+                    'success' => true,
+                    'message' => "Successfully create log for 'fix changes'"
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot create log for 'fix changes' this time. Please try again later."
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

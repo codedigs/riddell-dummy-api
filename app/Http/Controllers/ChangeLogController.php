@@ -38,9 +38,20 @@ class ChangeLogController extends Controller
 
         $logs = $cartItem->changes_logs->toArray();
 
+        $filter_logs = array_map(function($log) {
+            return [
+                'id' => $log['id'],
+                'note' => $log['note'],
+                'attachments' => $log['attachments'],
+                'role' => $log['role'],
+                'type' => $log['type'],
+                'created_at' => $log['created_at']
+            ];
+        }, $logs);
+
         return response()->json([
             'success' => true,
-            'logs' => $logs
+            'logs' => $filter_logs
         ]);
     }
 
@@ -60,6 +71,18 @@ class ChangeLogController extends Controller
      */
     public function askForChange(Request $request)
     {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+        $cartItem = $clientInfo->cart_item;
+
+        // block request if item status was pending approval
+        if (!$cartItem->isPendingApproval())
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot create log for 'ask for changes' if status not " . CartItem::STATUS_PENDING_APPROVAL . "."
+            ]);
+        }
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
@@ -72,44 +95,10 @@ class ChangeLogController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
-        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
-        $cartItem = $clientInfo->cart_item;
-
         $result = ChangeLog::createAskForChanges($params['note'], $params['attachments'], $cartItem->id);
 
         if ($result instanceof ChangeLog)
         {
-            $cartItem->markAsHasChangeRequest();
-
-            return response()->json([
-                'success' => true,
-                'message' => "Successfully create log for 'ask for changes'"
-            ]);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => "Cannot create log for 'ask for changes' this time. Please try again later."
-        ]);
-    }
-
-    /**
-     * Add fix change log
-     *
-     * Dependency
-     *  - Authenticate Middleware
-     *  - Cart Middleware
-     *  - CartItem Middleware
-     *
-     * @param Request $request
-     */
-    public function fixChanges(Request $request, $cart_item_id)
-    {
-        $result = ChangeLog::createFixChanges($cart_item_id);
-
-        if ($result instanceof ChangeLog)
-        {
-            $cartItem = CartItem::find($cart_item_id);
             $cartItem->markAsHasChangeRequest();
 
             return response()->json([
