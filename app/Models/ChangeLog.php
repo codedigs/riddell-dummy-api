@@ -14,11 +14,11 @@ class ChangeLog extends Model
 
     const TYPE_FIXED = "fixed";
     const TYPE_ASK_FOR_CHANGES = "ask for changes";
-    const TYPE_QUICK_CHANGE = "quick change";
+    const TYPE_QUICK_EDIT = "quick edit";
 
     public function scopeExcludeQuickChange($query)
     {
-        return $query->where("type", "<>", static::TYPE_QUICK_CHANGE);
+        return $query->where("type", "<>", static::TYPE_QUICK_EDIT);
     }
 
     public function isAskForChanges()
@@ -42,6 +42,16 @@ class ChangeLog extends Model
         return static::create([
             'role' => static::ROLE_SALES_REP,
             'type' => static::TYPE_FIXED,
+            'cart_item_id' => $cart_item_id
+        ]);
+    }
+
+    public static function createQuickEdit($note, $cart_item_id)
+    {
+        return static::create([
+            'note' => $note,
+            'role' => static::ROLE_COACH,
+            'type' => static::TYPE_QUICK_EDIT,
             'cart_item_id' => $cart_item_id
         ]);
     }

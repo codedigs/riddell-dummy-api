@@ -87,7 +87,7 @@ class ChangeLogController extends Controller
     }
 
     /**
-     * Add ask for change log
+     * Add ask for changes log
      *
      * Dependency
      *  - Authenticate Middleware
@@ -100,7 +100,7 @@ class ChangeLogController extends Controller
      *
      * @param Request $request
      */
-    public function askForChange(Request $request)
+    public function askForChanges(Request $request)
     {
         $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
         $cartItem = $clientInfo->cart_item;
@@ -141,6 +141,51 @@ class ChangeLogController extends Controller
         return response()->json([
             'success' => false,
             'message' => "Cannot create log for 'ask for changes' this time. Please try again later."
+        ]);
+    }
+
+    /**
+     * Add ask for change log
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * Data available
+     * - note
+     *
+     * @param Request $request
+     */
+    public function logQuickEdit(Request $request)
+    {
+        $params = $request->all();
+
+        $validator = Validator::make($params, [
+            'note' => "required|string|max:255"
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondWithErrorMessage($validator);
+        }
+
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+        $cartItem = $clientInfo->cart_item;
+
+        $result = ChangeLog::createQuickEdit($params['note'], $cartItem->id);
+
+        if ($result instanceof ChangeLog)
+        {
+            return response()->json([
+                'success' => true,
+                'message' => "Successfully create log for 'quick edit'"
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Cannot create log for 'quick edit' this time. Please try again later."
         ]);
     }
 }

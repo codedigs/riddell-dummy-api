@@ -77,7 +77,8 @@ $router->group([
 ], function() use($router) {
     $router->get("/", "ChangeLogController@getAll");
     $router->get("change-requested", "ChangeLogController@getChangeRequested");
-    $router->post("ask-for-change", "ChangeLogController@askForChange");
+    $router->post("ask-for-changes", "ChangeLogController@askForChanges");
+    $router->post("quick-edit", "ChangeLogController@logQuickEdit");
 });
 
 // users
