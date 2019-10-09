@@ -56,6 +56,37 @@ class ChangeLogController extends Controller
     }
 
     /**
+     * Get change requested of coach
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * @param Request $request
+     */
+    public function getChangeRequested(Request $request)
+    {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+        $cartItem = $clientInfo->cart_item;
+
+        // get last log
+        $log = $cartItem->changes_logs()
+                    ->excludeQuickChange()
+                    ->get()
+                    ->last();
+
+        unset($log['role']);
+        unset($log['type']);
+        unset($log['updated_at']);
+
+        return response()->json([
+            'success' => true,
+            'log' => $log
+        ]);
+    }
+
+    /**
      * Add ask for change log
      *
      * Dependency

@@ -76,6 +76,7 @@ $router->group([
     'middleware' => ["approval", "approval_cart_item"]
 ], function() use($router) {
     $router->get("/", "ChangeLogController@getAll");
+    $router->get("change-requested", "ChangeLogController@getChangeRequested");
     $router->post("ask-for-change", "ChangeLogController@askForChange");
 });
 
