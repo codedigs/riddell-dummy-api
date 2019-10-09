@@ -34,29 +34,29 @@ class CartApi extends Api
             ]
         }
      */
-    public function update($pl_cart_id, $user_email, $line_items)
+    public function update($pl_cart_id, $user_email, $rows)
     {
-        $designs = $line_items;
-        $STATUS = "PENDING";
+        // $designs = $line_items;
+        // $STATUS = "PENDING";
 
-        $data = [
-            'prolook_order_id' => $pl_cart_id,
-            'hybrisCartCode' => "",
-            'repEmail' => $user_email,
-            'repName' => "",
-            'repPhone' => "",
-            'contactName' => "",
-            'contactEmail' => "",
-            'status' => $STATUS,
-            "designs" => $designs
-        ];
+        // $data = [
+        //     'prolook_order_id' => $pl_cart_id,
+        //     'hybrisCartCode' => "",
+        //     'repEmail' => $user_email,
+        //     'repName' => "",
+        //     'repPhone' => "",
+        //     'contactName' => "",
+        //     'contactEmail' => "",
+        //     'status' => $STATUS,
+        //     "designs" => $designs
+        // ];
 
-        // return $data; // temporary
+        // return compact("pl_cart_id", "rows"); // temporary
 
         try {
             $response = $this->put("api/customizer/cartupdate", [
-                // 'json' => compact("pl_cart_id", "user_id", "user_email", "rows")
-                'json' => $data
+                'json' => compact("pl_cart_id", "rows")
+                // 'json' => $data
             ]);
 
             return $this->decoder->decode($response->getBody());
