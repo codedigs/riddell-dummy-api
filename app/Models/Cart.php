@@ -83,7 +83,9 @@ class Cart extends Model
 
     public function getCartItemsByHybrisFormat()
     {
-        $items = $this->cart_items;
+        $items = $this->cart_items()
+                    ->withTrashed()
+                    ->get();
 
         $rows = [];
         if ($items->isNotEmpty())
@@ -91,16 +93,27 @@ class Cart extends Model
             foreach ($items as $item)
             {
                 $rows[] = [
+                    // 'cutID' => $item->cut_id,
+                    // 'cutName' => "Cut Name ". $item->cut_id ."(Dummy)",
+                    // 'customizerStyleID' => $item->style_id,
+                    // 'customizerStyleName' => "Customizer Style Name ".$item->style_id." (Dummy)",
+                    // 'designID' => $item->design_id,
+                    // 'designStatus' => $item->getStatus(),
+                    // 'lineItemID' => $item->line_item_id,
+                    // 'styleDescription' => "Style Description (Dummy)",
+                    // 'url' => $item->getCustomizerUrl(),
+                    // 'variants' => $item->roster,
+
                     'line_id' => $item->line_item_id,
                     'cut_id' => $item->cut_id,
-                    'cut_name' => "",
+                    'cut_name' => "Cut Name ". $item->cut_id ."(Dummy)",
                     'style_id' => $item->style_id,
-                    'style_name' => "",
+                    'style_name' => "Customizer Style Name ".$item->style_id." (Dummy)",
                     'design_id' => $item->design_id,
                     'design_status' => $item->getStatus(),
                     'customizer_url' => $item->getCustomizerUrl(),
                     'roster' => $item->roster,
-                    'active' => !$item->trashed() ? 1 : 0
+                    'active' => $item->trashed() ? 0 : 1
                 ];
             }
         }

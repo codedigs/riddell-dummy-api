@@ -23,7 +23,7 @@ $router->group([
     'prefix' => "carts",
     'middleware' => ["auth", "cart"]
 ], function() use($router) {
-    $router->put("/sync-to-hybris", "CartController@syncToHybris");
+    $router->put("/save", "CartController@save");
 });
 
 // approval
