@@ -177,8 +177,12 @@ class CartItemController extends Controller
     {
         $cartItem = CartItem::find($cart_item_id);
 
-        // block request if item status was pending approval
-        if ($cartItem->isPendingApproval() || $cartItem->isGetApproval())
+        // block request if item status is invalid
+        if (
+            $cartItem->isPendingApproval() ||
+            $cartItem->isGetApproval() ||
+            $cartItem->isReviewChanges()
+        )
         {
             return response()->json([
                 'success' => false,
@@ -229,8 +233,12 @@ class CartItemController extends Controller
     {
         $cartItem = CartItem::find($cart_item_id);
 
-        // block request if item status was pending approval
-        if ($cartItem->isPendingApproval() || $cartItem->isGetApproval())
+        // block request if item status is invalid
+        if (
+            $cartItem->isPendingApproval() ||
+            $cartItem->isGetApproval() ||
+            $cartItem->isReviewChanges()
+        )
         {
             return response()->json([
                 'success' => false,
@@ -281,8 +289,11 @@ class CartItemController extends Controller
     {
         $cartItem = CartItem::find($cart_item_id);
 
-        // block request if item status was pending approval
-        if ($cartItem->isPendingApproval())
+        // block request if item status is invalid
+        if (
+            $cartItem->isPendingApproval() ||
+            $cartItem->isReviewChanges()
+        )
         {
             return response()->json([
                 'success' => false,
@@ -336,8 +347,11 @@ class CartItemController extends Controller
     {
         $cartItem = CartItem::find($cart_item_id);
 
-        // block request if item status was pending approval
-        if ($cartItem->isPendingApproval())
+        // block request if item status is invalid
+        if (
+            $cartItem->isPendingApproval() ||
+            $cartItem->isReviewChanges()
+        )
         {
             return response()->json([
                 'success' => false,
@@ -392,6 +406,20 @@ class CartItemController extends Controller
      */
     public function updateRoster(Request $request, $cart_item_id)
     {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // block request if item status is invalid
+        if (
+            $cartItem->isPendingApproval() ||
+            $cartItem->isReviewChanges()
+        )
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update roster on ".$cartItem->getStatus()." status."
+            ]);
+        }
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
@@ -403,7 +431,6 @@ class CartItemController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
-        $cartItem = CartItem::find($cart_item_id);
         $cartItem->roster = $params['roster'];
 
         return response()->json(
@@ -434,6 +461,20 @@ class CartItemController extends Controller
      */
     public function updateApplicationSize(Request $request, $cart_item_id)
     {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // block request if item status is invalid
+        if (
+            $cartItem->isPendingApproval() ||
+            $cartItem->isReviewChanges()
+        )
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update application size on ".$cartItem->getStatus()." status."
+            ]);
+        }
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
@@ -445,7 +486,6 @@ class CartItemController extends Controller
             return $this->respondWithErrorMessage($validator);
         }
 
-        $cartItem = CartItem::find($cart_item_id);
         $cartItem->application_size = $params['application_size'];
 
         return response()->json(
@@ -476,6 +516,20 @@ class CartItemController extends Controller
      */
     public function updateDesignStatus(Request $request, $cart_item_id)
     {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // block request if item status is invalid
+        if (
+            $cartItem->isPendingApproval() ||
+            $cartItem->isReviewChanges()
+        )
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update design status on ".$cartItem->getStatus()." status."
+            ]);
+        }
+
         $params = $request->all();
 
         $validator = Validator::make($params, [
