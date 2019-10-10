@@ -123,7 +123,7 @@ class ChangeLogController extends Controller
 
         $validator = Validator::make($params, [
             'note' => "required|string|max:255",
-            'attachments' => ["required", new MultipleUrl]
+            'attachments' => [new MultipleUrl]
         ]);
 
         if ($validator->fails())
