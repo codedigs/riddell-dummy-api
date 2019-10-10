@@ -13,6 +13,7 @@ class Controller extends BaseController
     {
         $this->request = $request;
     }
+
     // enable options
     protected function enableOptions($query)
     {
