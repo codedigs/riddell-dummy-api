@@ -5,6 +5,7 @@ namespace App\Transformers;
 use App\Api\Prolook\StyleApi;
 use App\Api\Qx7\CutApi;
 use App\Models\CartItem;
+use App\Models\Cut;
 use League\Fractal\TransformerAbstract;
 
 class CartItemTransformer extends TransformerAbstract
@@ -17,8 +18,6 @@ class CartItemTransformer extends TransformerAbstract
      */
     public function transform(CartItem $cartItem)
     {
-        https://via.placeholder.com/1000x1100?text=No%20Image
-
         $data = [
             'id' => $cartItem->id,
             'design_id' => $cartItem->getDesignId(),
@@ -39,18 +38,34 @@ class CartItemTransformer extends TransformerAbstract
 
         if (!is_null($cartItem->getCutId()))
         {
-            $cutApi = new CutApi;
-            $cut = $cutApi->getById($cartItem->cut_id);
-
-            if ($cut->success)
+            if (config("app.use_cuts_in_db"))
             {
-                $block_pattern = $cut->master_3d_block_patterns;
+                $cut = $cartItem->cut;
 
-                $data['cut'] = [
-                    'id' => $block_pattern->id,
-                    'name' => $block_pattern->block_pattern_name,
-                    'image' => !is_null($block_pattern->image_thumbnail) ? $block_pattern->image_thumbnail : "/riddell/img/Cuts/cut-7.png"
-                ];
+                if (!is_null($cut))
+                {
+                    $data['cut'] = [
+                        'id' => $cut->cut_id,
+                        'name' => $cut->name,
+                        'image' => !is_null($cut->image) ? $cut->image : "/riddell/img/Cuts/cut-7.png"
+                    ];
+                }
+            }
+            else
+            {
+                $cutApi = new CutApi;
+                $cut = $cutApi->getById($cartItem->cut_id);
+
+                if ($cut->success)
+                {
+                    $block_pattern = $cut->master_3d_block_patterns;
+
+                    $data['cut'] = [
+                        'id' => $block_pattern->id,
+                        'name' => $block_pattern->block_pattern_name,
+                        'image' => !is_null($block_pattern->image_thumbnail) ? $block_pattern->image_thumbnail : "/riddell/img/Cuts/cut-7.png"
+                    ];
+                }
             }
         }
 

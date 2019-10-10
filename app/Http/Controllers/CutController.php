@@ -2,17 +2,26 @@
 
 namespace App\Http\Controllers;
 
-// use App\Api\Prolook\CutApi;
+use App\Models\Cut;
+use App\Transformers\CutTransformer;
+
 use App\Api\Qx7\CutApi;
 
 class CutController extends Controller
 {
     public function getAll()
     {
-        $cutApi = new CutApi;
+        if (config("app.use_cuts_in_db"))
+        {
+            $cuts = transformer(Cut::all(), new CutTransformer)->toArray();
 
-        // $result = json_encode($cutApi->getAll(true));
-        // $result = json_decode($result, true); // convert to array
+            return response()->json([
+                'success' => true,
+                'lookup_to_styles' => $cuts['data']
+            ]);
+        }
+
+        $cutApi = new CutApi;
 
         $result = json_encode($cutApi->getAllByBrand());
         $result = json_decode($result, true); // convert to array

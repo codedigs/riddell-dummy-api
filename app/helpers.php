@@ -22,3 +22,15 @@ if (!function_exists("transformer"))
         return $fractal->createData(new $resourceClass($resource, $transformer));
     }
 }
+
+function searchForCutId($cut_id, $array) {
+   foreach ($array as $key => $val)
+   {
+       if ($val['cut_id'] === $cut_id)
+       {
+           return $val;
+       }
+   }
+
+   return null;
+}

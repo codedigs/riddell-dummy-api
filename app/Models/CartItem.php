@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Cart;
 use App\Models\ClientInformation;
+use App\Models\Cut;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
@@ -44,6 +45,11 @@ class CartItem extends Model
     public function client_information()
     {
         return $this->hasOne(ClientInformation::class);
+    }
+
+    public function cut()
+    {
+        return $this->hasOne(Cut::class, "cut_id", "cut_id");
     }
 
     public function scopeFindBy($query, $field, $value)

@@ -18,5 +18,7 @@ class AppServiceProvider extends ServiceProvider
         app()->configure("prolook");
         app()->configure("qx7");
         app()->configure("riddell");
+
+        date_default_timezone_set(config("app.timezone"));
     }
 }
