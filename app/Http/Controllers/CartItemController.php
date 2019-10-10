@@ -43,7 +43,10 @@ class CartItemController extends Controller
         $user = $request->user();
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
-        $cartItems = transformer($currentCart->cart_items, new CartItemTransformer)->toArray();
+        $query = $currentCart->cart_items();
+        $this->enableOptions($query);
+
+        $cartItems = transformer($query->get(), new CartItemTransformer)->toArray();
 
         return response()->json([
             'success' => true,

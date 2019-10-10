@@ -2,10 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+    // enable options
+    protected function enableOptions($query)
+    {
+        $sort = $this->request->get('sort');
+        $limit = $this->request->get('limit');
+
+        if (!is_null($sort))
+        {
+            $sort_value = "ASC";
+            switch(strtolower($sort))
+            {
+                case "desc":
+                case "descending":
+                    $sort_value = "DESC";
+                    break;
+            }
+
+            $query->orderBy('id', $sort_value);
+        }
+
+        if (!is_null($limit) && is_numeric($limit))
+        {
+            $query->limit($limit);
+        }
+    }
+
     /**
      * @param $message
      * @return Response

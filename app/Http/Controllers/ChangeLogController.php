@@ -19,6 +19,8 @@ class ChangeLogController extends Controller
         list($type, $approval_token) = explode(" ", $authorization);
 
         $this->approval_token = $approval_token;
+
+        parent::__construct($request);
     }
 
     /**
@@ -36,7 +38,10 @@ class ChangeLogController extends Controller
         $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
         $cartItem = $clientInfo->cart_item;
 
-        $logs = $cartItem->changes_logs->toArray();
+        $query = $cartItem->changes_logs();
+        $this->enableOptions($query);
+
+        $logs = $query->get()->toArray();
 
         $filter_logs = array_map(function($log) {
             return [
