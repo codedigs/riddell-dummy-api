@@ -6,7 +6,7 @@ return [
     'locale' => env("APP_LOCALE", "en"),
     'brand' => env("BRAND", "Riddell"),
 
-    'timezone' => env("TIMEZONE"),
+    'timezone' => env("TIMEZONE", "Asia/Manila"),
 
     'use_cuts_in_db' => env("USE_CUTS_IN_DB", false),
 
