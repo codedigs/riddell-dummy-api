@@ -38,6 +38,15 @@ class StyleApi extends Api
 
                     foreach ($cutStyles as $cutStyle)
                     {
+                        unset($cutStyle->alias);
+                        unset($cutStyle->created_at);
+                        unset($cutStyle->cut_id);
+                        unset($cutStyle->deleted_at);
+                        unset($cutStyle->gender);
+                        unset($cutStyle->id);
+                        unset($cutStyle->style_category);
+                        unset($cutStyle->updated_at);
+
                         $styleInfo = $this->getInfo($cutStyle->style_id);
 
                         if ($styleInfo->success)
