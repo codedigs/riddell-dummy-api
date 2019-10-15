@@ -124,39 +124,46 @@ class Cart extends Model
     public function getCartItemsByOrderFormat()
     {
         $items = $this->cart_items;
+        $user = $this->user;
+        $brand = config("app.brand");
 
         $data = [];
 
         // garbage data
         $data['order'] = [
-            'client' => "",
-            'submitted' => "",
-            'sku' => "",
-            'material_id' => "",
-            'url' => "",
-            'user_name' => "",
-            'po_number' => "",
-            'magento_order_number' => "",
-            'brand' => "",
-            'test_order' => ""
+            // 'client' => "",
+            // 'submitted' => "",
+            // 'sku' => "",
+            // 'material_id' => "",
+            // 'url' => "",
+            // 'user_name' => "",
+            // 'po_number' => "",
+            // 'magento_order_number' => "",
+            // 'brand' => "",
+            // 'test_order' => ""
+
+            'brand' => $brand,
+            'user_id' => $user->user_id,
+            'user_name' => $user->email
         ];
-        $data['athletic_director'] = [
-            'contact' => "",
-            'email' => "",
-            'phone' => "",
-            'fax' => ""
-        ];
-        $data['billing'] = [
-            'organization' => "",
-            'contact' => "",
-            'email' => "",
-            'address' => "",
-            'city' => "",
-            'state' => "",
-            'phone' => "",
-            'fax' => "",
-            'zip' => ""
-        ];
+        // $data['athletic_director'] = [
+        //     'contact' => "",
+        //     'email' => "",
+        //     'phone' => "",
+        //     'fax' => ""
+        // ];
+        // $data['billing'] = [
+        //     'organization' => "",
+        //     'contact' => "",
+        //     'email' => "",
+        //     'address' => "",
+        //     'city' => "",
+        //     'state' => "",
+        //     'phone' => "",
+        //     'fax' => "",
+        //     'zip' => ""
+        // ];
+
         $data['shipping'] = [
             'organization' => "",
             'contact' => "",
@@ -168,6 +175,21 @@ class Cart extends Model
             'fax' => "",
             'zip' => ""
         ];
+        if (!is_null($user))
+        {
+            if (!is_null($shippingInfo = $user->shipping_information))
+            {
+                $data['shipping']['organization'] = $shippingInfo->school_name;
+                $data['shipping']['contact'] = $shippingInfo->fullname();
+                $data['shipping']['email'] = $shippingInfo->email;
+                $data['shipping']['address'] = $shippingInfo->address_1;
+                $data['shipping']['city'] = $shippingInfo->city;
+                $data['shipping']['state'] = $shippingInfo->state;
+                $data['shipping']['phone'] = $shippingInfo->business_phone;
+                $data['shipping']['fax'] = ""; // blank for the mean time
+                $data['shipping']['zip'] = $shippingInfo->zip;
+            }
+        }
 
         $materialApi = new MaterialApi;
         $savedDesignApi = new SavedDesignApi;
@@ -180,39 +202,39 @@ class Cart extends Model
                 $clientInfo = $item->client_information;
 
                 $shipping_info = [
-                    'school_name' => $clientInfo->school_name,
-                    'first_name' => $clientInfo->first_name,
-                    'last_name' => $clientInfo->last_name,
+                    'organization' => $clientInfo->school_name,
+                    'contact' => $clientInfo->fullname(),
                     'email' => $clientInfo->email,
-                    'business_phone' => $clientInfo->business_phone,
-                    'address_1' => $clientInfo->address_1,
-                    'address_2' => $clientInfo->address_2,
+                    'address' => $clientInfo->address_1,
                     'city' => $clientInfo->city,
                     'state' => $clientInfo->state,
-                    "zip_code" => $clientInfo->zip_code
+                    'phone' => $clientInfo->business_phone,
+                    'fax' => "", // blank for the mean time
+                    // 'address_2' => $clientInfo->address_2,
+                    "zip" => $clientInfo->zip_code
                 ];
 
-                $orderItems[$index]['shipping_info'] = $shipping_info;
+                $orderItems[$index]['shipping'] = $shipping_info;
             }
 
             $orderItems[$index]['brand'] = $brand;
             $orderItems[$index]['item_id'] = $item->line_item_id;
-            $orderItems[$index]['type'] = "";
-            $orderItems[$index]['description'] = "";
-            $orderItems[$index]['builder_customization'] = "";
-            $orderItems[$index]['set_group_id'] = 0;
-            $orderItems[$index]['factory_order_id'] = "";
-            $orderItems[$index]['design_sheet'] = "";
+            $orderItems[$index]['type'] = ""; // meron
+            $orderItems[$index]['description'] = ""; // meron
+            $orderItems[$index]['builder_customization'] = ""; // meron
+            // $orderItems[$index]['set_group_id'] = 0;
+            // $orderItems[$index]['factory_order_id'] = "";
+            // $orderItems[$index]['design_sheet'] = "";
 
             $orderItems[$index]['roster'] = json_decode($item->roster);
             $orderItems[$index]['sku'] = "";
             $orderItems[$index]['material_id'] = $item->style_id;
             $orderItems[$index]['url'] = $item->getCustomizerUrl();
-            $orderItems[$index]['price'] = "Call for Pricing";
+            // $orderItems[$index]['price'] = "Call for Pricing";
             $orderItems[$index]['applicationType'] = "";
             $orderItems[$index]['application_type'] = "";
-            $orderItems[$index]['additional_attachments'] = "";
-            $orderItems[$index]['notes'] = "";
+            // $orderItems[$index]['additional_attachments'] = "";
+            // $orderItems[$index]['notes'] = "";
 
             $materialResult = $materialApi->getById($item->style_id);
             if ($materialResult->success)
