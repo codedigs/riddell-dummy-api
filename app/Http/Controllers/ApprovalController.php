@@ -27,6 +27,7 @@ class ApprovalController extends Controller
     {
         $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
         $cartItem = $clientInfo->cart_item;
+        $currentCart = $cartItem->cart;
 
         $cartItem->status = $cartItem->getStatus();
 
@@ -44,6 +45,8 @@ class ApprovalController extends Controller
 
         return response()->json([
             'success' => true,
+            'is_cart_available' => !$currentCart->isCompleted(),
+            'ready_to_submit' => $currentCart->areAllItemsApproved(),
             'data' => $clientInfo
         ]);
     }
