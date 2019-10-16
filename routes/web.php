@@ -68,6 +68,7 @@ $router->group([
 
     // change logs
     $router->get("{cart_item_id:[\d]+}/changes-logs", ['middleware' => "cart_item", 'uses' => "CartItemController@getAllLogs"]);
+    $router->get("{cart_item_id:[\d]+}/change-requested", ['middleware' => "cart_item", 'uses' => "CartItemController@getChangeRequested"]);
     $router->post("{cart_item_id:[\d]+}/fix-changes", ['middleware' => "cart_item", 'uses' => "CartItemController@fixChanges"]);
 });
 
@@ -77,7 +78,6 @@ $router->group([
     'middleware' => ["approval", "approval_cart_item"]
 ], function() use($router) {
     $router->get("/", "ChangeLogController@getAll");
-    $router->get("change-requested", "ChangeLogController@getChangeRequested");
     $router->post("ask-for-changes", "ChangeLogController@askForChanges");
     $router->post("quick-edit", "ChangeLogController@logQuickEdit");
 });

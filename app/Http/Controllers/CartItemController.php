@@ -907,4 +907,34 @@ class CartItemController extends Controller
             'logs' => $filter_logs
         ]);
     }
+
+    /**
+     * Get all change log
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * @param Request $request
+     */
+    public function getChangeRequested(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+
+        // get last log
+        $log = $cartItem->changes_logs()
+                    ->excludeQuickChange()
+                    ->get()
+                    ->last();
+
+        unset($log['role']);
+        unset($log['type']);
+        unset($log['updated_at']);
+
+        return response()->json([
+            'success' => true,
+            'log' => $log
+        ]);
+    }
 }
