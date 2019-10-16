@@ -34,7 +34,7 @@ class CartItem extends Model
 
     public function cart()
     {
-        return $this->belongsTo(Cart::class, "pl_cart_id", "pl_cart_id_fk");
+        return $this->belongsTo(Cart::class, "pl_cart_id_fk", "pl_cart_id");
     }
 
     public function changes_logs()

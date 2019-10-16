@@ -5,9 +5,6 @@ namespace App\Http\Middleware;
 use App\Models\ClientInformation;
 use Closure;
 
-/**
- * use Authenticate middleware before use this
- */
 class ApprovalMiddleware
 {
     public function handle($request, Closure $next)

@@ -35,6 +35,8 @@ class CartItemController extends Controller
 
         return response()->json([
             'success' => true,
+            'is_cart_available' => !$currentCart->isCompleted(),
+            'ready_to_submit' => $currentCart->areAllItemsApproved(),
             'data' => $cartItems['data']
         ]);
     }
@@ -52,6 +54,8 @@ class CartItemController extends Controller
     public function show(Request $request, $cart_item_id)
     {
         $cartItem = CartItem::find($cart_item_id);
+        $currentCart = $cartItem->cart;
+
         $itemStatus = $cartItem->getStatus();
 
         $cartItemData = $cartItem->toArray();
@@ -83,6 +87,8 @@ class CartItemController extends Controller
 
         return response()->json([
             'success' => true,
+            'is_cart_available' => !$currentCart->isCompleted(),
+            'ready_to_submit' => $currentCart->areAllItemsApproved(),
             'data' => $cartItemData
         ]);
     }
@@ -771,34 +777,6 @@ class CartItemController extends Controller
             [
                 'success' => true,
                 'message' => "Successfully deleted an item"
-            ] :
-            [
-                'success' => false,
-                'message' => "Cannot delete item this time. Please try again later."
-            ]
-        );
-    }
-
-    /**
-     * Delete cart item by line item id
-     *
-     * Dependency
-     *  - Authenticate Middleware
-     *  - Cart Middleware
-     *  - CartItem Middleware
-     *
-     * @param Request $request
-     */
-    public function deleteByLineItemId(Request $request, $line_item_id)
-    {
-        $cartItem = CartItem::findBy('line_item_id', $line_item_id)->first();
-        $is_deleted = $cartItem->delete();
-
-        return response()->json(
-            $is_deleted ?
-            [
-                'success' => true,
-                'message' => "Successfully delete item"
             ] :
             [
                 'success' => false,
