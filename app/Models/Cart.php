@@ -129,40 +129,13 @@ class Cart extends Model
 
         $data = [];
 
-        // garbage data
-        $data['order'] = [
-            // 'client' => "",
-            // 'submitted' => "",
-            // 'sku' => "",
-            // 'material_id' => "",
-            // 'url' => "",
-            // 'user_name' => "",
-            // 'po_number' => "",
-            // 'magento_order_number' => "",
-            // 'brand' => "",
-            // 'test_order' => ""
+        $data['action'] = "submit_order";
 
+        $data['order'] = [
             'brand' => $brand,
             'user_id' => $user->user_id,
             'user_name' => $user->email
         ];
-        // $data['athletic_director'] = [
-        //     'contact' => "",
-        //     'email' => "",
-        //     'phone' => "",
-        //     'fax' => ""
-        // ];
-        // $data['billing'] = [
-        //     'organization' => "",
-        //     'contact' => "",
-        //     'email' => "",
-        //     'address' => "",
-        //     'city' => "",
-        //     'state' => "",
-        //     'phone' => "",
-        //     'fax' => "",
-        //     'zip' => ""
-        // ];
 
         $data['shipping'] = [
             'organization' => "",
@@ -222,19 +195,18 @@ class Cart extends Model
             $orderItems[$index]['type'] = ""; // meron
             $orderItems[$index]['description'] = ""; // meron
             $orderItems[$index]['builder_customization'] = ""; // meron
-            // $orderItems[$index]['set_group_id'] = 0;
-            // $orderItems[$index]['factory_order_id'] = "";
-            // $orderItems[$index]['design_sheet'] = "";
+            $orderItems[$index]['factory_order_id'] = "";
 
             $orderItems[$index]['roster'] = json_decode($item->roster);
             $orderItems[$index]['sku'] = "";
             $orderItems[$index]['material_id'] = $item->style_id;
             $orderItems[$index]['url'] = $item->getCustomizerUrl();
-            // $orderItems[$index]['price'] = "Call for Pricing";
-            $orderItems[$index]['applicationType'] = "";
             $orderItems[$index]['application_type'] = "";
-            // $orderItems[$index]['additional_attachments'] = "";
-            // $orderItems[$index]['notes'] = "";
+
+            if (!is_null($item->cut))
+            {
+                $orderItems[$index]['sku'] = $item->cut->hybris_sku;
+            }
 
             $materialResult = $materialApi->getById($item->style_id);
             if ($materialResult->success)
@@ -258,6 +230,8 @@ class Cart extends Model
         }
 
         $data['order_items'] = $orderItems;
+        $data['message'] = "success";
+        $data['status'] = true;
 
         return $data;
     }
