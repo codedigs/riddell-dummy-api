@@ -23,7 +23,8 @@ $router->group([
     'prefix' => "carts",
     'middleware' => ["auth", "cart"]
 ], function() use($router) {
-    $router->put("/save", "CartController@save");
+    $router->put("save", "CartController@save");
+    $router->post("submit", "CartController@submit");
 });
 
 // approval
@@ -44,7 +45,6 @@ $router->group([
     'middleware' => ["auth", "cart"]
 ], function() use($router) {
     $router->get("/", "CartItemController@getCartItems");
-    $router->post("submit", "CartItemController@submit");
     $router->post("add", "CartItemController@store");
 
     $router->get("{cart_item_id:[\d]+}", ['middleware' => "cart_item", 'uses' => "CartItemController@show"]);
