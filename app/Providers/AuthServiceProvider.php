@@ -6,6 +6,7 @@ use App\Api\Prolook\UserApi as ProlookUserApi;
 use App\Api\Riddell\UserApi;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\ShippingInformation;
 use App\User;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
@@ -71,6 +72,25 @@ class AuthServiceProvider extends ServiceProvider
                                 $user = User::findBy('email', $data->user_email)->first();
                             }
 
+                            // check if no shipping information
+                            if (!$user->hasShippingInfo())
+                            {
+                                // // create shipping information
+                                // $shippingInformation = $user->shipping_information()->save(new ShippingInformation([
+                                //     'school_name' => $data->school_name,
+                                //     'first_name' => $data->first_name,
+                                //     'last_name' => $data->last_name,
+                                //     'email' => $data->email,
+                                //     'business_phone' => $data->business_phone,
+                                //     'address_1' => $data->address_1,
+                                //     'address_2' => $data->address_2,
+                                //     'city' => $data->city,
+                                //     'state' => $data->state,
+                                //     'zip_code' => $data->zip_code,
+                                // ]));
+                            }
+
+                            // check if no user_id
                             if (!$user->hasUserId())
                             {
                                 $prolookApi = new ProlookUserApi;
