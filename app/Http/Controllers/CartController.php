@@ -23,4 +23,20 @@ class CartController extends Controller
 
         return response()->json($result);
     }
+
+    public function submit(Request $request)
+    {
+        $user = $request->user();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
+
+        $data = $currentCart->getCartItemsByOrderFormat();
+
+        $cartApi = new CartApi($user->hybris_access_token);
+        $result = $cartApi->submitOrder($data);
+
+        // convert result to array
+        $result = json_decode(json_encode($result), true);
+
+        return response()->json($result);
+    }
 }

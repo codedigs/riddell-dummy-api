@@ -14,21 +14,6 @@ use Validator;
 
 class CartItemController extends Controller
 {
-    public function submit(Request $request)
-    {
-        $user = $request->user();
-        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
-
-        $data = $currentCart->getCartItemsByOrderFormat();
-
-        // $cartApi = new CartApi($user->hybris_access_token);
-        // $result = $cartApi->submitOrder($data);
-
-        // dd($result);
-
-        return response()->json($data);
-    }
-
     /**
      * Get items of cart
      *
