@@ -67,6 +67,7 @@ $router->group([
     $router->delete("{line_item_id:[\d]+}/delete-by-line-item-id", ['middleware' => "line_item", 'uses' => "CartItemController@deleteByLineItemId"]);
 
     // change logs
+    $router->get("{cart_item_id:[\d]+}/changes-logs", ['middleware' => "cart_item", 'uses' => "CartItemController@getAllLogs"]);
     $router->post("{cart_item_id:[\d]+}/fix-changes", ['middleware' => "cart_item", 'uses' => "CartItemController@fixChanges"]);
 });
 

@@ -871,4 +871,40 @@ class CartItemController extends Controller
             ]);
         }
     }
+
+    /**
+     * Get all change log
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * @param Request $request
+     */
+    public function getAllLogs(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+
+        $query = $cartItem->changes_logs();
+        $this->enableOptions($query);
+
+        $logs = $query->get()->toArray();
+
+        $filter_logs = array_map(function($log) {
+            return [
+                'id' => $log['id'],
+                'note' => $log['note'],
+                'attachments' => $log['attachments'],
+                'role' => $log['role'],
+                'type' => $log['type'],
+                'created_at' => $log['created_at']
+            ];
+        }, $logs);
+
+        return response()->json([
+            'success' => true,
+            'logs' => $filter_logs
+        ]);
+    }
 }
