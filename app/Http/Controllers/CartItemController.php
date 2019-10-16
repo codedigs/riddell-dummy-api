@@ -184,7 +184,8 @@ class CartItemController extends Controller
         if (
             $cartItem->isPendingApproval() ||
             $cartItem->isGetApproval() ||
-            $cartItem->isReviewChanges()
+            $cartItem->isReviewChanges() ||
+            $cartItem->isApproved()
         )
         {
             return response()->json([
@@ -240,7 +241,8 @@ class CartItemController extends Controller
         if (
             $cartItem->isPendingApproval() ||
             $cartItem->isGetApproval() ||
-            $cartItem->isReviewChanges()
+            $cartItem->isReviewChanges() ||
+            $cartItem->isApproved()
         )
         {
             return response()->json([
@@ -295,7 +297,8 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges()
+            $cartItem->isReviewChanges() ||
+            $cartItem->isApproved()
         )
         {
             return response()->json([
@@ -353,7 +356,8 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges()
+            $cartItem->isReviewChanges() ||
+            $cartItem->isApproved()
         )
         {
             return response()->json([
@@ -414,7 +418,8 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges()
+            $cartItem->isReviewChanges() ||
+            $cartItem->isApproved()
         )
         {
             return response()->json([
@@ -469,7 +474,8 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges()
+            $cartItem->isReviewChanges() ||
+            $cartItem->isApproved()
         )
         {
             return response()->json([
@@ -524,7 +530,8 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges()
+            $cartItem->isReviewChanges() ||
+            $cartItem->isApproved()
         )
         {
             return response()->json([
