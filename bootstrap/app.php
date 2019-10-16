@@ -72,6 +72,8 @@ $app->routeMiddleware([
     'line_item'=> App\Http\Middleware\CartLineItemMiddleware::class,
     'approval' => App\Http\Middleware\ApprovalMiddleware::class,
     'approval_cart_item' => App\Http\Middleware\ApprovalCartItemMiddleware::class,
+    'valid_to_use_cart' => App\Http\Middleware\ValidToUseCartMiddleware::class,
+    'valid_to_user_cart_for_non_session' => App\Http\Middleware\ValidToUseCartForNonSessionMiddleware::class
 ]);
 
 /*

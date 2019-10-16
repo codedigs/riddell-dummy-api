@@ -236,6 +236,23 @@ class Cart extends Model
         return $data;
     }
 
+    public function markAsCompleted()
+    {
+        $this->is_completed = static::TRUTHY_FLAG;
+        return $this->save();
+    }
+
+    public function areAllItemsApproved()
+    {
+        $result = $this->cart_items()
+                    ->get()
+                    ->pluck("is_approved")
+                    ->toArray();
+
+        $result = array_unique($result);
+        return $result[0] === 1 && count($result) === 1;
+    }
+
     public static function findByProlookCartId($pl_cart_id)
     {
         return static::where('pl_cart_id', $pl_cart_id)
