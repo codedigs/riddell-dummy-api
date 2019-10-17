@@ -88,7 +88,7 @@ $router->group([
     'middleware' => "auth"
 ], function() use($router) {
     $router->get("/", "AuthUserController@getAuthenticatedUser");
-    $router->get("cart", "AuthUserController@getCurrentCart");
+    $router->get("carts", "AuthUserController@getCarts");
 });
 
 $router->get("/cuts", "CutController@getAll");
