@@ -51,7 +51,7 @@ $router->group([
     $router->get("{cart_item_id:[\d]+}", ['middleware' => "cart_item", 'uses' => "CartItemController@show"]);
     $router->put("{cart_item_id:[\d]+}/update-cut-id", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateCutId"]);
     $router->put("{cart_item_id:[\d]+}/update-style-id", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateStyleId"]);
-    $router->put("{cart_item_id:[\d]+}/update-design-id", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateDesignId"]);
+    $router->put("{cart_item_id:[\d]+}/update-design", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateDesign"]);
     $router->put("{cart_item_id:[\d]+}/update-thumbnails", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateThumbnails"]);
     $router->put("{cart_item_id:[\d]+}/update-roster", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateRoster"]);
     $router->put("{cart_item_id:[\d]+}/update-application-size", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateApplicationSize"]);

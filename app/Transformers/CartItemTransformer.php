@@ -21,6 +21,7 @@ class CartItemTransformer extends TransformerAbstract
         $data = [
             'id' => $cartItem->id,
             'design_id' => $cartItem->getDesignId(),
+            'builder_customization' => $cartItem->builder_customization,
             'customizer_url' => $cartItem->getCustomizerUrl(),
             'front_image' => $cartItem->getFrontThumbnail(),
             'back_image' => $cartItem->getBackThumbnail(),
