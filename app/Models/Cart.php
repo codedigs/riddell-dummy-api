@@ -190,9 +190,9 @@ class Cart extends Model
 
             $orderItems[$index]['brand'] = $brand;
             $orderItems[$index]['item_id'] = $item->line_item_id;
+            $orderItems[$index]['builder_customization'] = $item->builder_customization;
             $orderItems[$index]['type'] = ""; // meron
             $orderItems[$index]['description'] = ""; // meron
-            $orderItems[$index]['builder_customization'] = ""; // meron
             $orderItems[$index]['factory_order_id'] = "";
 
             $orderItems[$index]['roster'] = json_decode($item->roster);
@@ -215,15 +215,6 @@ class Cart extends Model
                 $orderItems[$index]['description'] = $material->description;
                 $orderItems[$index]['applicationType'] = ucwords(str_replace("_", " ", $material->uniform_application_type), " ");
                 $orderItems[$index]['application_type'] = $material->uniform_application_type;
-            }
-
-            $savedDesignResult = $savedDesignApi->getById($item->design_id);
-
-            if ($savedDesignResult->success)
-            {
-                $savedDesign = $savedDesignResult->saved_design;
-
-                $orderItems[$index]['builder_customization'] = $savedDesign->builder_customizations;
             }
         }
 
