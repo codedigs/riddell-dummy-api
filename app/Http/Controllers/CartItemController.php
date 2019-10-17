@@ -281,7 +281,7 @@ class CartItemController extends Controller
      *
      * @param Request $request
      */
-    public function updateDesignId(Request $request, $cart_item_id)
+    public function updateDesign(Request $request, $cart_item_id)
     {
         $cartItem = CartItem::find($cart_item_id);
 
@@ -294,14 +294,15 @@ class CartItemController extends Controller
         {
             return response()->json([
                 'success' => false,
-                'message' => "Cannot update design id on ".$cartItem->getStatus()." status."
+                'message' => "Cannot update design on ".$cartItem->getStatus()." status."
             ]);
         }
 
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'design_id' => "required|numeric|digits_between:1,20"
+            'design_id' => "required|numeric|digits_between:1,20",
+            'builder_customization' => "required|json"
         ]);
 
         if ($validator->fails())
@@ -310,16 +311,17 @@ class CartItemController extends Controller
         }
 
         $cartItem->design_id = $params['design_id'];
+        $cartItem->builder_customization = $params['builder_customization'];
 
         return response()->json(
             $cartItem->save() ?
             [
                 'success' => true,
-                'message' => "Successfully update design id"
+                'message' => "Successfully update design"
             ] :
             [
                 'success' => false,
-                'message' => "Cannot update design id this time. Please try again later."
+                'message' => "Cannot update design this time. Please try again later."
             ]
         );
     }
