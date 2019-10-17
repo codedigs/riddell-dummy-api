@@ -18,8 +18,6 @@ class Cart extends Model
 
     protected $fillable = ["pl_cart_id", "is_active", "is_completed", "is_abandoned", "user_id"];
 
-    protected $hidden = ["pl_cart_id"];
-
     public function cart_items()
     {
         return $this->hasMany(CartItem::class, "pl_cart_id_fk", "pl_cart_id");

@@ -20,25 +20,23 @@ class AuthUserController extends Controller
         ]);
     }
 
-    public function getCurrentCart(Request $request)
+    public function getCarts(Request $request)
     {
         $user = $request->user();
+        $carts = $user->carts->toArray();
 
-        $cart = $user->carts()
-                    ->validToUse()
-                    ->get()
-                    ->last();
+        $filter_carts = array_map(function($cart) {
+            return [
+                'pl_cart_id' => $cart['pl_cart_id'],
+                'is_active' => $cart['is_active'],
+                'is_completed' => $cart['is_completed'],
+                'is_abandoned' => $cart['is_abandoned']
+            ];
+        }, $carts);
 
-        return response()->json(
-            !is_null($cart) ?
-            [
-                'success' => true,
-                'pl_cart_id' => $cart->pl_cart_id
-            ] :
-            [
-                'success' => false,
-                'message' => "No current cart"
-            ]
-        );
+        return response()->json([
+            'success' => true,
+            'carts' => $filter_carts
+        ]);
     }
 }
