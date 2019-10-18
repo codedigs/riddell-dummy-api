@@ -24,7 +24,7 @@ $router->group([
     'middleware' => ["auth", "cart", "valid_to_use_cart"]
 ], function() use($router) {
     $router->put("save", "CartController@save");
-    $router->post("submit", "CartController@submit");
+    $router->post("submit", ['middleware' => "valid_to_submit", 'uses' => "CartController@submit"]);
 });
 
 // approval
