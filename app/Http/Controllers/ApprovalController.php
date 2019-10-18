@@ -170,4 +170,15 @@ class ApprovalController extends Controller
             ]
         );
     }
+
+    public function getBuilderCustomization(Request $request)
+    {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+        $cartItem = $clientInfo->cart_item;
+
+        return response()->json([
+            'success' => true,
+            'builder-customization' => $cartItem->builder_customization
+        ]);
+    }
 }

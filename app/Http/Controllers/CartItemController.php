@@ -902,4 +902,24 @@ class CartItemController extends Controller
             'log' => $log
         ]);
     }
+
+    /**
+     * Get builder customization
+     *
+     * Dependency
+     *  - Authenticate Middleware
+     *  - Cart Middleware
+     *  - CartItem Middleware
+     *
+     * @param Request $request
+     */
+    public function getBuilderCustomization(Request $request, $cart_item_id)
+    {
+        $cartItem = CartItem::find($cart_item_id);
+
+        return response()->json([
+            'success' => true,
+            'builder-customization' => $cartItem->builder_customization
+        ]);
+    }
 }
