@@ -178,7 +178,7 @@ class ApprovalController extends Controller
 
         return response()->json([
             'success' => true,
-            'builder-customization' => $cartItem->builder_customization
+            'builder-customization' => json_decode($cartItem->builder_customization, true)
         ]);
     }
 }
