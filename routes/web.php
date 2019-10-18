@@ -33,6 +33,7 @@ $router->group([
     'middleware' => ["approval", "approval_cart_item"]
 ], function() use($router) {
     $router->get("client-information", "ApprovalController@getClientInformation");
+    $router->get("builder-customization", "ApprovalController@getBuilderCustomization");
 
     $router->put("update-roster", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@updateRoster"]);
     $router->put("update-client-information", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@updateClientInformation"]);
@@ -48,6 +49,7 @@ $router->group([
     $router->get("/", "CartItemController@getCartItems");
     $router->post("add", ['middleware' => "valid_to_use_cart", 'uses' => "CartItemController@store"]);
 
+    $router->get("{cart_item_id:[\d]+}/builder-customization", ['middleware' => "cart_item", 'uses' => "CartItemController@getBuilderCustomization"]);
     $router->get("{cart_item_id:[\d]+}", ['middleware' => "cart_item", 'uses' => "CartItemController@show"]);
     $router->put("{cart_item_id:[\d]+}/update-cut-id", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateCutId"]);
     $router->put("{cart_item_id:[\d]+}/update-style-id", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@updateStyleId"]);
@@ -70,6 +72,12 @@ $router->group([
     $router->get("{cart_item_id:[\d]+}/changes-logs", ['middleware' => "cart_item", 'uses' => "CartItemController@getAllLogs"]);
     $router->get("{cart_item_id:[\d]+}/change-requested", ['middleware' => "cart_item", 'uses' => "CartItemController@getChangeRequested"]);
     $router->post("{cart_item_id:[\d]+}/fix-changes", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@fixChanges"]);
+});
+
+// cart items
+$router->group([
+    'prefix' => "carts/items"
+], function() use($router) {
 });
 
 // changes logs
