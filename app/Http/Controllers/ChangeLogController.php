@@ -147,7 +147,7 @@ class ChangeLogController extends Controller
         $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
         $cartItem = $clientInfo->cart_item;
 
-        $result = ChangeLog::createQuickEdit($params['note'], $cartItem->id);
+        $result = ChangeLog::createQuickChange($params['note'], $cartItem->id);
 
         if ($result instanceof ChangeLog)
         {
