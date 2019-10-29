@@ -76,9 +76,9 @@ class UpdateCutsTableInDatabase extends Command
                             Cut::where('cut_id', $cut->cut_id)
                                 ->update([
                                     'cut_id' => $cutSearched['cut_id'],
-                                    'hybris_sku' => $cutSearched['hybris_sku'],
+                                    'hybris_sku' => json_encode($cutSearched['hybris_sku']),
                                     'style_category' => $cutSearched['style_category'],
-                                    'gender' => $cutSearched['gender'],
+                                    'gender' => json_encode($cutSearched['gender']),
                                     'name' => $cutSearched['cutInfo']['name'],
                                     'image' => $cutSearched['cutInfo']['image'],
                                     'sport' => $cutSearched['cutInfo']['sport']
@@ -102,9 +102,9 @@ class UpdateCutsTableInDatabase extends Command
                     {
                         Cut::create([
                             'cut_id' => $cutSearched['cut_id'],
-                            'hybris_sku' => $cutSearched['hybris_sku'],
+                            'hybris_sku' => json_encode($cutSearched['hybris_sku']),
                             'style_category' => $cutSearched['style_category'],
-                            'gender' => $cutSearched['gender'],
+                            'gender' => json_encode($cutSearched['gender']),
                             'name' => $cutSearched['cutInfo']['name'],
                             'image' => $cutSearched['cutInfo']['image'],
                             'sport' => $cutSearched['cutInfo']['sport']

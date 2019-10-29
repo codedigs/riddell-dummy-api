@@ -57,20 +57,22 @@ class CutApi extends Api
                     {
                         $styleResponse = $styleApi->getByCutId($cutObj->id);
 
-                        $hybris_sku = "";
+                        $hybris_sku = [];
                         $style_category = "";
-                        $gender = "";
+                        $gender = [];
 
                         if ($styleResponse->success)
                         {
-
                             if (!empty($styleResponse->lookup_to_styles))
                             {
-                                $styleObj = $styleResponse->lookup_to_styles[0];
+                                $hybris_sku = array_column($styleResponse->lookup_to_styles, "hybris_sku");
+                                $gender = array_column($styleResponse->lookup_to_styles, "gender");
 
-                                if (isset($styleObj->hybris_sku)) $hybris_sku = $styleObj->hybris_sku;
-                                if (isset($styleObj->style_category)) $style_category = $styleObj->style_category;
-                                if (isset($styleObj->gender)) $gender = $styleObj->gender;
+                                $styleObj = $styleResponse->lookup_to_styles[0];
+                                if (isset($styleObj->style_category))
+                                {
+                                    $style_category = $styleObj->style_category;
+                                }
                             }
                         }
 

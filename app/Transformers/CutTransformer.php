@@ -17,9 +17,9 @@ class CutTransformer extends TransformerAbstract
     {
         return [
             'cut_id' => $cut->cut_id,
-            'hybris_sku' => $cut->hybris_sku,
+            'hybris_sku' => json_decode($cut->hybris_sku),
             'style_category' => $cut->style_category,
-            'gender' => $cut->gender,
+            'gender' => json_decode($cut->gender),
             'cutInfo' => [
                 'name' => $cut->name,
                 'image' => $cut->image,
