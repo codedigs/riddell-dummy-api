@@ -162,26 +162,43 @@ class AuthServiceProvider extends ServiceProvider
                                 $currentCart = Cart::findBy('pl_cart_id', $data->pl_cart_id)->first();
                             }
 
-                            // add cart item if not exist in cart
-                            $items = $data->items;
-                            foreach ($items as $item) {
-                                $cartItem = CartItem::withTrashed()
-                                                    ->findBy('line_item_id', $item->line_item_id)
-                                                    ->first();
+                            // // add cart item if not exist in cart
+                            // $items = $data->items;
+                            // foreach ($items as $item) {
+                            //     $cartItem = CartItem::withTrashed()
+                            //                         ->findBy('line_item_id', $item->line_item_id)
+                            //                         ->first();
 
-                                if (is_null($cartItem))
-                                {
-                                    $currentCart->cart_items()->save(new CartItem([
-                                        'cut_id' => $item->cut_id,
-                                        'line_item_id' => $item->line_item_id
-                                    ]));
-                                    // create cart item
-                                }
-                                // elseif ($cartItem->cut_id !== $item->cut_id)
-                                // {
-                                //     // change cut id
-                                // }
+                            //     if (is_null($cartItem))
+                            //     {
+                            //         $currentCart->cart_items()->save(new CartItem([
+                            //             'cut_id' => $item->cut_id,
+                            //             'line_item_id' => $item->line_item_id
+                            //         ]));
+                            //         // create cart item
+                            //     }
+                            //     // elseif ($cartItem->cut_id !== $item->cut_id)
+                            //     // {
+                            //     //     // change cut id
+                            //     // }
+                            // }
+
+                            $cartItem = CartItem::withTrashed()
+                                                ->findBy('line_item_id', $data->line_item_id)
+                                                ->first();
+
+                            if (is_null($cartItem))
+                            {
+                                $currentCart->cart_items()->save(new CartItem([
+                                    'cut_id' => $data->cut_id,
+                                    'line_item_id' => $data->line_item_id
+                                ]));
+                                // create cart item
                             }
+                            // elseif ($cartItem->cut_id !== $item->cut_id)
+                            // {
+                            //     // change cut id
+                            // }
 
                             // add extra data
                             $user->hybris_access_token = $access_token;
