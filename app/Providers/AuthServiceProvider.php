@@ -203,6 +203,7 @@ class AuthServiceProvider extends ServiceProvider
                             // add extra data
                             $user->hybris_access_token = $access_token;
                             $user->current_pl_cart_id = $data->pl_cart_id;
+                            $user->selected_line_item_id = $data->line_item_id;
 
                             return $user;
                         }
