@@ -26,8 +26,11 @@ class ZipCodeController extends Controller
         ]);
     }
 
-    public static function getZipCodesByStateCodeAndCity($state_code, $city)
+    public function getZipCodesByStateCodeAndCity($state_code, $city)
     {
+        $state_code = urldecode($state_code);
+        $city = urldecode($city);
+
         $zip_codes = ZipCode::getZipCodesByStateCodeAndCity($state_code, $city);
 
         return response()->json([
