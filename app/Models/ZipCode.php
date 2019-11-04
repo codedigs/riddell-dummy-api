@@ -25,6 +25,8 @@ class ZipCode extends Model
 
     public static function getZipCodesByStateCodeAndCity($state_code, $city)
     {
+        \Log::debug(print_r([$state_code, $city], true));
+
         return static::where('state_code', $state_code)
                     ->where('city', $city)
                     ->get()
