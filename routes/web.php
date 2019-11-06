@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 // carts
 $router->group([
     'prefix' => "carts",
-    'middleware' => ["auth", "cart", "valid_to_use_cart"]
+    'middleware' => ["auth", "cart", "valid_to_use_cart", "cors"]
 ], function() use($router) {
     $router->get("save", "CartController@save");
     $router->post("submit", ['middleware' => "valid_to_submit", 'uses' => "CartController@submit"]);

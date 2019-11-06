@@ -74,7 +74,8 @@ $app->routeMiddleware([
     'approval_cart_item' => App\Http\Middleware\ApprovalCartItemMiddleware::class,
     'valid_to_use_cart' => App\Http\Middleware\ValidToUseCartMiddleware::class,
     'valid_to_user_cart_for_non_session' => App\Http\Middleware\ValidToUseCartForNonSessionMiddleware::class,
-    'valid_to_submit' => App\Http\Middleware\ValidToSubmitMiddleware::class
+    'valid_to_submit' => App\Http\Middleware\ValidToSubmitMiddleware::class,
+    'cors' => App\Http\Middleware\CorsMiddleware::class,
 ]);
 
 /*
