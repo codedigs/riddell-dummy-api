@@ -238,8 +238,12 @@ class Cart extends Model
                     ->pluck("is_approved")
                     ->toArray();
 
-        $result = array_unique($result);
-        return $result[0] === 1 && count($result) === 1;
+        if (count($result) > 0) {
+            $result = array_unique($result);
+            return $result[0] === 1 && count($result) === 1;
+        }
+
+        return false;
     }
 
     public static function findByProlookCartId($pl_cart_id)
