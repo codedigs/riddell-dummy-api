@@ -824,7 +824,7 @@ class CartItemController extends Controller
             if ($result instanceof ChangeLog)
             {
                 $cartItem = CartItem::find($cart_item_id);
-                $cartItem->markAsIncomplete(false); // false means not removing approval link
+                $cartItem->markAsPendingApproval();
 
                 return response()->json([
                     'success' => true,
