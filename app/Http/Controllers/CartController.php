@@ -31,8 +31,6 @@ class CartController extends Controller
 
         $data = $currentCart->getCartItemsByOrderFormat();
 
-        return response()->json($data);
-
         $cartApi = new CartApi($user->hybris_access_token);
         $result = $cartApi->submitOrder($data);
 
