@@ -34,7 +34,8 @@ class CartItemTransformer extends TransformerAbstract
             'signature_image' => $cartItem->signature_image,
             'line_item_id' => $cartItem->line_item_id,
             'pl_cart_id' => $cartItem->pl_cart_id_fk,
-            'status' => $cartItem->getStatus()
+            'status' => $cartItem->getStatus(),
+            'has_history_of_changes' => $cartItem->changes_logs->isNotEmpty()
         ];
 
         if (!is_null($cartItem->getCutId()))
