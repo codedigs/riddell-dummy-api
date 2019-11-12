@@ -94,8 +94,8 @@ class CartItem extends Model
             case is_null($this->cut_id) || $this->cut_id === 0:
             case is_null($this->style_id) || $this->style_id === 0:
             case is_null($this->design_id) || $this->design_id === 0:
-            case is_null($this->roster) || $this->roster === "[]":
-            case is_null($this->roster) || $this->application_size === "{}":
+            case is_null($this->roster) || $this->roster === "[]" || $this->roster === "{}":
+            case is_null($this->application_size) || $this->application_size === "[]" || $this->application_size === "{}":
 
             //  temporary comment these below
             // case $this->designStatusIncomplete():
