@@ -785,7 +785,7 @@ class CartItemController extends Controller
             $is_deleted ?
             [
                 'success' => true,
-                'message' => "Successfully deleted an item"
+                'message' => "Successfully deleted an item."
             ] :
             [
                 'success' => false,
@@ -813,7 +813,7 @@ class CartItemController extends Controller
             $is_deleted ?
             [
                 'success' => true,
-                'message' => "Successfully deleted an item"
+                'message' => "Successfully deleted an item."
             ] :
             [
                 'success' => false,
