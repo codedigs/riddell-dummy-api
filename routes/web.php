@@ -67,13 +67,16 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/incomplete", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@markAsIncomplete"]);
 
     $router->delete("{cart_item_id:[\d]+}/delete", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@delete"]);
-    $router->delete("{line_item_id}/delete-by-line-item-id", ['middleware' => ["valid_to_use_cart", "line_item"], 'uses' => "CartItemController@deleteByLineItemId"]);
+    // $router->delete("{line_item_id}/delete-by-line-item-id", ['middleware' => ["valid_to_use_cart", "line_item"], 'uses' => "CartItemController@deleteByLineItemId"]);
 
     // change logs
     $router->get("{cart_item_id:[\d]+}/changes-logs", ['middleware' => "cart_item", 'uses' => "CartItemController@getAllLogs"]);
     $router->get("{cart_item_id:[\d]+}/change-requested", ['middleware' => "cart_item", 'uses' => "CartItemController@getChangeRequested"]);
     $router->put("{cart_item_id:[\d]+}/fix-changes", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@fixChanges"]);
 });
+
+// delete cart item by line item without middleware
+$router->delete("carts/{pl_cart_id}/items/{line_item_id}/delete-by-line-item-id", "CartItemController@deleteByLineItemId");
 
 // changes logs
 $router->group([
