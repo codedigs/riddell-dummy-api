@@ -804,22 +804,55 @@ class CartItemController extends Controller
      *
      * @param Request $request
      */
-    public function deleteByLineItemId(Request $request, $line_item_id)
-    {
-        $cartItem = CartItem::findBy("line_item_id", $line_item_id)->first();
-        $is_deleted = $cartItem->delete();
+    // public function deleteByLineItemId(Request $request, $line_item_id)
+    // {
+    //     $cartItem = CartItem::findBy("line_item_id", $line_item_id)->first();
+    //     $is_deleted = $cartItem->delete();
 
-        return response()->json(
-            $is_deleted ?
-            [
-                'success' => true,
-                'message' => "Successfully deleted an item."
-            ] :
-            [
-                'success' => false,
-                'message' => "Cannot delete item this time. Please try again later."
-            ]
-        );
+    //     return response()->json(
+    //         $is_deleted ?
+    //         [
+    //             'success' => true,
+    //             'message' => "Successfully deleted an item."
+    //         ] :
+    //         [
+    //             'success' => false,
+    //             'message' => "Cannot delete item this time. Please try again later."
+    //         ]
+    //     );
+    // }
+
+    /**
+     * Delete cart item by line item id
+     *
+     * @param Request $request
+     */
+    public function deleteByLineItemId(Request $request, $pl_cart_id, $line_item_id)
+    {
+        $cart = Cart::findBy('pl_cart_id', $pl_cart_id)->first();
+
+        if (!is_null($cart))
+        {
+            $line_item_ids = $cart->cart_items->pluck("line_item_id")->toArray();
+
+            if (in_array($line_item_id, $line_item_ids))
+            {
+                $cartItem = CartItem::findBy("line_item_id", $line_item_id)->first();
+                $is_deleted = $cartItem->delete();
+
+                return response()->json(
+                    $is_deleted ?
+                    [
+                        'success' => true,
+                        'message' => "Successfully deleted an item."
+                    ] :
+                    [
+                        'success' => false,
+                        'message' => "Cannot delete item this time. Please try again later."
+                    ]
+                );
+            }
+        }
     }
 
     /**
