@@ -11,6 +11,7 @@ class ZipCode extends Model
     public static function getAllStates()
     {
         return static::all()
+                    ->sortBy("state")
                     ->unique("state")
                     ->pluck("state", "state_code");
     }
@@ -19,6 +20,10 @@ class ZipCode extends Model
     {
         return static::where('state_code', $state_code)
                     ->get()
+                    ->filter(function($zipCode) {
+                        return !empty($zipCode->city);
+                    })
+                    ->sortBy("city")
                     ->unique("city")
                     ->pluck("city");
     }
@@ -28,6 +33,10 @@ class ZipCode extends Model
         return static::where('state_code', $state_code)
                     ->where('city', $city)
                     ->get()
+                    ->filter(function($zipCode) {
+                        return !empty($zipCode->zip_code);
+                    })
+                    ->sortBy("zip_code")
                     ->pluck("zip_code");
     }
 }
