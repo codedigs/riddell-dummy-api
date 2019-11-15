@@ -362,10 +362,10 @@ class CartItemController extends Controller
         $params = $request->all();
 
         $validator = Validator::make($params, [
-            'front_image' => "required|url|max:255",
-            'back_image' => "required|url|max:255",
-            'left_image' => "required|url|max:255",
-            'right_image' => "required|url|max:255",
+            'front_image' => "url|max:255",
+            'back_image' => "url|max:255",
+            'left_image' => "url|max:255",
+            'right_image' => "url|max:255",
         ]);
 
         if ($validator->fails())
