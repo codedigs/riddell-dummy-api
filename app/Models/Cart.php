@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Api\Prolook\MaterialApi;
 use App\Api\Prolook\SavedDesignApi;
+use App\Api\Qx7\CutApi;
 use App\Models\CartItem;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -88,8 +89,45 @@ class Cart extends Model
         $rows = [];
         if ($items->isNotEmpty())
         {
+            $cutApi = new CutApi;
+            $materialApi = new MaterialApi;
+
             foreach ($items as $item)
             {
+                $cut_name = "";
+                $style_name = "";
+
+                if (!empty($item->cut_id))
+                {
+                    $cutResult = $cutApi->getById($item->cut_id);
+
+                    if ($cutResult->success)
+                    {
+                        if (isset($cutResult->master_3d_block_patterns))
+                        {
+                            if (isset($cutResult->master_3d_block_patterns->block_pattern_name))
+                            {
+                                $cut_name = $cutResult->master_3d_block_patterns->block_pattern_name;
+                            }
+                        }
+                    }
+                }
+
+                if (!empty($item->style_id))
+                {
+                    $materialResult = $materialApi->getById($item->style_id);
+                    if ($materialResult->success)
+                    {
+                        if (isset($materialResult->material))
+                        {
+                            if (isset($materialResult->material->name))
+                            {
+                                $style_name = $materialResult->material->name;
+                            }
+                        }
+                    }
+                }
+
                 $rows[] = [
                     // 'cutID' => $item->cut_id,
                     // 'cutName' => "Cut Name ". $item->cut_id ."(Dummy)",
@@ -104,9 +142,9 @@ class Cart extends Model
 
                     'line_id' => $item->line_item_id,
                     'cut_id' => $item->cut_id,
-                    'cut_name' => "Cut Name ". $item->cut_id ."(Dummy)",
+                    'cut_name' => $cut_name,
                     'style_id' => $item->style_id,
-                    'style_name' => "Customizer Style Name ".$item->style_id." (Dummy)",
+                    'style_name' => $style_name,
                     'design_id' => $item->design_id,
                     'design_status' => $item->getStatus(),
                     'customizer_url' => $item->getCustomizerUrl(),
