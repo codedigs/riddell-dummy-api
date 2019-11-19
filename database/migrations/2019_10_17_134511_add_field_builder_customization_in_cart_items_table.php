@@ -14,7 +14,7 @@ class AddFieldBuilderCustomizationInCartItemsTable extends Migration
     public function up()
     {
         Schema::table('cart_items', function (Blueprint $table) {
-            $table->text('builder_customization')->nullable()->default(null)->after("design_id");
+            $table->longText('builder_customization')->nullable()->default(null)->after("design_id");
         });
     }
 
