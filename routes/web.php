@@ -97,6 +97,8 @@ $router->group([
     $router->get("carts", "AuthUserController@getCarts");
 });
 
+$router->get("/group-cuts", "GroupCutController@getAll");
+$router->get("/group-cuts/{group_cut_id:[\d]+}/styles", "StyleController@getStylesByGroupCutId");
 $router->get("/cuts", "CutController@getAll");
 $router->get("/cuts/{cut_id:[\d]+}/styles", "StyleController@getStylesByCutId");
 

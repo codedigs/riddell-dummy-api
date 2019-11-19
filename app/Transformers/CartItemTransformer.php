@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use App\Api\Prolook\StyleApi;
 use App\Api\Qx7\CutApi;
+use App\Api\Qx7\GroupCutApi;
 use App\Models\CartItem;
 use App\Models\Cut;
 use League\Fractal\TransformerAbstract;
@@ -40,34 +41,48 @@ class CartItemTransformer extends TransformerAbstract
 
         if (!is_null($cartItem->getCutId()))
         {
-            if (config("app.use_cuts_in_db"))
+            // if (config("app.use_cuts_in_db"))
+            // {
+            //     $cut = $cartItem->cut;
+
+            //     if (!is_null($cut))
+            //     {
+            //         $data['cut'] = [
+            //             'id' => $cut->cut_id,
+            //             'name' => $cut->name,
+            //             'image' => !is_null($cut->image) ? $cut->image : "/riddell/img/Cuts/cut-7.png"
+            //         ];
+            //     }
+            // }
+            // else
+            // {
+            //     $cutApi = new CutApi;
+            //     $cut = $cutApi->getById($cartItem->cut_id);
+
+            //     if ($cut->success)
+            //     {
+            //         $block_pattern = $cut->master_3d_block_patterns;
+
+            //         $data['cut'] = [
+            //             'id' => $block_pattern->id,
+            //             'name' => $block_pattern->block_pattern_name,
+            //             'image' => !is_null($block_pattern->image_thumbnail) ? $block_pattern->image_thumbnail : "/riddell/img/Cuts/cut-7.png"
+            //         ];
+            //     }
+            // }
+
+            $groupCutApi = new GroupCutApi;
+            $groupCutResult = $groupCutApi->getById($cartItem->cut_id);
+
+            if ($groupCutResult->success)
             {
-                $cut = $cartItem->cut;
+                $groupCut = $groupCutResult->master_block_pattern_group;
 
-                if (!is_null($cut))
-                {
-                    $data['cut'] = [
-                        'id' => $cut->cut_id,
-                        'name' => $cut->name,
-                        'image' => !is_null($cut->image) ? $cut->image : "/riddell/img/Cuts/cut-7.png"
-                    ];
-                }
-            }
-            else
-            {
-                $cutApi = new CutApi;
-                $cut = $cutApi->getById($cartItem->cut_id);
-
-                if ($cut->success)
-                {
-                    $block_pattern = $cut->master_3d_block_patterns;
-
-                    $data['cut'] = [
-                        'id' => $block_pattern->id,
-                        'name' => $block_pattern->block_pattern_name,
-                        'image' => !is_null($block_pattern->image_thumbnail) ? $block_pattern->image_thumbnail : "/riddell/img/Cuts/cut-7.png"
-                    ];
-                }
+                $data['group_cut'] = [
+                    'id' => $groupCut->id,
+                    'name' => $groupCut->name,
+                    'image' => !is_null($groupCut->thumbnail) ? $groupCut->thumbnail : "/riddell/img/Cuts/cut-7.png"
+                ];
             }
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Api\Prolook;
 
+use App\Models\Cut;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 
@@ -23,6 +24,40 @@ class StyleApi extends Api
     //         return $result;
     //     }
     // }
+
+    public function getByGroupCutId($group_cut_id)
+    {
+        $styles = new \stdClass;
+        $styles->styles = [];
+        $styles->success = false;
+
+        $cuts = Cut::findBy("group_cut_id", $group_cut_id)->get();
+
+        if ($cuts->isNotEmpty())
+        {
+            $cut_ids = $cuts->pluck("cut_id")->toArray();
+
+            if (!empty($cut_ids))
+            {
+                $stylesArr = [];
+
+                foreach ($cut_ids as $id)
+                {
+                    $result = $this->getByCutId($id, true);
+
+                    if ($result->success)
+                    {
+                        $stylesArr[] = $result->lookup_to_styles;
+                    }
+                }
+
+                $styles->success = true;
+                $styles->styles = array_flatten($stylesArr);
+            }
+        }
+
+        return $styles;
+    }
 
     public function getByCutId($cut_id, $spread=false)
     {

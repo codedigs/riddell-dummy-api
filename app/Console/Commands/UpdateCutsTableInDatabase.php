@@ -81,7 +81,8 @@ class UpdateCutsTableInDatabase extends Command
                                     'gender' => json_encode($cutSearched['gender']),
                                     'name' => $cutSearched['cutInfo']['name'],
                                     'image' => $cutSearched['cutInfo']['image'],
-                                    'sport' => $cutSearched['cutInfo']['sport']
+                                    'sport' => $cutSearched['cutInfo']['sport'],
+                                    'group_cut_id' => $cutSearched['cutInfo']['master_block_pattern_group_id']
                                 ]);
 
                             unset($cut_ids[array_search($cut->cut_id, $cut_ids)]);
@@ -107,7 +108,8 @@ class UpdateCutsTableInDatabase extends Command
                             'gender' => json_encode($cutSearched['gender']),
                             'name' => $cutSearched['cutInfo']['name'],
                             'image' => $cutSearched['cutInfo']['image'],
-                            'sport' => $cutSearched['cutInfo']['sport']
+                            'sport' => $cutSearched['cutInfo']['sport'],
+                            'group_cut_id' => $cutSearched['cutInfo']['master_block_pattern_group_id']
                         ]);
                     }
                 }
