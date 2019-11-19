@@ -44,4 +44,14 @@ class CartController extends Controller
 
         return response()->json($result);
     }
+
+    public function submitData(Request $request)
+    {
+        $user = $request->user();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
+
+        $data = $currentCart->getCartItemsByOrderFormat();
+
+        return response()->json($data);
+    }
 }
