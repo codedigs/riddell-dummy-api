@@ -84,7 +84,8 @@ class CutApi extends Api
                             'cutInfo' => [
                                 'name' => $cutObj->block_pattern_name,
                                 'image' => $cutObj->image_thumbnail,
-                                'sport' => $cutObj->sport->sport_name
+                                'sport' => $cutObj->sport->sport_name,
+                                'master_block_pattern_group_id' => $cutObj->master_block_pattern_group_id
                             ]
                         ]);
                     }
