@@ -25,6 +25,8 @@ $router->group([
 ], function() use($router) {
     $router->get("save", "CartController@save");
     $router->post("submit", ['middleware' => "valid_to_submit", 'uses' => "CartController@submit"]);
+
+    $router->get("submit-data", ['middleware' => "valid_to_submit", 'uses' => "CartController@submitData"]);
 });
 
 // approval
