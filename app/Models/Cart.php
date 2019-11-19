@@ -229,7 +229,7 @@ class Cart extends Model
             $orderItems[$index]['brand'] = $brand;
             $orderItems[$index]['item_id'] = $item->line_item_id;
             $orderItems[$index]['customizer_style_id'] = $item->style_id;
-            $orderItems[$index]['builder_customization'] = $item->builder_customization;
+            $orderItems[$index]['builder_customizations'] = $item->builder_customization;
             $orderItems[$index]['type'] = ""; // meron
             $orderItems[$index]['description'] = ""; // meron
             $orderItems[$index]['factory_order_id'] = "";
