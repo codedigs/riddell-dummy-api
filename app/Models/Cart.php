@@ -340,7 +340,7 @@ class Cart extends Model
                 'sml' => [],
                 'sku' => "-",
                 'hybris_cart_info' => [
-                    "hyb_cart_id" => "", // skip
+                    "hyb_cart_id" => "", // optional
                     "pl_cart_id" => $item->pl_cart_id_fk,
                     "line_item_id" => $item->line_item_id,
                     "cut_id" => $item->cut_id,
