@@ -14,7 +14,7 @@ class AddFieldGroupCutIdInCutsTable extends Migration
     public function up()
     {
         Schema::table('cuts', function (Blueprint $table) {
-            $table->integer("group_cut_id")->nullable()->default(null);
+            $table->integer("group_cut_id")->nullable()->default(null)->after("sport");
         });
     }
 
