@@ -159,6 +159,9 @@ class Cart extends Model
 
     public function getCartItemsByOrderFormat()
     {
+        $SELECTED_SOURCE = "Riddell Customizer";
+        $SELECTED_TEMPLATE = "Riddell";
+
         $items = $this->cart_items;
         $user = $this->user;
         $brand = config("app.brand");
@@ -202,6 +205,8 @@ class Cart extends Model
 
         $materialApi = new MaterialApi;
         $savedDesignApi = new SavedDesignApi;
+        $cutApi = new CutApi;
+
         $brand = config("app.brand");
 
         $orderItems = [];
@@ -226,10 +231,44 @@ class Cart extends Model
                 $orderItems[$index]['shipping'] = $shipping_info;
             }
 
+            $cut_name = "";
+            $style_name = "";
+
+            if (!empty($item->cut_id))
+            {
+                $cutResult = $cutApi->getById($item->cut_id);
+
+                if ($cutResult->success)
+                {
+                    if (isset($cutResult->master_3d_block_patterns))
+                    {
+                        if (isset($cutResult->master_3d_block_patterns->block_pattern_name))
+                        {
+                            $cut_name = $cutResult->master_3d_block_patterns->block_pattern_name;
+                        }
+                    }
+                }
+            }
+
+            if (!empty($item->style_id))
+            {
+                $materialResult = $materialApi->getById($item->style_id);
+                if ($materialResult->success)
+                {
+                    if (isset($materialResult->material))
+                    {
+                        if (isset($materialResult->material->name))
+                        {
+                            $style_name = $materialResult->material->name;
+                        }
+                    }
+                }
+            }
+
             $orderItems[$index]['brand'] = $brand;
             $orderItems[$index]['item_id'] = $item->line_item_id;
             $orderItems[$index]['customizer_style_id'] = $item->style_id;
-            $orderItems[$index]['builder_customizations'] = $item->builder_customization;
+            // $orderItems[$index]['builder_customizations'] = $item->builder_customization;
             $orderItems[$index]['type'] = ""; // meron
             $orderItems[$index]['description'] = ""; // meron
             $orderItems[$index]['factory_order_id'] = "";
@@ -254,6 +293,144 @@ class Cart extends Model
                 $orderItems[$index]['description'] = $material->description;
                 $orderItems[$index]['applicationType'] = ucwords(str_replace("_", " ", $material->uniform_application_type), " ");
                 $orderItems[$index]['application_type'] = $material->uniform_application_type;
+            }
+
+            $builder_customization = json_decode($item->builder_customization, true);
+            $roster = json_decode($item->roster, true);
+            $sizeBreakdown = array_map(function($roster_row) {
+                return [
+                    'qty' => $roster_row['qty'],
+                    'size' => $roster_row['size']
+                ];
+            }, $roster);
+
+            // pdf json
+            $orderItems[$index]['pdf_json'] = [
+                'pdfGenerator' => true,
+                'selectedSource' => $SELECTED_SOURCE,
+                'selectedTemplate' => $SELECTED_TEMPLATE,
+                'searchKey' => "preview" . date("-Y-m-d-H-i-s-") . uniqid(), // skip
+                'thumbnails' => [
+                    'front_view' => "",
+                    'back_view' => "",
+                    'left_view' => "",
+                    'right_view' => ""
+                ],
+                'category' => "",
+                'fullName' => "",
+                'client' => "fullname",
+                'orderId' => "",
+                'foid' => "",
+                'description' => "",
+                'cutPdf' => "",
+                'stylesPdf' => "",
+                'roster' => [],
+                'pipings' => $roster,
+                'createdDate' => date("Y/m/d"),
+                'notes' => "",
+                'sizeBreakdown' => $sizeBreakdown,
+                'applications' => [],
+                'sizingTable' => [],
+                'upper' => [],
+                'lower' => [],
+                'hiddenBody' => "",
+                'randomFeeds' => [],
+                'legacyPDF' => "",
+                'applicationType' => "",
+                'sml' => [],
+                'sku' => "-",
+                'hybris_cart_info' => [
+                    "hyb_cart_id" => "", // skip
+                    "pl_cart_id" => $item->pl_cart_id_fk,
+                    "line_item_id" => $item->line_item_id,
+                    "cut_id" => $item->cut_id,
+                    "cut_name" => $cut_name,
+                    "style_id" => $item->style_id,
+                    "style_name" => $style_name,
+                    "design_id" => $item->design_id
+                ],
+                'colorGroupings' => []
+            ];
+
+            if (isset($builder_customization['thumbnails']))
+            {
+                $orderItems[$index]['pdf_json']['thumbnails'] = $builder_customization['thumbnails'];
+            }
+
+            if (isset($builder_customization['uniform_category']))
+            {
+                $orderItems[$index]['pdf_json']['category'] = $builder_customization['uniform_category'];
+            }
+
+            if (isset($builder_customization['material']))
+            {
+                if (isset($builder_customization['material']['block_pattern']))
+                {
+                    $orderItems[$index]['pdf_json']['description'] = $builder_customization['material']['block_pattern'];
+                }
+            }
+
+            if (isset($builder_customization['cut_pdf']))
+            {
+                $orderItems[$index]['pdf_json']['cutPdf'] = $builder_customization['cut_pdf'];
+            }
+
+            if (isset($builder_customization['styles_pdf']))
+            {
+                $orderItems[$index]['pdf_json']['stylesPdf'] = $builder_customization['styles_pdf'];
+            }
+
+            if (isset($builder_customization['pipings']))
+            {
+                $orderItems[$index]['pdf_json']['pipings'] = $builder_customization['pipings'];
+            }
+
+            if (isset($builder_customization['applications']))
+            {
+                $orderItems[$index]['pdf_json']['applications'] = $builder_customization['applications'];
+            }
+
+            if (isset($builder_customization['upper']))
+            {
+                $orderItems[$index]['pdf_json']['upper'] = $builder_customization['upper'];
+            }
+
+            if (isset($builder_customization['lower']))
+            {
+                $orderItems[$index]['pdf_json']['lower'] = $builder_customization['lower'];
+            }
+
+            if (isset($builder_customization['lower']))
+            {
+                $orderItems[$index]['pdf_json']['lower'] = $builder_customization['lower'];
+            }
+
+            if (isset($builder_customization['hiddenBody']))
+            {
+                $orderItems[$index]['pdf_json']['hiddenBody'] = $builder_customization['hiddenBody'];
+            }
+
+            if (isset($builder_customization['randomFeeds']))
+            {
+                $orderItems[$index]['pdf_json']['randomFeeds'] = $builder_customization['randomFeeds'];
+            }
+
+            if (isset($builder_customization['material']))
+            {
+                if (isset($builder_customization['material']['uniform_application_type']))
+                {
+                    $orderItems[$index]['pdf_json']['applicationType'] = $builder_customization['material']['uniform_application_type'];
+                }
+
+                if (isset($builder_customization['material']['modifier_labels']))
+                {
+                    $orderItems[$index]['pdf_json']['sml'] = $builder_customization['material']['modifier_labels'];
+                }
+            }
+
+            if (isset($builder_customization['colorGroupings']))
+            {
+                $orderItems[$index]['pdf_json']['colorGroupings'] = $builder_customization['colorGroupings'];
             }
         }
 
