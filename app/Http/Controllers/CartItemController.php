@@ -853,6 +853,12 @@ class CartItemController extends Controller
                 );
             }
         }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Unauthorized to access cart",
+            'status_code' => 401
+        ]);
     }
 
     /**
