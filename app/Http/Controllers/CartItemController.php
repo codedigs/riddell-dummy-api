@@ -189,11 +189,20 @@ class CartItemController extends Controller
     public function updateCutId(Request $request, $cart_item_id)
     {
         $cartItem = CartItem::find($cart_item_id);
+        $has_history_of_changes = $cartItem->changes_logs->isNotEmpty();
+
+        // block request if coach has changes
+        if ($has_history_of_changes)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update cut id when coach has already change request."
+            ]);
+        }
 
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isGetApproval() ||
             $cartItem->isReviewChanges() ||
             $cartItem->isApproved()
         )
@@ -246,11 +255,20 @@ class CartItemController extends Controller
     public function updateStyleId(Request $request, $cart_item_id)
     {
         $cartItem = CartItem::find($cart_item_id);
+        $has_history_of_changes = $cartItem->changes_logs->isNotEmpty();
+
+        // block request if coach has changes
+        if ($has_history_of_changes)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot update cut id when coach has already change request."
+            ]);
+        }
 
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isGetApproval() ||
             $cartItem->isReviewChanges() ||
             $cartItem->isApproved()
         )
