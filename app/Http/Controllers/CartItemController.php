@@ -10,6 +10,7 @@ use App\Models\ClientInformation;
 use App\Transformers\CartItemTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Log;
 use Validator;
 
 class CartItemController extends Controller
@@ -852,6 +853,14 @@ class CartItemController extends Controller
                     ]
                 );
             }
+            else
+            {
+                Log::warning("Warning: Line item id {$line_item_id} not belong to Pl cart id {$pl_cart_id}!");
+            }
+        }
+        else
+        {
+            Log::warning("Warning: Pl cart id {$pl_cart_id} is not exist!");
         }
 
         return response()->json([
