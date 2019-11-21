@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\Prolook\StyleApi;
 use App\Api\Riddell\CartApi;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -77,6 +78,23 @@ class CartItemController extends Controller
         unset($cartItemData['cart_id']);
         unset($cartItemData['created_at']);
         unset($cartItemData['updated_at']);
+
+        if (!is_null($cartItem->getStyleId()))
+        {
+            $styleApi = new StyleApi;
+            $style = $styleApi->getInfo($cartItem->getStyleId());
+
+            if ($style->success)
+            {
+                $material = $style->material;
+
+                $cartItemData['style'] = [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'image' => !empty($material->thumbnail_path) ? $material->thumbnail_path : "/riddell/img/Football-Picker/Inspiration@2x.png"
+                ];
+            }
+        }
 
         if (!is_null($cartItemData['client_information']))
         {
@@ -830,6 +848,7 @@ class CartItemController extends Controller
      */
     public function deleteByLineItemId(Request $request, $pl_cart_id, $line_item_id)
     {
+        Log::debug("Bum panot!");
         $cart = Cart::findBy('pl_cart_id', $pl_cart_id)->first();
 
         if (!is_null($cart))
@@ -838,6 +857,8 @@ class CartItemController extends Controller
 
             if (in_array($line_item_id, $line_item_ids))
             {
+                Log::info("Success");
+
                 $cartItem = CartItem::findBy("line_item_id", $line_item_id)->first();
                 $is_deleted = $cartItem->delete();
 
