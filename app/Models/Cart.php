@@ -173,7 +173,8 @@ class Cart extends Model
         $data['order'] = [
             'brand' => $brand,
             'user_id' => $user->user_id,
-            'user_name' => $user->email
+            'user_name' => $user->email,
+            'pl_cart_id' => $this->pl_cart_id
         ];
 
         $data['shipping'] = [
