@@ -325,7 +325,6 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges() ||
             $cartItem->isApproved()
         )
         {
@@ -386,7 +385,6 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges() ||
             $cartItem->isApproved()
         )
         {
@@ -448,7 +446,6 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges() ||
             $cartItem->isApproved()
         )
         {
@@ -504,7 +501,6 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges() ||
             $cartItem->isApproved()
         )
         {
@@ -560,7 +556,6 @@ class CartItemController extends Controller
         // block request if item status is invalid
         if (
             $cartItem->isPendingApproval() ||
-            $cartItem->isReviewChanges() ||
             $cartItem->isApproved()
         )
         {
