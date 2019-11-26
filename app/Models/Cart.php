@@ -266,8 +266,16 @@ class Cart extends Model
                 }
             }
 
+            $builder_customization = json_decode($item->builder_customization, true);
+            $item_id = "";
+            if (isset($builder_customization['item_id']))
+            {
+                $item_id = $builder_customization['item_id'];
+            }
+
             $orderItems[$index]['brand'] = $brand;
-            $orderItems[$index]['item_id'] = $item->line_item_id;
+            $orderItems[$index]['line_item_id'] = $item->line_item_id;
+            $orderItems[$index]['item_id'] = $item_id;
             $orderItems[$index]['customizer_style_id'] = $item->style_id;
             $orderItems[$index]['builder_customizations'] = $item->builder_customization;
             $orderItems[$index]['type'] = ""; // meron
@@ -296,7 +304,6 @@ class Cart extends Model
                 $orderItems[$index]['application_type'] = $material->uniform_application_type;
             }
 
-            $builder_customization = json_decode($item->builder_customization, true);
             $roster = json_decode($item->roster, true);
             $sizeBreakdown = array_map(function($roster_row) {
                 return [
