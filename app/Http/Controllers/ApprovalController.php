@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\Prolook\StyleApi;
 use App\Models\ClientInformation;
 use Illuminate\Http\Request;
 use Validator;
@@ -42,6 +43,23 @@ class ApprovalController extends Controller
         unset($clientInfo['created_at']);
         unset($clientInfo['updated_at']);
         unset($clientInfo['cart_item_id']);
+
+        if (!is_null($cartItem->getStyleId()))
+        {
+            $styleApi = new StyleApi;
+            $style = $styleApi->getInfo($cartItem->getStyleId());
+
+            if ($style->success)
+            {
+                $material = $style->material;
+
+                $cartItem['style'] = [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'image' => !empty($material->thumbnail_path) ? $material->thumbnail_path : "/riddell/img/Football-Picker/Inspiration@2x.png"
+                ];
+            }
+        }
 
         return response()->json([
             'success' => true,
