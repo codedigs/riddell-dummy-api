@@ -120,7 +120,6 @@ class ApprovalController extends Controller
         $clientInfo->school_name = isset($params['school_name']) ? $params['school_name'] : "";
         $clientInfo->first_name = $params['first_name'];
         $clientInfo->last_name = $params['last_name'];
-        $clientInfo->email = $params['email'];
         $clientInfo->business_phone = isset($params['business_phone']) ? $params['business_phone'] : "";
         $clientInfo->address_1 = isset($params['address_1']) ? $params['address_1'] : "";
         $clientInfo->address_2 = isset($params['address_2']) ? $params['address_2'] : "";
