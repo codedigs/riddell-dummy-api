@@ -106,7 +106,10 @@ class ApprovalController extends Controller
 
         $params = $request->all();
 
-        $validator = Validator::make($params, ClientInformation::$rules);
+        $modifiedRules = ClientInformation::$rules;
+        unset($modifiedRules['email']);
+
+        $validator = Validator::make($params, $modifiedRules);
 
         if ($validator->fails())
         {
