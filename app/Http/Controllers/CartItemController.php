@@ -79,6 +79,8 @@ class CartItemController extends Controller
         unset($cartItemData['created_at']);
         unset($cartItemData['updated_at']);
 
+        unset($cartItemData['builder_customization']);
+
         if (!is_null($cartItem->getStyleId()))
         {
             $styleApi = new StyleApi;
@@ -648,13 +650,7 @@ class CartItemController extends Controller
      * Data available
      * - school_name
      * - first_name
-     * - last_name
      * - email
-     * - address_1
-     * - address_2
-     * - city
-     * - state
-     * - zip_code
      *
      * @param Request $request
      */
@@ -677,14 +673,14 @@ class CartItemController extends Controller
             $clientInformation = $cartItem->client_information()->save(new ClientInformation([
                 'school_name' => isset($params['school_name']) ? $params['school_name'] : "",
                 'first_name' => $params['first_name'],
-                'last_name' => $params['last_name'],
+                // 'last_name' => $params['last_name'],
                 'email' => $params['email'],
-                'business_phone' => isset($params['business_phone']) ? $params['business_phone'] : "",
-                'address_1' => isset($params['address_1']) ? $params['address_1'] : "",
-                'address_2' => isset($params['address_2']) ? $params['address_2'] : "",
-                'city' => isset($params['city']) ? $params['city'] : "",
-                'state' => isset($params['state']) ? $params['state'] : "",
-                'zip_code' => isset($params['zip_code']) ? $params['zip_code'] : "",
+                // 'business_phone' => isset($params['business_phone']) ? $params['business_phone'] : "",
+                // 'address_1' => isset($params['address_1']) ? $params['address_1'] : "",
+                // 'address_2' => isset($params['address_2']) ? $params['address_2'] : "",
+                // 'city' => isset($params['city']) ? $params['city'] : "",
+                // 'state' => isset($params['state']) ? $params['state'] : "",
+                // 'zip_code' => isset($params['zip_code']) ? $params['zip_code'] : "",
                 'approval_token' => ClientInformation::generateUniqueApprovalToken()
             ]));
 
@@ -697,20 +693,18 @@ class CartItemController extends Controller
             // update client information
             $clientInformation->school_name = isset($params['school_name']) ? $params['school_name'] : "";
             $clientInformation->first_name = $params['first_name'];
-            $clientInformation->last_name = $params['last_name'];
+            // $clientInformation->last_name = $params['last_name'];
             $clientInformation->email = $params['email'];
-            $clientInformation->business_phone = isset($params['business_phone']) ? $params['business_phone'] : "";
-            $clientInformation->address_1 = isset($params['address_1']) ? $params['address_1'] : "";
-            $clientInformation->address_2 = isset($params['address_2']) ? $params['address_2'] : "";
-            $clientInformation->city = isset($params['city']) ? $params['city'] : "";
-            $clientInformation->state = isset($params['state']) ? $params['state'] : "";
-            $clientInformation->zip_code = isset($params['zip_code']) ? $params['zip_code'] : "";
+            // $clientInformation->business_phone = isset($params['business_phone']) ? $params['business_phone'] : "";
+            // $clientInformation->address_1 = isset($params['address_1']) ? $params['address_1'] : "";
+            // $clientInformation->address_2 = isset($params['address_2']) ? $params['address_2'] : "";
+            // $clientInformation->city = isset($params['city']) ? $params['city'] : "";
+            // $clientInformation->state = isset($params['state']) ? $params['state'] : "";
+            // $clientInformation->zip_code = isset($params['zip_code']) ? $params['zip_code'] : "";
             $clientInformation->approval_token = ClientInformation::generateUniqueApprovalToken();
 
             $saved = $clientInformation->save();
         }
-
-        // fsda
 
         return response()->json(
             $saved ?

@@ -12,14 +12,14 @@ class ClientInformation extends Model
     public static $rules = [
         'school_name' => "string|max:100",
         'first_name' => "required|string|max:50",
-        'last_name' => "required|string|max:50",
+        // 'last_name' => "required|string|max:50",
         'email' => "required|string|max:50",
-        'business_phone' => "string|max:20",
-        'address_1' => "string|max:255",
-        'address_2' => "string|max:255",
-        'city' => "string|max:20",
-        'state' => "string|max:20",
-        'zip_code' => "numeric|digits_between:4,10"
+        // 'business_phone' => "string|max:20",
+        // 'address_1' => "string|max:255",
+        // 'address_2' => "string|max:255",
+        // 'city' => "string|max:20",
+        // 'state' => "string|max:20",
+        // 'zip_code' => "numeric|digits_between:4,10"
     ];
 
     public function cart_item()
