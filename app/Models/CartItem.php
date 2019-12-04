@@ -94,8 +94,8 @@ class CartItem extends Model
             case is_null($this->cut_id) || $this->cut_id === 0:
             case is_null($this->style_id) || $this->style_id === 0:
             case is_null($this->design_id) || $this->design_id === 0:
-            case is_null($this->roster) || $this->roster === "[]" || $this->roster === "{}":
-            case is_null($this->application_size) || $this->application_size === "[]" || $this->application_size === "{}":
+            case $this->isRosterEmpty():
+            case $this->isAppSizeEmpty():
 
             //  temporary comment these below
             // case $this->designStatusIncomplete():
@@ -116,6 +116,16 @@ class CartItem extends Model
         }
 
         return null;
+    }
+
+    public function isRosterEmpty()
+    {
+        return is_null($this->roster) || $this->roster === "[]" || $this->roster === "{}";
+    }
+
+    public function isAppSizeEmpty()
+    {
+        return is_null($this->application_size) || $this->application_size === "[]" || $this->application_size === "{}";
     }
 
     public function isIncomplete()
@@ -244,6 +254,70 @@ class CartItem extends Model
         $this->has_pending_approval = static::FALSY_FLAG;
 
         return $this->save();
+    }
+
+    public function getRosterSizeBreakDown()
+    {
+        if (!$this->isRosterEmpty())
+        {
+            $rosters = json_decode($this->roster, true);
+            $sizeBreakdown = array_map(function($roster) {
+                return [
+                    'qty' => $roster['qty'],
+                    'size' => $roster['size']
+                ];
+            }, $rosters);
+
+            return $sizeBreakdown;
+        }
+
+        return null;
+    }
+
+    public function getRosterOrderFormat($cut_name)
+    {
+        if (!$this->isRosterEmpty())
+        {
+            $rosters = json_decode($this->roster, true);
+
+            $rosterOrderFormat = [];
+            foreach ($rosters as $roster)
+            {
+                if (count($roster['rosters']) > 0)
+                {
+                    $subRosters = $roster['rosters'];
+
+                    foreach ($subRosters as $subRoster)
+                    {
+                        $rosterOrderFormat[] = [
+                            'Size' => $subRoster['size'],
+                            'Number' => $subRoster['number'],
+                            'Name' => $subRoster['player_name'],
+                            'Sample' => 0,
+                            'LastNameApplication' => "N/A",
+                            'SleeveCut' => $cut_name,
+                            'Quantity' => $subRoster['qty']
+                        ];
+                    }
+                }
+                else
+                {
+                    $rosterOrderFormat[] = [
+                        'Size' => $roster['size'],
+                        'Number' => "",
+                        'Name' => "",
+                        'Sample' => 0,
+                        'LastNameApplication' => "N/A",
+                        'SleeveCut' => $cut_name,
+                        'Quantity' => $roster['qty']
+                    ];
+                }
+            }
+
+            return $rosterOrderFormat;
+        }
+
+        return null;
     }
 
     // public function cart_item_players()

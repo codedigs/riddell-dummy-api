@@ -282,7 +282,7 @@ class Cart extends Model
             $orderItems[$index]['description'] = ""; // meron
             $orderItems[$index]['factory_order_id'] = "";
 
-            $orderItems[$index]['roster'] = json_decode($item->roster);
+            $orderItems[$index]['roster'] = $item->getRosterOrderFormat($cut_name);
             $orderItems[$index]['sku'] = "";
             $orderItems[$index]['material_id'] = $item->style_id;
             $orderItems[$index]['url'] = $item->getCustomizerUrl();
@@ -304,14 +304,6 @@ class Cart extends Model
                 $orderItems[$index]['application_type'] = $material->uniform_application_type;
             }
 
-            $roster = json_decode($item->roster, true);
-            $sizeBreakdown = array_map(function($roster_row) {
-                return [
-                    'qty' => $roster_row['qty'],
-                    'size' => $roster_row['size']
-                ];
-            }, $roster);
-
             // pdf json
             $orderItems[$index]['pdf_json'] = [
                 'pdfGenerator' => true,
@@ -332,11 +324,11 @@ class Cart extends Model
                 'description' => "",
                 'cutPdf' => "",
                 'stylesPdf' => "",
-                'roster' => [],
-                'pipings' => $roster,
+                'roster' => $item->getRosterOrderFormat($cut_name),
+                'pipings' => [],
                 'createdDate' => date("Y/m/d"),
                 'notes' => "",
-                'sizeBreakdown' => $sizeBreakdown,
+                'sizeBreakdown' => $item->getRosterSizeBreakDown(),
                 'applications' => [],
                 'sizingTable' => [],
                 'upper' => [],
