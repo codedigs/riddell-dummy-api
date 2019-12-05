@@ -79,8 +79,6 @@ class CartItemController extends Controller
         unset($cartItemData['created_at']);
         unset($cartItemData['updated_at']);
 
-        unset($cartItemData['builder_customization']);
-
         if (!is_null($cartItem->getStyleId()))
         {
             $styleApi = new StyleApi;
