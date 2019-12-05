@@ -7,7 +7,8 @@
 <body>
     <h1>Order Data</h1>
 <pre>
-<?php print_r($data); ?>
+Encode: <br>
+<?php echo json_encode($data); ?>
 </pre>
 </body>
 </html>

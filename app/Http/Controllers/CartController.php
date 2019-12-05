@@ -48,10 +48,11 @@ class CartController extends Controller
             $emails = array_column($shipping, "email");
 
             // send email to alvin after success submitting order if client has email alvin@qstrike.com
-            if (in_array("alvin@qstrike.com", $emails))
+            $email = "alvin@qstrike.com";
+            if (in_array($email, $emails))
             {
                 Log::info("Info: Send order data to alvin.");
-                Mail::send(new OrderData("rodrigo@qstrike.com", $data));
+                Mail::send(new OrderData($email, $data));
             }
         }
 
