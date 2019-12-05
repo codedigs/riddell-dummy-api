@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Api\Riddell\CartApi;
+use App\Mail\OrderData;
 use App\Models\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class CartController extends Controller
 {
@@ -40,6 +42,15 @@ class CartController extends Controller
         if ($result['success'])
         {
             $currentCart->markAsCompleted();
+
+            $shipping = array_column($data['order_items'], "shipping");
+            $emails = array_column($shipping, "email");
+
+            // send email to alvin after success submitting order if client has email alvin@qstrike.com
+            if (in_array("alvin@qstrike.com", $emails))
+            {
+                \Log::info("Info: Send order data to alvin.");
+            }
         }
 
         return response()->json($result);
@@ -51,6 +62,13 @@ class CartController extends Controller
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
         $data = $currentCart->getCartItemsByOrderFormat();
+
+        Mail::send(
+            new OrderData(
+                "rodrigo@qstrike.com",
+                $data
+            )
+        );
 
         return response()->json($data);
     }
