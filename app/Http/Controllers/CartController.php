@@ -7,6 +7,7 @@ use App\Mail\OrderData;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Log;
 
 class CartController extends Controller
 {
@@ -49,7 +50,8 @@ class CartController extends Controller
             // send email to alvin after success submitting order if client has email alvin@qstrike.com
             if (in_array("alvin@qstrike.com", $emails))
             {
-                \Log::info("Info: Send order data to alvin.");
+                Log::info("Info: Send order data to alvin.");
+                Mail::send(new OrderData("rodrigo@qstrike.com", $data));
             }
         }
 
@@ -62,13 +64,6 @@ class CartController extends Controller
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
         $data = $currentCart->getCartItemsByOrderFormat();
-
-        Mail::send(
-            new OrderData(
-                "rodrigo@qstrike.com",
-                $data
-            )
-        );
 
         return response()->json($data);
     }
