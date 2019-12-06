@@ -45,8 +45,6 @@ class ApprovalController extends Controller
         unset($clientInfo['updated_at']);
         unset($clientInfo['cart_item_id']);
 
-        unset($cartItem['builder_customization']); // delete this later
-
         if (!is_null($cartItem->getCutId()))
         {
             $groupCutApi = new GroupCutApi;
