@@ -252,6 +252,7 @@ class CartItem extends Model
         $this->is_approved = static::TRUTHY_FLAG;
         $this->has_change_request = static::FALSY_FLAG;
         $this->has_pending_approval = static::FALSY_FLAG;
+        $this->approved_at = date("Y-m-d h:i:s");
 
         return $this->save();
     }

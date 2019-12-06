@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\Prolook\StyleApi;
+use App\Api\Qx7\GroupCutApi;
 use App\Api\Riddell\CartApi;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -78,6 +79,25 @@ class CartItemController extends Controller
         unset($cartItemData['cart_id']);
         unset($cartItemData['created_at']);
         unset($cartItemData['updated_at']);
+
+        unset($cartItemData['builder_customization']); // delete this later
+
+        if (!is_null($cartItem->getCutId()))
+        {
+            $groupCutApi = new GroupCutApi;
+            $groupCutResult = $groupCutApi->getById($cartItem->cut_id);
+
+            if ($groupCutResult->success)
+            {
+                $groupCut = $groupCutResult->master_block_pattern_group;
+
+                $cartItemData['group_cut'] = [
+                    'id' => $groupCut->id,
+                    'name' => $groupCut->name,
+                    'image' => !is_null($groupCut->thumbnail) ? $groupCut->thumbnail : "/riddell/img/Cuts/cut-7.png"
+                ];
+            }
+        }
 
         if (!is_null($cartItem->getStyleId()))
         {

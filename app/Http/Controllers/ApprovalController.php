@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\Prolook\StyleApi;
+use App\Api\Qx7\GroupCutApi;
 use App\Models\ClientInformation;
 use Illuminate\Http\Request;
 use Validator;
@@ -43,6 +44,25 @@ class ApprovalController extends Controller
         unset($clientInfo['created_at']);
         unset($clientInfo['updated_at']);
         unset($clientInfo['cart_item_id']);
+
+        unset($cartItem['builder_customization']); // delete this later
+
+        if (!is_null($cartItem->getCutId()))
+        {
+            $groupCutApi = new GroupCutApi;
+            $groupCutResult = $groupCutApi->getById($cartItem->cut_id);
+
+            if ($groupCutResult->success)
+            {
+                $groupCut = $groupCutResult->master_block_pattern_group;
+
+                $cartItem['group_cut'] = [
+                    'id' => $groupCut->id,
+                    'name' => $groupCut->name,
+                    'image' => !is_null($groupCut->thumbnail) ? $groupCut->thumbnail : "/riddell/img/Cuts/cut-7.png"
+                ];
+            }
+        }
 
         if (!is_null($cartItem->getStyleId()))
         {
