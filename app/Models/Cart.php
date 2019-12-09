@@ -222,7 +222,7 @@ class Cart extends Model
                     'email' => $clientInfo->email,
                     'address' => $clientInfo->address_1,
                     'city' => $clientInfo->city,
-                    'state' => $clientInfo->state,
+                    'state' => "",
                     'phone' => $clientInfo->business_phone,
                     'fax' => "", // blank for the mean time
                     // 'address_2' => $clientInfo->address_2,
