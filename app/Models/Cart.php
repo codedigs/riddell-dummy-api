@@ -229,7 +229,7 @@ class Cart extends Model
                     "zip" => $clientInfo->zip_code
                 ];
 
-                $orderItems[$index]['shipping'] = $shipping_info;
+                $orderItems[$index]['shipping'] = json_encode($shipping_info);
             }
 
             $cut_name = "";
