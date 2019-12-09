@@ -45,7 +45,8 @@ class CartController extends Controller
             $currentCart->markAsCompleted();
 
             $shipping = array_column($data['order_items'], "shipping");
-            $emails = array_column($shipping, "email");
+            $shipping_decode = array_map("json_decode", $shipping);
+            $emails = array_column($shipping_decode, "email");
 
             // send email to alvin after success submitting order if client has email alvin@qstrike.com
             $email = "alvin@qstrike.com";
