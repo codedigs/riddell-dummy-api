@@ -27,38 +27,38 @@ class CartController extends Controller
         return response()->json($result);
     }
 
-    public function submit(Request $request)
-    {
-        $user = $request->user();
-        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
+    // public function submit(Request $request)
+    // {
+    //     $user = $request->user();
+    //     $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
-        $data = $currentCart->getCartItemsByOrderFormat();
+    //     $data = $currentCart->getCartItemsByOrderFormat();
 
-        $cartApi = new CartApi($user->hybris_access_token);
-        $result = $cartApi->submitOrder($data);
+    //     $cartApi = new CartApi($user->hybris_access_token);
+    //     $result = $cartApi->submitOrder($data);
 
-        // convert result to array
-        $result = json_decode(json_encode($result), true);
+    //     // convert result to array
+    //     $result = json_decode(json_encode($result), true);
 
-        if ($result['success'])
-        {
-            $currentCart->markAsCompleted();
+    //     if ($result['success'])
+    //     {
+    //         $currentCart->markAsCompleted();
 
-            $shipping = array_column($data['order_items'], "shipping");
-            $shipping_decode = array_map("json_decode", $shipping);
-            $emails = array_column($shipping_decode, "email");
+    //         $shipping = array_column($data['order_items'], "shipping");
+    //         $shipping_decode = array_map("json_decode", $shipping);
+    //         $emails = array_column($shipping_decode, "email");
 
-            // send email to alvin after success submitting order if client has email alvin@qstrike.com
-            $email = "alvin@qstrike.com";
-            if (in_array($email, $emails))
-            {
-                Log::info("Info: Send order data to alvin.");
-                Mail::send(new OrderData($email, $data));
-            }
-        }
+    //         // send email to alvin after success submitting order if client has email alvin@qstrike.com
+    //         $email = "alvin@qstrike.com";
+    //         if (in_array($email, $emails))
+    //         {
+    //             Log::info("Info: Send order data to alvin.");
+    //             Mail::send(new OrderData($email, $data));
+    //         }
+    //     }
 
-        return response()->json($result);
-    }
+    //     return response()->json($result);
+    // }
 
     public function submitData(Request $request)
     {
