@@ -206,6 +206,7 @@ class AuthServiceProvider extends ServiceProvider
                             $user->selected_line_item_id = $data->line_item_id;
                             $user->client_email = $data->client_email;
                             $user->client_name = $data->client_name;
+                            $user->hyb_url = $data->hyb_url;
 
                             return $user;
                         }
