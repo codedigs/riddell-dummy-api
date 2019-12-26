@@ -247,12 +247,15 @@ class CartItem extends Model
         return $this->save();
     }
 
-    public function markAsApproved()
+    public function markAsApproved($timezone="America/New_York")
     {
         $this->is_approved = static::TRUTHY_FLAG;
         $this->has_change_request = static::FALSY_FLAG;
         $this->has_pending_approval = static::FALSY_FLAG;
-        $this->approved_at = date("Y-m-d h:i:s");
+
+        $now = new \DateTime();
+        $now->setTimezone(new \DateTimeZone($timezone));
+        $this->approved_at = $now->format("Y-m-d H:i:s");
 
         return $this->save();
     }

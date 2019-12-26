@@ -19,8 +19,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->configure("qx7");
         $this->app->configure("riddell");
 
-        date_default_timezone_set(config("app.timezone"));
-
         $this->app->singleton('mailer', function ($app) {
             $app->configure('services');
             return $app->loadComponent('mail', "Illuminate\Mail\MailServiceProvider", 'mailer');
