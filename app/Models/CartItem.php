@@ -324,6 +324,12 @@ class CartItem extends Model
         return null;
     }
 
+    public function saveLineItemId($line_item_id)
+    {
+        $this->line_item_id = $line_item_id;
+        return $this->save();
+    }
+
     // public function cart_item_players()
     // {
     //     return $this->hasMany(CartItemPlayer::class);

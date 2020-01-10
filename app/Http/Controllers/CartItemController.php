@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Api\Prolook\StyleApi;
 use App\Api\Qx7\GroupCutApi;
 use App\Api\Riddell\CartApi;
+use App\Api\Riddell\CartItemApi;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\ChangeLog;
@@ -177,8 +178,22 @@ class CartItemController extends Controller
             'has_pending_approval' => isset($params['has_pending_approval']) ? $params['has_pending_approval'] : 0
         ]);
 
+        $is_created = $result instanceof CartItem;
+
+        if ($is_created)
+        {
+            // sync item to hybris
+            $cartItemApi = new CartItemApi($user->hybris_access_token);
+            $syncingResult = $cartItemApi->syncItem($user->current_pl_cart_id, $params['cut_id']);
+
+            if ($syncingResult->success)
+            {
+                $result->saveLineItemId($syncingResult->line_item_id);
+            }
+        }
+
         return response()->json(
-            $result instanceof CartItem ?
+            $is_created ?
             [
                'success' => true,
                'message' => "Successfully create cart item",
