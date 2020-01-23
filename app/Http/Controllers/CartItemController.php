@@ -98,9 +98,9 @@ class CartItemController extends Controller
             }
         }
 
+        $styleApi = new StyleApi;
         if (!is_null($cartItem->getStyleId()))
         {
-            $styleApi = new StyleApi;
             $style = $styleApi->getInfo($cartItem->getStyleId());
 
             if ($style->success)
@@ -121,6 +121,30 @@ class CartItemController extends Controller
             unset($cartItemData['client_information']['cart_item_id']);
             unset($cartItemData['client_information']['created_at']);
             unset($cartItemData['client_information']['updated_at']);
+        }
+
+        if (!is_null($cartItem->side2))
+        {
+            $cartItemData['side2'] = $cartItem->side2;
+
+            $style = $styleApi->getInfo($cartItemData['side2']['style_id']);
+
+            if ($style->success)
+            {
+                $material = $style->material;
+
+                $cartItemData['side2']['style'] = [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'image' => !empty($material->thumbnail_path) ? $material->thumbnail_path : "/riddell/img/Football-Picker/Inspiration@2x.png"
+                ];
+            }
+
+            unset($cartItemData['side2']['id']);
+            unset($cartItemData['side2']['cart_item_id']);
+            unset($cartItemData['side2']['created_at']);
+            unset($cartItemData['side2']['updated_at']);
+            unset($cartItemData['side2']['deleted_at']);
         }
 
         return response()->json([
@@ -295,7 +319,7 @@ class CartItemController extends Controller
         {
             return response()->json([
                 'success' => false,
-                'message' => "Cannot update cut id when coach has already change request."
+                'message' => "Cannot update style id when coach has already change request."
             ]);
         }
 
@@ -329,7 +353,7 @@ class CartItemController extends Controller
             $cartItem->save() ?
             [
                 'success' => true,
-                'message' => "Successfully update style id"
+                'message' => "Successfully update style id."
             ] :
             [
                 'success' => false,
@@ -386,7 +410,7 @@ class CartItemController extends Controller
             $cartItem->save() ?
             [
                 'success' => true,
-                'message' => "Successfully update design"
+                'message' => "Successfully update design."
             ] :
             [
                 'success' => false,

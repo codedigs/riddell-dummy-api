@@ -22,7 +22,7 @@ class CartItemTransformer extends TransformerAbstract
         $data = [
             'id' => $cartItem->id,
             'design_id' => $cartItem->getDesignId(),
-            'builder_customization' => $cartItem->builder_customization,
+            // 'builder_customization' => $cartItem->builder_customization,
             'customizer_url' => $cartItem->getCustomizerUrl(),
             'front_image' => $cartItem->getFrontThumbnail(),
             'back_image' => $cartItem->getBackThumbnail(),
@@ -86,9 +86,9 @@ class CartItemTransformer extends TransformerAbstract
             }
         }
 
+        $styleApi = new StyleApi;
         if (!is_null($cartItem->getStyleId()))
         {
-            $styleApi = new StyleApi;
             $style = $styleApi->getInfo($cartItem->getStyleId());
 
             if ($style->success)
@@ -111,6 +111,30 @@ class CartItemTransformer extends TransformerAbstract
             unset($data['client_information']['cart_item_id']);
             unset($data['client_information']['created_at']);
             unset($data['client_information']['updated_at']);
+        }
+
+        if (!is_null($cartItem->side2))
+        {
+            $data['side2'] = $cartItem->side2;
+
+            $style = $styleApi->getInfo($data['side2']['style_id']);
+
+            if ($style->success)
+            {
+                $material = $style->material;
+
+                $data['side2']['style'] = [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'image' => !empty($material->thumbnail_path) ? $material->thumbnail_path : "/riddell/img/Football-Picker/Inspiration@2x.png"
+                ];
+            }
+
+            unset($data['side2']['id']);
+            unset($data['side2']['cart_item_id']);
+            unset($data['side2']['created_at']);
+            unset($data['side2']['updated_at']);
+            unset($data['side2']['deleted_at']);
         }
 
         return $data;

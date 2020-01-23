@@ -76,7 +76,7 @@ class StyleApi extends Api
                     {
                         unset($cutStyle->alias);
                         unset($cutStyle->created_at);
-                        unset($cutStyle->cut_id);
+                        // unset($cutStyle->cut_id);
                         unset($cutStyle->deleted_at);
                         unset($cutStyle->gender);
                         unset($cutStyle->id);

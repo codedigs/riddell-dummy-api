@@ -77,6 +77,17 @@ $router->group([
     $router->put("{cart_item_id:[\d]+}/fix-changes", ['middleware' => ["valid_to_use_cart", "cart_item"], 'uses' => "CartItemController@fixChanges"]);
 });
 
+// cart items side 2 (for reversible)
+$router->group([
+    'prefix' => "carts/items/{cart_item_id:[\d]+}/side2",
+    'middleware' => ["auth", "cart", "valid_to_use_cart", "cart_item"]
+], function() use($router) {
+    $router->put("update-style-id", "CartItemSide2Controller@updateStyleId");
+    $router->put("update-design", "CartItemSide2Controller@updateDesign");
+    $router->put("update-thumbnails", "CartItemSide2Controller@updateThumbnails");
+    $router->put("update-application-size", "CartItemSide2Controller@updateApplicationSize");
+});
+
 // delete cart item by line item without middleware
 $router->delete("carts/{pl_cart_id}/items/{line_item_id}/delete-by-line-item-id", "CartItemController@deleteByLineItemId");
 

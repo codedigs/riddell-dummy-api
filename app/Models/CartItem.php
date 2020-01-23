@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Cart;
+use App\Models\CartItemSide2;
 use App\Models\ClientInformation;
 use App\Models\Cut;
 use Illuminate\Database\Eloquent\Model;
@@ -50,6 +51,11 @@ class CartItem extends Model
     public function cut()
     {
         return $this->hasOne(Cut::class, "cut_id", "cut_id");
+    }
+
+    public function side2()
+    {
+        return $this->hasOne(CartItemSide2::class);
     }
 
     public function scopeFindBy($query, $field, $value)
