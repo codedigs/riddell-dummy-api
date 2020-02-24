@@ -16,8 +16,6 @@ class CartController extends Controller
         $user = $request->user();
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
-        $rows = $currentCart->getCartItemsByHybrisFormat();
-
         $cartApi = new CartApi($user->hybris_access_token);
         $result = $cartApi->update($currentCart->pl_cart_id, $user->email, $rows);
 
