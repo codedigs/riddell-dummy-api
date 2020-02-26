@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Api\Prolook\MaterialApi;
 use App\Api\Prolook\SavedDesignApi;
 use App\Api\Qx7\CutApi;
+use App\Api\Qx7\GroupCutApi;
 use App\Models\CartItem;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -89,7 +90,7 @@ class Cart extends Model
         $rows = [];
         if ($items->isNotEmpty())
         {
-            $cutApi = new CutApi;
+            $groupCutApi = new GroupCutApi;
             $materialApi = new MaterialApi;
 
             foreach ($items as $item)
@@ -99,15 +100,15 @@ class Cart extends Model
 
                 if (!empty($item->cut_id))
                 {
-                    $cutResult = $cutApi->getById($item->cut_id);
+                    $groupCutResult = $groupCutApi->getById($item->cut_id);
 
-                    if ($cutResult->success)
+                    if ($groupCutResult->success)
                     {
-                        if (isset($cutResult->master_3d_block_patterns))
+                        if (isset($groupCutResult->master_block_pattern_group))
                         {
-                            if (isset($cutResult->master_3d_block_patterns->block_pattern_name))
+                            if (isset($groupCutResult->master_block_pattern_group->name))
                             {
-                                $cut_name = $cutResult->master_3d_block_patterns->block_pattern_name;
+                                $cut_name = $groupCutResult->master_block_pattern_group->name;
                             }
                         }
                     }
@@ -206,7 +207,7 @@ class Cart extends Model
 
         $materialApi = new MaterialApi;
         $savedDesignApi = new SavedDesignApi;
-        $cutApi = new CutApi;
+        $groupCutApi = new GroupCutApi;
 
         $brand = config("app.brand");
 
@@ -237,15 +238,15 @@ class Cart extends Model
 
             if (!empty($item->cut_id))
             {
-                $cutResult = $cutApi->getById($item->cut_id);
+                $groupCutResult = $groupCutApi->getById($item->cut_id);
 
-                if ($cutResult->success)
+                if ($groupCutResult->success)
                 {
-                    if (isset($cutResult->master_3d_block_patterns))
+                    if (isset($groupCutResult->master_block_pattern_group))
                     {
-                        if (isset($cutResult->master_3d_block_patterns->block_pattern_name))
+                        if (isset($groupCutResult->master_block_pattern_group->name))
                         {
-                            $cut_name = $cutResult->master_3d_block_patterns->block_pattern_name;
+                            $cut_name = $groupCutResult->master_block_pattern_group->name;
                         }
                     }
                 }
