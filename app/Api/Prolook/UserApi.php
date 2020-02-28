@@ -12,7 +12,7 @@ class UserApi extends Api
         $riddell_brand_id = config("riddell.brand_id");
 
         try {
-            $response = $this->post("api/user/quickRegistration", [
+            $response = $this->post("api/user/riddell/quickRegistration", [
                 'json' => compact("email", "riddell_brand_id", "is_from_hybris"),
             ]);
             return $this->decoder->decode($response->getBody());
