@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Api\Prolook\StyleApi;
 use App\Api\Qx7\GroupCutApi;
 use App\Models\ClientInformation;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -33,10 +34,10 @@ class ApprovalController extends Controller
 
         $cartItem->status = $cartItem->getStatus();
 
+        unset($cartItem['cart']);
         unset($cartItem['is_approved']);
         unset($cartItem['has_change_request']);
         unset($cartItem['has_pending_approval']);
-        unset($cartItem['created_at']);
         unset($cartItem['created_at']);
         unset($cartItem['updated_at']);
         unset($cartItem['deleted_at']);
@@ -79,11 +80,21 @@ class ApprovalController extends Controller
             }
         }
 
+        $sales_rep_email = null;
+        if (isset($currentCart->user))
+        {
+            if (isset($currentCart->user->email))
+            {
+                $sales_rep_email = $currentCart->user->email;
+            }
+        }
+
         return response()->json([
             'success' => true,
             'is_cart_available' => !$currentCart->isCompleted(),
             'ready_to_submit' => $currentCart->areAllItemsApproved(),
-            'data' => $clientInfo
+            'data' => $clientInfo,
+            'sales_rep_email' => $sales_rep_email
         ]);
     }
 
@@ -218,5 +229,24 @@ class ApprovalController extends Controller
             'success' => true,
             'builder_customization' => json_decode($cartItem->builder_customization, true)
         ]);
+    }
+
+    public function getEmailToken(Request $request)
+    {
+        $client = new Client;
+
+        $riddellConfig = config("riddell");
+
+        $response = $client->post($riddellConfig['api_host'] . '/api/auth/token', [
+            'auth' => [
+                $riddellConfig['integration_endpoint_username'], $riddellConfig['integration_endpoint_password']
+            ],
+            'headers' => [
+                "Content-Type" => "application/x-www-form-urlencoded"
+            ]
+        ]);
+        $response = json_decode($response->getBody(), 1);
+
+        return response()->json($response);
     }
 }
