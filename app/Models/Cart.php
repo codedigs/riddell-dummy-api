@@ -350,7 +350,9 @@ class Cart extends Model
                     "style_name" => $style_name,
                     "design_id" => $item->design_id
                 ],
-                'colorGroupings' => []
+                'colorGroupings' => [],
+                'signature' => $item->signature_image,
+                'dateTimeStamp' => $item->approved_at
             ];
 
             if (isset($builder_customization['thumbnails']))
