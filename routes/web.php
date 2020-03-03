@@ -36,6 +36,7 @@ $router->group([
 ], function() use($router) {
     $router->get("client-information", "ApprovalController@getClientInformation");
     $router->get("builder-customization", "ApprovalController@getBuilderCustomization");
+    $router->get("email-token", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@getEmailToken"]);
 
     $router->put("update-roster", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@updateRoster"]);
     $router->put("update-client-information", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@updateClientInformation"]);
