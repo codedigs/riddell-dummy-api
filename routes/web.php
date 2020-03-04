@@ -83,6 +83,7 @@ $router->group([
     'prefix' => "carts/items/{cart_item_id:[\d]+}/side2",
     'middleware' => ["auth", "cart", "valid_to_use_cart", "cart_item"]
 ], function() use($router) {
+    $router->get("update-style-id", "CartItemSide2Controller@updateStyleId");
     $router->put("update-style-id", "CartItemSide2Controller@updateStyleId");
     $router->put("update-design", "CartItemSide2Controller@updateDesign");
     $router->put("update-thumbnails", "CartItemSide2Controller@updateThumbnails");

@@ -80,6 +80,7 @@ class CartItemController extends Controller
         unset($cartItemData['cart_id']);
         unset($cartItemData['created_at']);
         unset($cartItemData['updated_at']);
+        unset($cartItemData['cart']);
 
         if (!is_null($cartItem->getCutId()))
         {
@@ -123,7 +124,7 @@ class CartItemController extends Controller
             unset($cartItemData['client_information']['updated_at']);
         }
 
-        if (!is_null($cartItem->side2))
+        if ($cartItem->isReversible() && !is_null($cartItem->side2))
         {
             $cartItemData['side2'] = $cartItem->side2;
 

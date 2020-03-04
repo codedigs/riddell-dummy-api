@@ -113,7 +113,7 @@ class CartItemTransformer extends TransformerAbstract
             unset($data['client_information']['updated_at']);
         }
 
-        if (!is_null($cartItem->side2))
+        if ($cartItem->isReversible() && !is_null($cartItem->side2))
         {
             $data['side2'] = $cartItem->side2;
 

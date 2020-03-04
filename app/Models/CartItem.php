@@ -33,6 +33,8 @@ class CartItem extends Model
 
     const NO_IMAGE_PLACEHOLDER = "https://via.placeholder.com/1000x1100?text=No%20Image";
 
+    const REVERSIBLE_GROUP_CUT_ID = 10;
+
     public function cart()
     {
         return $this->belongsTo(Cart::class, "pl_cart_id_fk", "pl_cart_id");
@@ -157,6 +159,11 @@ class CartItem extends Model
     public function isGetApproval()
     {
         return $this->getStatus() === static::STATUS_GET_APPROVAL;
+    }
+
+    public function isReversible()
+    {
+        return $this->cut_id === static::REVERSIBLE_GROUP_CUT_ID;
     }
 
     public function getFrontThumbnail($placeholder=true)
