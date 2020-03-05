@@ -80,6 +80,30 @@ class ApprovalController extends Controller
             }
         }
 
+        if ($cartItem->isReversible() && !is_null($cartItem->side2))
+        {
+            $cartItem['side2'] = $cartItem->side2;
+
+            $style = $styleApi->getInfo($cartItem['side2']['style_id']);
+
+            if ($style->success)
+            {
+                $material = $style->material;
+
+                $cartItem['side2']['style'] = [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'image' => !empty($material->thumbnail_path) ? $material->thumbnail_path : "/riddell/img/Football-Picker/Inspiration@2x.png"
+                ];
+            }
+
+            unset($cartItem['side2']['id']);
+            unset($cartItem['side2']['cart_item_id']);
+            unset($cartItem['side2']['created_at']);
+            unset($cartItem['side2']['updated_at']);
+            unset($cartItem['side2']['deleted_at']);
+        }
+
         $sales_rep_email = null;
         if (isset($currentCart->user))
         {
