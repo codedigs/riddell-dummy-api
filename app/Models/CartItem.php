@@ -299,7 +299,7 @@ class CartItem extends Model
                             'Name' => $subRoster['player_name'],
                             'Sample' => 0,
                             'LastNameApplication' => "N/A",
-                            'SleeveCut' => $cut_name,
+                            'SleeveCut' => !empty($cut_name) ? $cut_name : "",
                             'Quantity' => $subRoster['qty']
                         ];
                     }
@@ -312,7 +312,7 @@ class CartItem extends Model
                         'Name' => "",
                         'Sample' => 0,
                         'LastNameApplication' => "N/A",
-                        'SleeveCut' => $cut_name,
+                        'SleeveCut' => !empty($cut_name) ? $cut_name : "",
                         'Quantity' => $roster['qty']
                     ];
                 }
