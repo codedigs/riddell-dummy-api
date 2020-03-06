@@ -35,6 +35,9 @@ class CartItem extends Model
 
     const REVERSIBLE_GROUP_CUT_ID = 10;
 
+    const ROSTER_CATEGORY_ADULT = "adult";
+    const ROSTER_CATEGORY_YOUTH = "youth";
+
     public function cart()
     {
         return $this->belongsTo(Cart::class, "pl_cart_id_fk", "pl_cart_id");
@@ -340,6 +343,30 @@ class CartItem extends Model
     public function saveLineItemId($line_item_id)
     {
         $this->line_item_id = $line_item_id;
+        return $this->save();
+    }
+
+    public function deleteAdultRoster()
+    {
+        $roster = json_decode($this->roster, true);
+
+        $newRoster = array_filter($roster, function($r) {
+            return $r['category'] === static::ROSTER_CATEGORY_YOUTH;
+        });
+
+        $this->roster = json_encode($newRoster);
+        return $this->save();
+    }
+
+    public function deleteYouthRoster()
+    {
+        $roster = json_decode($this->roster, true);
+
+        $newRoster = array_filter($roster, function($r) {
+            return $r['category'] === static::ROSTER_CATEGORY_ADULT;
+        });
+
+        $this->roster = json_encode($newRoster);
         return $this->save();
     }
 

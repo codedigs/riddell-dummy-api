@@ -905,56 +905,6 @@ class CartItemController extends Controller
     // }
 
     /**
-     * Delete cart item by line item id
-     *
-     * @param Request $request
-     */
-    public function deleteByLineItemId(Request $request, $pl_cart_id, $line_item_id)
-    {
-        Log::debug("Bum panot!");
-        $cart = Cart::findBy('pl_cart_id', $pl_cart_id)->first();
-
-        if (!is_null($cart))
-        {
-            $line_item_ids = $cart->cart_items->pluck("line_item_id")->toArray();
-
-            if (in_array($line_item_id, $line_item_ids))
-            {
-                Log::info("Success");
-
-                $cartItem = CartItem::findBy("line_item_id", $line_item_id)->first();
-                $is_deleted = $cartItem->delete();
-
-                return response()->json(
-                    $is_deleted ?
-                    [
-                        'success' => true,
-                        'message' => "Successfully deleted an item."
-                    ] :
-                    [
-                        'success' => false,
-                        'message' => "Cannot delete item this time. Please try again later."
-                    ]
-                );
-            }
-            else
-            {
-                Log::warning("Warning: Line item id {$line_item_id} not belong to Pl cart id {$pl_cart_id}!");
-            }
-        }
-        else
-        {
-            Log::warning("Warning: Pl cart id {$pl_cart_id} is not exist!");
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => "Unauthorized to access cart",
-            'status_code' => 401
-        ]);
-    }
-
-    /**
      * Add fix change log
      *
      * Dependency
