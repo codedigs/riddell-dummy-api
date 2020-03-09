@@ -24,6 +24,14 @@ class CartController extends Controller
         // convert result to array
         $result = json_decode(json_encode($result), true);
 
+        if ($result['success'])
+        {
+            if ($currentCart->areAllItemsApproved())
+            {
+                $currentCart->markAsCompleted();
+            }
+        }
+
         return response()->json($result);
     }
 

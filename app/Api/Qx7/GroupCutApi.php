@@ -58,4 +58,30 @@ class GroupCutApi extends Api
             return $result;
         }
     }
+
+    public function getGroupStylesById($id)
+    {
+        try {
+            $response = $this->get("api/master_block_pattern_groups/cuts-group-styles/{$id}");
+            return $this->decoder->decode($response->getBody());
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+
+            $result = new \stdClass;
+            $result->success = false;
+            $result->status_code = $response->getStatusCode();
+            $result->message = $response->getReasonPhrase();
+
+            return $result;
+        } catch (ServerException $e) {
+            $response = $e->getResponse();
+
+            $result = new \stdClass;
+            $result->success = false;
+            $result->status_code = $response->getStatusCode();
+            $result->message = $response->getReasonPhrase();
+
+            return $result;
+        }
+    }
 }

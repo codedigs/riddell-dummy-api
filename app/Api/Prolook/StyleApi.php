@@ -64,7 +64,6 @@ class StyleApi extends Api
         try {
             $response = $this->get("api/lookup_cut_to_style/cut_id/{$cut_id}");
             $result = $this->decoder->decode($response->getBody());
-            $BELTED = "belted";
 
             if ($result->success)
             {
@@ -90,13 +89,11 @@ class StyleApi extends Api
                             if (isset($styleInfo->material))
                             {
                                 $material = $styleInfo->material;
-                                $is_belted = strpos(strtolower($material->neck_option), $BELTED) !== false;
 
                                 $cutStyle->info = new \stdClass;
                                 $cutStyle->info->name = $material->name;
                                 $cutStyle->info->thumbnail_path = $material->thumbnail_path;
-                                $cutStyle->info->sizing_config_prop = $material->sizing_config_prop;
-                                $cutStyle->info->belted = $is_belted;
+                                $cutStyle->info->neck_option = $material->neck_option;
                             }
                         }
                     }
