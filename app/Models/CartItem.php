@@ -341,7 +341,7 @@ class CartItem extends Model
             return $r['category'] === static::ROSTER_CATEGORY_YOUTH;
         });
 
-        $this->roster = json_encode($newRoster);
+        $this->roster = json_encode(array_values($newRoster));
         return $this->save();
     }
 
@@ -353,7 +353,7 @@ class CartItem extends Model
             return $r['category'] === static::ROSTER_CATEGORY_ADULT;
         });
 
-        $this->roster = json_encode($newRoster);
+        $this->roster = json_encode(array_values($newRoster));
         return $this->save();
     }
 
