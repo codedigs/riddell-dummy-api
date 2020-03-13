@@ -36,12 +36,14 @@ $router->group([
 ], function() use($router) {
     $router->get("client-information", "ApprovalController@getClientInformation");
     $router->get("builder-customization", "ApprovalController@getBuilderCustomization");
-    $router->get("email-token", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@getEmailToken"]);
+    $router->get("email-token", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@getEmailToken"]);
 
-    $router->put("update-roster", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@updateRoster"]);
-    $router->put("update-client-information", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@updateClientInformation"]);
-    $router->put("update-signature-image", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@updateSignatureImage"]);
-    $router->put("approved", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ApprovalController@markAsApproved"]);
+    $router->put("update-roster", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@updateRoster"]);
+    $router->put("update-client-information", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@updateClientInformation"]);
+    $router->put("update-signature-image", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@updateSignatureImage"]);
+    $router->put("approved", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@markAsApproved"]);
+
+    $router->get("save-cart", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@saveCart"]);
 });
 
 // cart items
@@ -87,8 +89,8 @@ $router->group([
     'middleware' => ["approval", "approval_cart_item"]
 ], function() use($router) {
     $router->get("/", "ChangeLogController@getAll");
-    $router->post("ask-for-changes", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ChangeLogController@askForChanges"]);
-    $router->post("quick-edit", ['middleware' => "valid_to_user_cart_for_non_session", 'uses' => "ChangeLogController@logQuickEdit"]);
+    $router->post("ask-for-changes", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ChangeLogController@askForChanges"]);
+    $router->post("quick-edit", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ChangeLogController@logQuickEdit"]);
 });
 
 // users
