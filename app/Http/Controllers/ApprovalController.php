@@ -249,4 +249,20 @@ class ApprovalController extends Controller
 
         return response()->json($response);
     }
+
+    public function saveCart(Request $request)
+    {
+        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+        $currentCart = $clientInfo->cart_item->cart;
+
+        $rows = $currentCart->getCartItemsByHybrisFormat();
+
+        $cartApi = new CartApi($user->hybris_access_token);
+        $result = $cartApi->update($currentCart->pl_cart_id, $user->email, $rows);
+
+        // convert result to array
+        $result = json_decode(json_encode($result), true);
+
+        return response()->json($result);
+    }
 }
