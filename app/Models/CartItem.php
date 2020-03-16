@@ -355,7 +355,14 @@ class CartItem extends Model
         });
 
         $this->roster = json_encode(array_values($newRoster));
-        return $this->save();
+        $saved = $this->save();
+
+        if (empty($newRoster))
+        {
+            $this->delete();
+        }
+
+        return $saved;
     }
 
     public function deleteYouthRoster()
@@ -367,7 +374,14 @@ class CartItem extends Model
         });
 
         $this->roster = json_encode(array_values($newRoster));
-        return $this->save();
+        $saved = $this->save();
+
+        if (empty($newRoster))
+        {
+            $this->delete();
+        }
+
+        return $saved;
     }
 
     // public function cart_item_players()
