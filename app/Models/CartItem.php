@@ -366,6 +366,7 @@ class CartItem extends Model
             return $saved;
         }
 
+        $this->delete();
         return true;
     }
 
@@ -389,6 +390,7 @@ class CartItem extends Model
             return $saved;
         }
 
+        $this->delete();
         return true;
     }
 
