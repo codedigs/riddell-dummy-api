@@ -29,10 +29,12 @@ class RosterController extends Controller
                 return response()->json(
                     $cartItem->deleteAdultRoster() ? [
                         'success' => true,
-                        'new_roster' => "Successfully delete adult roster."
+                        'message' => "Successfully deleted adult roster.",
+                        'status_code' => 200
                     ] : [
                         'success' => true,
-                        'new_roster' => "Cannot delete adult roster this time. Please try again later."
+                        'message' => "Cannot delete adult roster this time. Please try again later.",
+                        'status_code' => 200
                     ]
                 );
             }
@@ -73,10 +75,12 @@ class RosterController extends Controller
                 return response()->json(
                     $cartItem->deleteYouthRoster() ? [
                         'success' => true,
-                        'new_roster' => "Successfully delete youth roster."
+                        'new_roster' => "Successfully deleted youth roster.",
+                        'status_code' => 200
                     ] : [
                         'success' => true,
-                        'new_roster' => "Cannot delete youth roster this time. Please try again later."
+                        'new_roster' => "Cannot delete youth roster this time. Please try again later.",
+                        'status_code' => 200
                     ]
                 );
             }

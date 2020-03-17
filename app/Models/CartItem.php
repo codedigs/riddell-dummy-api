@@ -348,40 +348,48 @@ class CartItem extends Model
 
     public function deleteAdultRoster()
     {
-        $roster = json_decode($this->roster, true);
+        if (!$this->isRosterEmpty()) {
+            $roster = json_decode($this->roster, true);
 
-        $newRoster = array_filter($roster, function($r) {
-            return $r['category'] === static::ROSTER_CATEGORY_YOUTH;
-        });
+            $newRoster = array_filter($roster, function($r) {
+                return $r['category'] === static::ROSTER_CATEGORY_YOUTH;
+            });
 
-        $this->roster = json_encode(array_values($newRoster));
-        $saved = $this->save();
+            $this->roster = json_encode(array_values($newRoster));
+            $saved = $this->save();
 
-        if (empty($newRoster))
-        {
-            $this->delete();
+            if (empty($newRoster))
+            {
+                $this->delete();
+            }
+
+            return $saved;
         }
 
-        return $saved;
+        return true;
     }
 
     public function deleteYouthRoster()
     {
-        $roster = json_decode($this->roster, true);
+        if (!$this->isRosterEmpty()) {
+            $roster = json_decode($this->roster, true);
 
-        $newRoster = array_filter($roster, function($r) {
-            return $r['category'] === static::ROSTER_CATEGORY_ADULT;
-        });
+            $newRoster = array_filter($roster, function($r) {
+                return $r['category'] === static::ROSTER_CATEGORY_ADULT;
+            });
 
-        $this->roster = json_encode(array_values($newRoster));
-        $saved = $this->save();
+            $this->roster = json_encode(array_values($newRoster));
+            $saved = $this->save();
 
-        if (empty($newRoster))
-        {
-            $this->delete();
+            if (empty($newRoster))
+            {
+                $this->delete();
+            }
+
+            return $saved;
         }
 
-        return $saved;
+        return true;
     }
 
     // public function cart_item_players()
