@@ -109,4 +109,33 @@ class CartApi extends Api
             return $result;
         }
     }
+
+    public function submitOrder2($data)
+    {
+        try {
+            $response = $this->post("/api/customizer/order", [
+                'json' => $data
+            ]);
+
+            return $this->decoder->decode($response->getBody());
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+
+            $result = new \stdClass;
+            $result->success = false;
+            $result->status_code = $response->getStatusCode();
+            $result->message = $response->getReasonPhrase();
+
+            return $result;
+        } catch (ServerException $e) {
+            $response = $e->getResponse();
+
+            $result = new \stdClass;
+            $result->success = false;
+            $result->status_code = $response->getStatusCode();
+            $result->message = $response->getReasonPhrase();
+
+            return $result;
+        }
+    }
 }
