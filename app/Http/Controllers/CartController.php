@@ -25,8 +25,12 @@ class CartController extends Controller
         // convert result to array
         $result = json_decode(json_encode($result), true);
 
+        Logs::debug(print_r($result, true));
+
         if ($result['success'])
         {
+            Logs::debug("Items are all approved: " . print_r($currentCart->areAllItemsApproved(), true));
+
             if ($currentCart->areAllItemsApproved())
             {
                 $currentCart->markAsCompleted();
@@ -40,6 +44,8 @@ class CartController extends Controller
 
                 $prolookResponse = json_decode($prolookResponse->getBody(), 1);
 
+                Logs::debug("Prolook Response: " . print_r($prolookResponse, true));
+
                 if ($prolookResponse['success'])
                 {
                     // append pl_cart_id
@@ -47,6 +53,8 @@ class CartController extends Controller
 
                     $cartApi = new CartApi($user->hybris_access_token);
                     $orderResponse = $cartApi->submitOrder2($prolookResponse);
+
+                    Logs::debug("Order Response: " . print_r($orderResponse, true));
 
                     return response()->json($orderResponse);
                 }
