@@ -75,11 +75,11 @@ class RosterController extends Controller
                 return response()->json(
                     $cartItem->deleteYouthRoster() ? [
                         'success' => true,
-                        'new_roster' => "Successfully deleted youth roster.",
+                        'message' => "Successfully deleted youth roster.",
                         'status_code' => 200
                     ] : [
                         'success' => true,
-                        'new_roster' => "Cannot delete youth roster this time. Please try again later.",
+                        'message' => "Cannot delete youth roster this time. Please try again later.",
                         'status_code' => 200
                     ]
                 );
