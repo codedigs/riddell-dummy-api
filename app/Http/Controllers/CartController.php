@@ -42,6 +42,9 @@ class CartController extends Controller
 
                 if ($prolookResponse['success'])
                 {
+                    // append pl_cart_id
+                    $prolookResponse['pl_cart_id'] = $user->current_pl_cart_id;
+
                     $cartApi = new CartApi($user->hybris_access_token);
                     $orderResponse = $cartApi->submitOrder2($prolookResponse);
 
