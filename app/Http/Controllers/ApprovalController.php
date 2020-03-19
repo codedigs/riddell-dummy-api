@@ -273,7 +273,7 @@ class ApprovalController extends Controller
 
             if ($cartUpdateResponse->success)
             {
-                $json_data = $item->getPdfJson();
+                $json_data = ['pdf_json' => $item->getPdfJson()];
 
                 $pdfApi = new PdfApi($hybris_access_token);
                 $generatePdfResponse = $pdfApi->generate($json_data);
