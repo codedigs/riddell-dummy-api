@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Api\Prolook\StyleApi;
 use App\Api\Qx7\GroupCutApi;
+use App\Api\Riddell\CartApi;
 use App\Api\Riddell\PdfApi;
 use App\Models\ClientInformation;
 use GuzzleHttp\Client;
