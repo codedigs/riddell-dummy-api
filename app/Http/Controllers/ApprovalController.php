@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Api\Prolook\StyleApi;
 use App\Api\Qx7\GroupCutApi;
+use App\Api\Riddell\PdfApi;
 use App\Models\ClientInformation;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -252,17 +253,40 @@ class ApprovalController extends Controller
 
     public function saveCart(Request $request)
     {
-        $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
-        $currentCart = $clientInfo->cart_item->cart;
+        $token = $this->getEmailToken($request);
+        $token = $token->getData();
 
-        $rows = $currentCart->getCartItemsByHybrisFormat();
+        if ($token->success)
+        {
+            $hybris_access_token = $token->token;
 
-        $cartApi = new CartApi($user->hybris_access_token);
-        $result = $cartApi->update($currentCart->pl_cart_id, $user->email, $rows);
+            $clientInfo = ClientInformation::findBy('approval_token', $this->approval_token)->first();
+            $item = $clientInfo->cart_item;
+            $currentCart = $item->cart;
+            $user = $currentCart->user;
 
-        // convert result to array
-        $result = json_decode(json_encode($result), true);
+            $rows = $currentCart->getCartItemsByHybrisFormat();
 
-        return response()->json($result);
+            $cartApi = new CartApi($hybris_access_token);
+            $cartUpdateResponse = $cartApi->update($currentCart->pl_cart_id, $user->email, $rows);
+
+            if ($cartUpdateResponse->success)
+            {
+                $json_data = $item->getPdfJson();
+
+                $pdfApi = new PdfApi($hybris_access_token);
+                $generatePdfResponse = $pdfApi->generate($json_data);
+
+                // convert result to array
+                $generatePdfResponse = json_decode(json_encode($generatePdfResponse), true);
+
+                return response()->json($generatePdfResponse);
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Cannot get token to save cart this time. Please try again later."
+        ]);
     }
 }

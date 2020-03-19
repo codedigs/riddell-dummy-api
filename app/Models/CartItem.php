@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Api\Prolook\MaterialApi;
+use App\Api\Qx7\GroupCutApi;
 use App\Models\Cart;
 use App\Models\ClientInformation;
 use App\Models\Cut;
@@ -279,6 +281,183 @@ class CartItem extends Model
         }
 
         return null;
+    }
+
+    public function getPdfJson()
+    {
+        $SELECTED_SOURCE = "Riddell Customizer";
+        $SELECTED_TEMPLATE = "Riddell";
+
+        $cut_name = "";
+        $style_name = "";
+
+        $groupCutApi = new GroupCutApi;
+        $materialApi = new MaterialApi;
+
+        if (!empty($this->cut_id))
+        {
+            $groupCutResult = $groupCutApi->getById($this->cut_id);
+
+            if ($groupCutResult->success)
+            {
+                if (isset($groupCutResult->master_block_pattern_group))
+                {
+                    if (isset($groupCutResult->master_block_pattern_group->name))
+                    {
+                        $cut_name = $groupCutResult->master_block_pattern_group->name;
+                    }
+                }
+            }
+        }
+
+        if (!empty($this->style_id))
+        {
+            $materialResult = $materialApi->getById($this->style_id);
+            if ($materialResult->success)
+            {
+                if (isset($materialResult->material))
+                {
+                    if (isset($materialResult->material->name))
+                    {
+                        $style_name = $materialResult->material->name;
+                    }
+                }
+            }
+        }
+
+        $builder_customization = json_decode($this->builder_customization, true);
+
+        $pdf_json = [
+            'pdfGenerator' => true,
+            'selectedSource' => $SELECTED_SOURCE,
+            'selectedTemplate' => $SELECTED_TEMPLATE,
+            'searchKey' => "preview" . date("-Y-m-d-H-i-s-") . uniqid(), // skip
+            'thumbnails' => [
+                'front_view' => "",
+                'back_view' => "",
+                'left_view' => "",
+                'right_view' => ""
+            ],
+            'category' => "",
+            'fullName' => "",
+            'client' => "fullname",
+            'orderId' => "",
+            'foid' => "",
+            'description' => "",
+            'cutPdf' => "",
+            'stylesPdf' => "",
+            'roster' => $this->getRosterOrderFormat($cut_name),
+            'pipings' => [],
+            'createdDate' => date("Y/m/d"),
+            'notes' => "",
+            'sizeBreakdown' => $this->getRosterSizeBreakDown(),
+            'applications' => [],
+            'sizingTable' => [],
+            'upper' => [],
+            'lower' => [],
+            'hiddenBody' => "",
+            'randomFeeds' => [],
+            'legacyPDF' => "",
+            'applicationType' => "",
+            'sml' => [],
+            'sku' => "-",
+            'hybris_cart_info' => [
+                "hyb_cart_id" => "", // optional
+                "pl_cart_id" => $this->pl_cart_id_fk,
+                "line_item_id" => $this->line_item_id,
+                "cut_id" => $this->cut_id,
+                "cut_name" => $cut_name,
+                "style_id" => $this->style_id,
+                "style_name" => $style_name,
+                "design_id" => $this->design_id
+            ],
+            'colorGroupings' => [],
+            'signature' => $this->signature_image,
+            'dateTimeStamp' => $this->approved_at
+        ];
+
+        if (isset($builder_customization['thumbnails']))
+        {
+            $pdf_json['thumbnails'] = $builder_customization['thumbnails'];
+        }
+
+        if (isset($builder_customization['uniform_category']))
+        {
+            $pdf_json['category'] = $builder_customization['uniform_category'];
+        }
+
+        if (isset($builder_customization['material']))
+        {
+            if (isset($builder_customization['material']['block_pattern']))
+            {
+                $pdf_json['description'] = $builder_customization['material']['block_pattern'];
+            }
+        }
+
+        if (isset($builder_customization['cut_pdf']))
+        {
+            $pdf_json['cutPdf'] = $builder_customization['cut_pdf'];
+        }
+
+        if (isset($builder_customization['styles_pdf']))
+        {
+            $pdf_json['stylesPdf'] = $builder_customization['styles_pdf'];
+        }
+
+        if (isset($builder_customization['pipings']))
+        {
+            $pdf_json['pipings'] = $builder_customization['pipings'];
+        }
+
+        if (isset($builder_customization['applications']))
+        {
+            $pdf_json['applications'] = $builder_customization['applications'];
+        }
+
+        if (isset($builder_customization['upper']))
+        {
+            $pdf_json['upper'] = $builder_customization['upper'];
+        }
+
+        if (isset($builder_customization['lower']))
+        {
+            $pdf_json['lower'] = $builder_customization['lower'];
+        }
+
+        if (isset($builder_customization['lower']))
+        {
+            $pdf_json['lower'] = $builder_customization['lower'];
+        }
+
+        if (isset($builder_customization['hiddenBody']))
+        {
+            $pdf_json['hiddenBody'] = $builder_customization['hiddenBody'];
+        }
+
+        if (isset($builder_customization['randomFeeds']))
+        {
+            $pdf_json['randomFeeds'] = $builder_customization['randomFeeds'];
+        }
+
+        if (isset($builder_customization['material']))
+        {
+            if (isset($builder_customization['material']['uniform_application_type']))
+            {
+                $pdf_json['applicationType'] = $builder_customization['material']['uniform_application_type'];
+            }
+
+            if (isset($builder_customization['material']['modifier_labels']))
+            {
+                $pdf_json['sml'] = $builder_customization['material']['modifier_labels'];
+            }
+        }
+
+        if (isset($builder_customization['colorGroupings']))
+        {
+            $pdf_json['colorGroupings'] = $builder_customization['colorGroupings'];
+        }
+
+        return $pdf_json;
     }
 
     public function getRosterOrderFormat($cut_name)
