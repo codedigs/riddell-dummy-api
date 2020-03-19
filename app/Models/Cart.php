@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Api\Prolook\MaterialApi;
-use App\Api\Prolook\SavedDesignApi;
 use App\Api\Qx7\CutApi;
 use App\Api\Qx7\GroupCutApi;
 use App\Models\CartItem;
@@ -160,9 +159,6 @@ class Cart extends Model
 
     public function getCartItemsByOrderFormat()
     {
-        $SELECTED_SOURCE = "Riddell Customizer";
-        $SELECTED_TEMPLATE = "Riddell";
-
         $items = $this->cart_items;
         $user = $this->user;
         $brand = config("app.brand");
@@ -206,10 +202,7 @@ class Cart extends Model
         }
 
         $materialApi = new MaterialApi;
-        $savedDesignApi = new SavedDesignApi;
         $groupCutApi = new GroupCutApi;
-
-        $brand = config("app.brand");
 
         $orderItems = [];
         foreach ($items as $index => $item) {
@@ -306,135 +299,7 @@ class Cart extends Model
             }
 
             // pdf json
-            $orderItems[$index]['pdf_json'] = [
-                'pdfGenerator' => true,
-                'selectedSource' => $SELECTED_SOURCE,
-                'selectedTemplate' => $SELECTED_TEMPLATE,
-                'searchKey' => "preview" . date("-Y-m-d-H-i-s-") . uniqid(), // skip
-                'thumbnails' => [
-                    'front_view' => "",
-                    'back_view' => "",
-                    'left_view' => "",
-                    'right_view' => ""
-                ],
-                'category' => "",
-                'fullName' => "",
-                'client' => "fullname",
-                'orderId' => "",
-                'foid' => "",
-                'description' => "",
-                'cutPdf' => "",
-                'stylesPdf' => "",
-                'roster' => $item->getRosterOrderFormat($cut_name),
-                'pipings' => [],
-                'createdDate' => date("Y/m/d"),
-                'notes' => "",
-                'sizeBreakdown' => $item->getRosterSizeBreakDown(),
-                'applications' => [],
-                'sizingTable' => [],
-                'upper' => [],
-                'lower' => [],
-                'hiddenBody' => "",
-                'randomFeeds' => [],
-                'legacyPDF' => "",
-                'applicationType' => "",
-                'sml' => [],
-                'sku' => "-",
-                'hybris_cart_info' => [
-                    "hyb_cart_id" => "", // optional
-                    "pl_cart_id" => $item->pl_cart_id_fk,
-                    "line_item_id" => $item->line_item_id,
-                    "cut_id" => $item->cut_id,
-                    "cut_name" => $cut_name,
-                    "style_id" => $item->style_id,
-                    "style_name" => $style_name,
-                    "design_id" => $item->design_id
-                ],
-                'colorGroupings' => [],
-                'signature' => $item->signature_image,
-                'dateTimeStamp' => $item->approved_at
-            ];
-
-            if (isset($builder_customization['thumbnails']))
-            {
-                $orderItems[$index]['pdf_json']['thumbnails'] = $builder_customization['thumbnails'];
-            }
-
-            if (isset($builder_customization['uniform_category']))
-            {
-                $orderItems[$index]['pdf_json']['category'] = $builder_customization['uniform_category'];
-            }
-
-            if (isset($builder_customization['material']))
-            {
-                if (isset($builder_customization['material']['block_pattern']))
-                {
-                    $orderItems[$index]['pdf_json']['description'] = $builder_customization['material']['block_pattern'];
-                }
-            }
-
-            if (isset($builder_customization['cut_pdf']))
-            {
-                $orderItems[$index]['pdf_json']['cutPdf'] = $builder_customization['cut_pdf'];
-            }
-
-            if (isset($builder_customization['styles_pdf']))
-            {
-                $orderItems[$index]['pdf_json']['stylesPdf'] = $builder_customization['styles_pdf'];
-            }
-
-            if (isset($builder_customization['pipings']))
-            {
-                $orderItems[$index]['pdf_json']['pipings'] = $builder_customization['pipings'];
-            }
-
-            if (isset($builder_customization['applications']))
-            {
-                $orderItems[$index]['pdf_json']['applications'] = $builder_customization['applications'];
-            }
-
-            if (isset($builder_customization['upper']))
-            {
-                $orderItems[$index]['pdf_json']['upper'] = $builder_customization['upper'];
-            }
-
-            if (isset($builder_customization['lower']))
-            {
-                $orderItems[$index]['pdf_json']['lower'] = $builder_customization['lower'];
-            }
-
-            if (isset($builder_customization['lower']))
-            {
-                $orderItems[$index]['pdf_json']['lower'] = $builder_customization['lower'];
-            }
-
-            if (isset($builder_customization['hiddenBody']))
-            {
-                $orderItems[$index]['pdf_json']['hiddenBody'] = $builder_customization['hiddenBody'];
-            }
-
-            if (isset($builder_customization['randomFeeds']))
-            {
-                $orderItems[$index]['pdf_json']['randomFeeds'] = $builder_customization['randomFeeds'];
-            }
-
-            if (isset($builder_customization['material']))
-            {
-                if (isset($builder_customization['material']['uniform_application_type']))
-                {
-                    $orderItems[$index]['pdf_json']['applicationType'] = $builder_customization['material']['uniform_application_type'];
-                }
-
-                if (isset($builder_customization['material']['modifier_labels']))
-                {
-                    $orderItems[$index]['pdf_json']['sml'] = $builder_customization['material']['modifier_labels'];
-                }
-            }
-
-            if (isset($builder_customization['colorGroupings']))
-            {
-                $orderItems[$index]['pdf_json']['colorGroupings'] = $builder_customization['colorGroupings'];
-            }
+            $orderItems[$index]['pdf_json'] = $item->getPdfJson();
         }
 
         $data['order_items'] = $orderItems;

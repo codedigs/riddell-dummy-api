@@ -23,7 +23,7 @@ $router->group([
     'prefix' => "carts",
     'middleware' => ["auth", "cart", "valid_to_use_cart", "cors"]
 ], function() use($router) {
-    $router->get("save", "CartController@save");
+    $router->post("save", "CartController@save");
     $router->post("submit", ['middleware' => "valid_to_submit", 'uses' => "CartController@submit"]);
 
     $router->get("submit-data", ['middleware' => "valid_to_submit", 'uses' => "CartController@submitData"]);
@@ -43,7 +43,7 @@ $router->group([
     $router->put("update-signature-image", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@updateSignatureImage"]);
     $router->put("approved", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@markAsApproved"]);
 
-    $router->get("save-cart", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@saveCart"]);
+    $router->post("save-cart", ['middleware' => "valid_to_use_cart_for_non_session", 'uses' => "ApprovalController@saveCart"]);
 });
 
 // cart items
