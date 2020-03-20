@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Api\Riddell\CartApi;
 use App\Mail\OrderData;
 use App\Models\Cart;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Log;
@@ -24,11 +25,43 @@ class CartController extends Controller
         // convert result to array
         $result = json_decode(json_encode($result), true);
 
+        Log::debug(print_r($result, true));
+
         if ($result['success'])
         {
+            Log::debug("Items are all approved: " . print_r($currentCart->areAllItemsApproved(), true));
+
             if ($currentCart->areAllItemsApproved())
             {
                 $currentCart->markAsCompleted();
+
+                $data = $currentCart->getCartItemsByOrderFormat();
+
+                $client = new Client;
+                $prolookResponse = $client->post("https://api.prolook.com/api/order/new", [
+                    'json' => $data
+                ]);
+
+                $prolookResponse = json_decode($prolookResponse->getBody(), 1);
+
+                Log::debug("Prolook Response: " . print_r($prolookResponse, true));
+
+                if ($prolookResponse['success'])
+                {
+                    // append pl_cart_id
+                    $prolookResponse['pl_cart_id'] = $user->current_pl_cart_id;
+
+                    $cartApi = new CartApi($user->hybris_access_token);
+                    $orderResponse = $cartApi->submitOrder2($prolookResponse);
+
+                    Log::debug("Order Response: " . print_r($orderResponse, true));
+
+                    return response()->json($orderResponse);
+                }
+                else
+                {
+                    Log::error("Error: Submit order on prolook." . print_r($prolookResponse, true));
+                }
             }
         }
 
