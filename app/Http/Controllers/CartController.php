@@ -27,43 +27,50 @@ class CartController extends Controller
 
         Log::debug(print_r($result, true));
 
-        if ($result['success'])
-        {
-            Log::debug("Items are all approved: " . print_r($currentCart->areAllItemsApproved(), true));
+        // if ($result['success'])
+        // {
+        //     Log::debug("Items are all approved: " . print_r($currentCart->areAllItemsApproved(), true));
 
-            if ($currentCart->areAllItemsApproved())
-            {
-                $currentCart->markAsCompleted();
+        //     if ($currentCart->areAllItemsApproved())
+        //     {
+        //         $currentCart->markAsCompleted();
 
-                $data = $currentCart->getCartItemsByOrderFormat();
+        //         $data = $currentCart->getCartItemsByOrderFormat();
 
-                $client = new Client;
-                $prolookResponse = $client->post("https://api.prolook.com/api/order/new", [
-                    'json' => $data
-                ]);
+        //         $client = new Client;
+        //         $prolookResponse = $client->post("https://api.prolook.com/api/order/new", [
+        //             'json' => $data
+        //         ]);
 
-                $prolookResponse = json_decode($prolookResponse->getBody(), 1);
+        //         $prolookResponse = json_decode($prolookResponse->getBody(), 1);
 
-                Log::debug("Prolook Response: " . print_r($prolookResponse, true));
+        //         Log::debug("Prolook Response: " . print_r($prolookResponse, true));
 
-                if ($prolookResponse['success'])
-                {
-                    // append pl_cart_id
-                    $prolookResponse['pl_cart_id'] = $user->current_pl_cart_id;
+        //         if ($prolookResponse['success'])
+        //         {
+        //             // append pl_cart_id
+        //             $prolookResponse['pl_cart_id'] = $user->current_pl_cart_id;
 
-                    $cartApi = new CartApi($user->hybris_access_token);
-                    $orderResponse = $cartApi->submitOrder2($prolookResponse);
+        //             $cartApi = new CartApi($user->hybris_access_token);
+        //             $orderResponse = $cartApi->submitOrder2($prolookResponse);
 
-                    Log::debug("Order Response: " . print_r($orderResponse, true));
+        //             Log::debug("Order Response: " . print_r($orderResponse, true));
 
-                    return response()->json($orderResponse);
-                }
-                else
-                {
-                    Log::error("Error: Submit order on prolook." . print_r($prolookResponse, true));
-                }
-            }
-        }
+        //             return response()->json($orderResponse);
+        //         }
+        //         else
+        //         {
+        //             Log::error("Error: Submit order on prolook." . print_r($prolookResponse, true));
+        //         }
+        //     }
+        // }
+
+        /*
+            1. generate pdf
+            2. send order to kuya jet endpoint
+            3. call /api/customizer/order endpoint
+            4. return the response
+         */
 
         return response()->json($result);
     }
