@@ -101,6 +101,42 @@ class CartController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * Delete whole cart
+     *
+     * @param Request $request
+     */
+    public function deleteWholeCart(Request $request)
+    {
+        $user = $request->user();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
+
+        if (!is_null($currentCart))
+        {
+            return response()->json(
+                $currentCart->delete() ? [
+                    'success' => true,
+                    'new_roster' => "Successfully deleted whole cart.",
+                    'status_code' => 200
+                ] : [
+                    'success' => true,
+                    'new_roster' => "Cannot delete whole cart this time. Please try again later.",
+                    'status_code' => 200
+                ]
+            );
+        }
+        else
+        {
+            Log::warning("Warning: Pl cart id {$pl_cart_id} is not exist!");
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Unauthorized to access cart",
+            'status_code' => 401
+        ]);
+    }
+
     public function submitData(Request $request)
     {
         $user = $request->user();
