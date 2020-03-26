@@ -14,6 +14,12 @@ class CartController extends Controller
 {
     public function save(Request $request)
     {
+        /*
+            1. generate pdf
+            2. call submit order kuya jet endpoint
+            3. save cart on mam jen
+         */
+
         $user = $request->user();
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
@@ -111,6 +117,9 @@ class CartController extends Controller
         $user = $request->user();
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
+        Log::debug("current_pl_cart_id " . $user->current_pl_cart_id);
+        Log::debug(print_r($currentCart, true));
+
         if (!is_null($currentCart))
         {
             return response()->json(
@@ -127,7 +136,7 @@ class CartController extends Controller
         }
         else
         {
-            Log::warning("Warning: Pl cart id {$pl_cart_id} is not exist!");
+            Log::warning("Warning: Pl cart id ". $user->current_pl_cart_id ." is not exist!");
         }
 
         return response()->json([
