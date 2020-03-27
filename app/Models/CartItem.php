@@ -473,6 +473,17 @@ class CartItem extends Model
         return $pdf_json;
     }
 
+    public function updatePdfUrl($url)
+    {
+        $this->pdf_url = $url;
+        return $this->save();
+    }
+
+    public function hasPdfUrl()
+    {
+        return !is_null($this->pdf_url);
+    }
+
     public function getRosterOrderFormat($cut_name)
     {
         if (!$this->isRosterEmpty())
