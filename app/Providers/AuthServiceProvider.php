@@ -183,31 +183,51 @@ class AuthServiceProvider extends ServiceProvider
                             //     // }
                             // }
 
-                            $cartItem = CartItem::withTrashed()
-                                                ->findBy('line_item_id', $data->line_item_id)
-                                                ->first();
-
-                            if (is_null($cartItem))
+                            if (isset($data->line_item_id, $data->cut_id))
                             {
-                                $currentCart->cart_items()->save(new CartItem([
-                                    'cut_id' => $data->cut_id,
-                                    'line_item_id' => $data->line_item_id
-                                ]));
-                                // create cart item
+                                $cartItem = CartItem::withTrashed()
+                                                    ->findBy('line_item_id', $data->line_item_id)
+                                                    ->first();
+
+                                if (is_null($cartItem))
+                                {
+                                    $currentCart->cart_items()->save(new CartItem([
+                                        'cut_id' => $data->cut_id,
+                                        'line_item_id' => $data->line_item_id
+                                    ]));
+                                    // create cart item
+                                }
+                                // elseif ($cartItem->cut_id !== $item->cut_id)
+                                // {
+                                //     // change cut id
+                                // }
+
+                                $user->selected_line_item_id = $data->line_item_id;
                             }
-                            // elseif ($cartItem->cut_id !== $item->cut_id)
-                            // {
-                            //     // change cut id
-                            // }
 
                             // add extra data
                             $user->hybris_access_token = $access_token;
                             $user->current_pl_cart_id = $data->pl_cart_id;
-                            $user->selected_line_item_id = $data->line_item_id;
-                            $user->school_name = $data->school_name;
-                            $user->client_name = $data->client_name;
-                            $user->client_email = $data->client_email;
-                            $user->hyb_url = $data->hyb_url;
+                            // $user->selected_line_item_id = $data->line_item_id;
+                            if (isset($data->school_name))
+                            {
+                                $user->school_name = $data->school_name;
+                            }
+
+                            if (isset($data->client_name))
+                            {
+                                $user->client_name = $data->client_name;
+                            }
+
+                            if (isset($data->client_email))
+                            {
+                                $user->client_email = $data->client_email;
+                            }
+
+                            if (isset($data->hyb_url))
+                            {
+                                $user->hyb_url = $data->hyb_url;
+                            }
 
                             return $user;
                         }
