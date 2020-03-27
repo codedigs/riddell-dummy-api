@@ -24,8 +24,7 @@ $router->group([
     'middleware' => ["auth", "cart", "valid_to_use_cart", "cors"]
 ], function() use($router) {
     $router->post("save", "CartController@save");
-    $router->post("complete", "CartController@complete");
-    // $router->post("submit", ['middleware' => "valid_to_submit", 'uses' => "CartController@submit"]);
+    $router->post("submit", ['middleware' => "valid_to_submit", 'uses' => "CartController@submit"]);
     $router->delete("delete", "CartController@deleteWholeCart");
 
     $router->get("submit-data", ['middleware' => "valid_to_submit", 'uses' => "CartController@submitData"]);
