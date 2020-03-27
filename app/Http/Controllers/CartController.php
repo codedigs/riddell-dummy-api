@@ -31,8 +31,6 @@ class CartController extends Controller
         // convert result to array
         $result = json_decode(json_encode($result), true);
 
-        Log::debug(print_r($result, true));
-
         if ($result['success'])
         {
             Log::debug("Items are all approved: " . print_r($currentCart->areAllItemsApproved(), true));
@@ -74,37 +72,62 @@ class CartController extends Controller
         return response()->json($result);
     }
 
-    public function submit(Request $request)
+    // public function submit(Request $request)
+    // {
+    //     $user = $request->user();
+    //     $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
+
+    //     $data = $currentCart->getCartItemsByOrderFormat();
+
+    //     $cartApi = new CartApi($user->hybris_access_token);
+    //     $result = $cartApi->submitOrder($data);
+
+    //     // convert result to array
+    //     $result = json_decode(json_encode($result), true);
+
+    //     if ($result['success'])
+    //     {
+    //         $currentCart->markAsCompleted();
+
+    //         $shipping = array_column($data['order_items'], "shipping");
+    //         $shipping_decode = array_map("json_decode", $shipping);
+    //         $emails = array_column($shipping_decode, "email");
+
+    //         // send email to jenn after success submitting order if client has email jenn@qstrike.com
+    //         $email = "jenn@qstrike.com";
+    //         if (in_array($email, $emails))
+    //         {
+    //             Log::info("Info: Send order data to jenn.");
+    //             Mail::send(new OrderData($email, $data));
+    //         }
+    //     }
+
+    //     return response()->json($result);
+    // }
+
+    public function complete(Request $request)
     {
         $user = $request->user();
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
-        $data = $currentCart->getCartItemsByOrderFormat();
-
-        $cartApi = new CartApi($user->hybris_access_token);
-        $result = $cartApi->submitOrder($data);
-
-        // convert result to array
-        $result = json_decode(json_encode($result), true);
-
-        if ($result['success'])
+        if ($currentCart->areAllItemsApproved())
         {
-            $currentCart->markAsCompleted();
-
-            $shipping = array_column($data['order_items'], "shipping");
-            $shipping_decode = array_map("json_decode", $shipping);
-            $emails = array_column($shipping_decode, "email");
-
-            // send email to jenn after success submitting order if client has email jenn@qstrike.com
-            $email = "jenn@qstrike.com";
-            if (in_array($email, $emails))
-            {
-                Log::info("Info: Send order data to jenn.");
-                Mail::send(new OrderData($email, $data));
-            }
+            return response()->json($currentCart->markAsCompleted() ?
+            [
+                'success' => true,
+                'message' => "Successfully complete the cart."
+            ] :
+            [
+                'success' => false,
+                'message' => "Cannot complete the cart this time. Please try again later."
+            ]);
         }
 
-        return response()->json($result);
+        return response()->json([
+            'success' => false,
+            'message' => "Unauthorized to access cart",
+            'status_code' => 401
+        ]);
     }
 
     /**
