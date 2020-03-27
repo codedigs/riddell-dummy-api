@@ -14,12 +14,22 @@ class CartController extends Controller
 {
     public function save(Request $request)
     {
-        /*
-            1. generate pdf
-            2. call submit order kuya jet endpoint
-            3. save cart on mam jen
-         */
+        $user = $request->user();
+        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
+        $rows = $currentCart->getCartItemsByHybrisFormat();
+
+        $cartApi = new CartApi($user->hybris_access_token);
+        $result = $cartApi->update($currentCart->pl_cart_id, $user->email, $rows);
+
+        // convert result to array
+        $result = json_decode(json_encode($result), true);
+
+        return response()->json($result);
+    }
+
+    public function submit(Request $request)
+    {
         $user = $request->user();
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
@@ -79,7 +89,7 @@ class CartController extends Controller
 
             $prolookResponse = json_decode($prolookResponse->getBody(), 1);
 
-            Log::debug("Prolook Response: " . print_r($prolookResponse, true));
+            Log::info("Prolook Response: " . print_r($prolookResponse, true));
 
             if ($prolookResponse['success'])
             {
@@ -89,7 +99,9 @@ class CartController extends Controller
                 $cartApi = new CartApi($user->hybris_access_token);
                 $orderResponse = $cartApi->submitOrder2($prolookResponse);
 
-                Log::debug("Order Response: " . print_r($orderResponse, true));
+                Log::info("Order Response: " . print_r($orderResponse, true));
+
+                $currentCart->markAsCompleted();
 
                 return response()->json($orderResponse);
             }
@@ -100,64 +112,6 @@ class CartController extends Controller
         }
 
         return response()->json($result);
-    }
-
-    // public function submit(Request $request)
-    // {
-    //     $user = $request->user();
-    //     $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
-
-    //     $data = $currentCart->getCartItemsByOrderFormat();
-
-    //     $cartApi = new CartApi($user->hybris_access_token);
-    //     $result = $cartApi->submitOrder($data);
-
-    //     // convert result to array
-    //     $result = json_decode(json_encode($result), true);
-
-    //     if ($result['success'])
-    //     {
-    //         $currentCart->markAsCompleted();
-
-    //         $shipping = array_column($data['order_items'], "shipping");
-    //         $shipping_decode = array_map("json_decode", $shipping);
-    //         $emails = array_column($shipping_decode, "email");
-
-    //         // send email to jenn after success submitting order if client has email jenn@qstrike.com
-    //         $email = "jenn@qstrike.com";
-    //         if (in_array($email, $emails))
-    //         {
-    //             Log::info("Info: Send order data to jenn.");
-    //             Mail::send(new OrderData($email, $data));
-    //         }
-    //     }
-
-    //     return response()->json($result);
-    // }
-
-    public function complete(Request $request)
-    {
-        $user = $request->user();
-        $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
-
-        if ($currentCart->areAllItemsApproved())
-        {
-            return response()->json($currentCart->markAsCompleted() ?
-            [
-                'success' => true,
-                'message' => "Successfully complete the cart."
-            ] :
-            [
-                'success' => false,
-                'message' => "Cannot complete the cart this time. Please try again later."
-            ]);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => "Unauthorized to access cart",
-            'status_code' => 401
-        ]);
     }
 
     /**
