@@ -303,9 +303,19 @@ class ApprovalController extends Controller
                 $generatePdfResponse = $pdfApi->generate($json_data);
 
                 // convert result to array
-                $generatePdfResponse = json_decode(json_encode($generatePdfResponse), true);
+                $cartUpdateResponse = json_decode(json_encode($cartUpdateResponse), true);
+                $cartUpdateResponse['pdf_response'] = $generatePdfResponse;
 
-                return response()->json($generatePdfResponse);
+                if ($generatePdfResponse->success)
+                {
+                    $item->updatePdfUrl($generatePdfResponse->pdfUrl);
+                }
+                else
+                {
+                    Log::error("Error: Generate pdf failed.");
+                }
+
+                return response()->json($cartUpdateResponse);
             }
         }
 
