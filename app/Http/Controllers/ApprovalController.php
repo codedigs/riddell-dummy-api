@@ -9,6 +9,7 @@ use App\Api\Riddell\PdfApi;
 use App\Models\ClientInformation;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Log;
 use Validator;
 
 /**
