@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\Riddell\CartApi;
+use App\Api\Riddell\PdfApi;
 use App\Mail\OrderData;
 use App\Models\Cart;
 use GuzzleHttp\Client;
