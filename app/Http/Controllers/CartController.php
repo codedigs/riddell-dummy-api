@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\Pdf\PdfApi;
 use App\Api\Riddell\CartApi;
-use App\Api\Riddell\PdfApi;
 use App\Mail\OrderData;
 use App\Models\Cart;
 use GuzzleHttp\Client;
@@ -55,10 +55,8 @@ class CartController extends Controller
 
                     do
                     {
-                        $json_data = ['pdf_json' => $item->getPdfJson()];
-
                         $pdfApi = new PdfApi($user->hybris_access_token);
-                        $generatePdfResponse = $pdfApi->generate($json_data);
+                        $generatePdfResponse = $pdfApi->generate($item->getPdfJson());
 
                         if ($generatePdfResponse->success)
                         {
