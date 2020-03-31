@@ -57,7 +57,7 @@ class CartController extends Controller
                     {
                         $json_data = ['pdf_json' => $item->getPdfJson()];
 
-                        $pdfApi = new PdfApi($hybris_access_token);
+                        $pdfApi = new PdfApi($user->hybris_access_token);
                         $generatePdfResponse = $pdfApi->generate($json_data);
 
                         if ($generatePdfResponse->success)
