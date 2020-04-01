@@ -61,6 +61,7 @@ class CartController extends Controller
                         if ($generatePdfResponse->success)
                         {
                             $item->updatePdfUrl($generatePdfResponse->pdfUrl);
+                            break;
                         }
                         else
                         {

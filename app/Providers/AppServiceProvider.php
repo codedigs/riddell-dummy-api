@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->configure("prolook");
         $this->app->configure("qx7");
         $this->app->configure("riddell");
+        $this->app->configure("pdf");
 
         $this->app->singleton('mailer', function ($app) {
             $app->configure('services');
