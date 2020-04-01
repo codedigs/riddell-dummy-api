@@ -298,6 +298,11 @@ class CartItem extends Model
 
     public function getPdfJson()
     {
+        return $this->isReversible() ? $this->getPdfJsonReversible() : $this->getPdfJsonOneSided();
+    }
+
+    private function getPdfJsonOneSided()
+    {
         $SELECTED_SOURCE = "Riddell Customizer";
         $SELECTED_TEMPLATE = "Riddell";
 
@@ -469,6 +474,137 @@ class CartItem extends Model
         {
             $pdf_json['colorGroupings'] = $builder_customization['colorGroupings'];
         }
+
+        return $pdf_json;
+    }
+
+    private function getPdfJsonReversible()
+    {
+        $side2 = $this->side2;
+
+        $side1PdfJson = $this->getPdfJsonOneSided();
+        $side2PdfJson = $side1PdfJson;
+
+        $style_name = "";
+        $materialApi = new MaterialApi;
+
+        if (!empty($side2->style_id))
+        {
+            $materialResult = $materialApi->getById($this->style_id);
+            if ($materialResult->success)
+            {
+                if (isset($materialResult->material))
+                {
+                    if (isset($materialResult->material->name))
+                    {
+                        $style_name = $materialResult->material->name;
+                    }
+                }
+            }
+        }
+
+        $builder_customization = json_decode($side2->builder_customization, true);
+
+        // modify data for side 2
+        $side2PdfJson['hybris_cart_info']['style_id'] = $side2->style_id;
+        $side2PdfJson['hybris_cart_info']['style_name'] = $style_name;
+        $side2PdfJson['hybris_cart_info']['design_id'] = $side2->design_id;
+
+        if (isset($builder_customization['thumbnails']))
+        {
+            $side2PdfJson['thumbnails'] = $builder_customization['thumbnails'];
+        }
+
+        if (isset($builder_customization['uniform_category']))
+        {
+            $side2PdfJson['category'] = $builder_customization['uniform_category'];
+        }
+
+        if (isset($builder_customization['material']))
+        {
+            if (isset($builder_customization['material']['block_pattern']))
+            {
+                $side2PdfJson['description'] = $builder_customization['material']['block_pattern'];
+            }
+        }
+
+        if (isset($builder_customization['cut_pdf']))
+        {
+            $side2PdfJson['cutPdf'] = $builder_customization['cut_pdf'];
+        }
+
+        if (isset($builder_customization['styles_pdf']))
+        {
+            $side2PdfJson['stylesPdf'] = $builder_customization['styles_pdf'];
+        }
+
+        if (isset($builder_customization['pipings']))
+        {
+            $side2PdfJson['pipings'] = $builder_customization['pipings'];
+        }
+
+        if (isset($builder_customization['applications']))
+        {
+            $side2PdfJson['applications'] = $builder_customization['applications'];
+        }
+
+        if (isset($builder_customization['upper']))
+        {
+            $side2PdfJson['upper'] = $builder_customization['upper'];
+        }
+
+        if (isset($builder_customization['lower']))
+        {
+            $side2PdfJson['lower'] = $builder_customization['lower'];
+        }
+
+        if (isset($builder_customization['lower']))
+        {
+            $side2PdfJson['lower'] = $builder_customization['lower'];
+        }
+
+        if (isset($builder_customization['hiddenBody']))
+        {
+            $side2PdfJson['hiddenBody'] = $builder_customization['hiddenBody'];
+        }
+
+        if (isset($builder_customization['randomFeeds']))
+        {
+            $side2PdfJson['randomFeeds'] = $builder_customization['randomFeeds'];
+        }
+
+        if (isset($builder_customization['material']))
+        {
+            if (isset($builder_customization['material']['uniform_application_type']))
+            {
+                $side2PdfJson['applicationType'] = $builder_customization['material']['uniform_application_type'];
+            }
+
+            if (isset($builder_customization['material']['modifier_labels']))
+            {
+                $side2PdfJson['sml'] = $builder_customization['material']['modifier_labels'];
+            }
+        }
+
+        if (isset($builder_customization['colorGroupings']))
+        {
+            $side2PdfJson['colorGroupings'] = $builder_customization['colorGroupings'];
+        }
+
+        $pdf_json = [
+            'type' => "reversible",
+            'filename' => uniqid("reversible-", true),
+            'order_list' => [
+                [
+                    'index' => 0,
+                    'data' => $side1PdfJson
+                ],
+                [
+                    'index' => 1,
+                    'data' => $side2PdfJson
+                ]
+            ]
+        ];
 
         return $pdf_json;
     }
