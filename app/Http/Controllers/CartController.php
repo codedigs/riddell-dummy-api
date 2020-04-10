@@ -99,6 +99,100 @@ class CartController extends Controller
         Log::error("Error: Submit order on prolook." . print_r($prolookResponse, true));
     }
 
+    ################################
+    ####### PLACE ORDER TEST #######
+    ################################
+
+    // PLACE ORDER TESTING (DEVRI PRESENTATION ONLY, DELETE AFTER)
+    public function placeOrderSubmit(Request $request)
+    {
+        $pl_cart_id = $request->pl_cart_id;
+        $currentCart = Cart::findBy('pl_cart_id', $pl_cart_id)->first();
+
+        if (!is_null($currentCart)) {
+            
+            if ($currentCart->areAllItemsApproved()) {
+                $items = $currentCart->cart_items;
+
+                foreach ($items as $item)
+                {
+                    if (!$item->hasPdfUrl())
+                    {
+                        $failed_counter = 0;
+                        $FAILED_LIMIT = 3;
+
+                        do
+                        {
+                            $pdfApi = new PdfApi();
+                            $generatePdfResponse = $pdfApi->upload($item->getPdfJson());
+
+                            if ($generatePdfResponse->success)
+                            {
+                                $item->updatePdfUrl($generatePdfResponse->pdfUrl);
+                                break;
+                            }
+                            else
+                            {
+                                Log::error("Error: Generating pdf failed.");
+                                $failed_counter++;
+                            }
+                        } while ($failed_counter < $FAILED_LIMIT);
+
+                        if ($failed_counter === $FAILED_LIMIT)
+                        {
+                            return response()->json([
+                                'success' => false,
+                                'message' => "Cannot submit order this time. Please try again later."
+                            ]);
+                        }
+                    }
+                }
+
+                $data = $currentCart->getCartItemsByOrderFormat();
+
+                $client = new Client;
+                $prolookResponse = $client->post("https://api.prolook.com/api/order/new", [
+                    'json' => $data
+                ]);
+
+                $prolookResponse = json_decode($prolookResponse->getBody(), 1);
+
+                Log::info("Prolook Response: " . print_r($prolookResponse, true));
+
+                if ($prolookResponse['success'])
+                {
+                    // append pl_cart_id
+                    $prolookResponse['pl_cart_id'] = $pl_cart_id;
+
+                    $cartApi = new CartApi();
+                    $orderResponse = $cartApi->submitOrder2($prolookResponse);
+
+                    Log::info("Order Response: " . print_r($orderResponse, true));
+
+                    $currentCart->markAsCompleted();
+
+                    return response()->json($orderResponse);
+                }
+
+                Log::error("Error: Submit order on prolook." . print_r($prolookResponse, true));
+            
+            } else {
+                $result = [
+                    "message" => "CART is not ready to submit, make sure all items are approved.",
+                    "success" => false
+                ];
+            }
+
+        } else {
+            $result = [
+                "message" => "PL CART ID does not exists!",
+                "success" => false
+            ];
+        }
+
+        return response()->json($result);
+    }
+
     /**
      * Delete whole cart
      *

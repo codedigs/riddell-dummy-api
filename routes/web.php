@@ -128,3 +128,11 @@ $router->group([
     $router->get("{state_code}/cities", "ZipCodeController@getCitiesByStateCode");
     $router->get("{state_code}/cities/{city}/zip-codes", "ZipCodeController@getZipCodesByStateCodeAndCity");
 });
+
+
+################################
+####### PLACE ORDER TEST #######
+################################
+
+// PLACE ORDER TESTING (DEVRI PRESENTATION ONLY, DELETE AFTER)
+$router->post("/carts/place-order-submit", "CartController@placeOrderSubmit");
