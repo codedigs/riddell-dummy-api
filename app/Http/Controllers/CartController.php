@@ -34,84 +34,69 @@ class CartController extends Controller
         $user = $request->user();
         $currentCart = Cart::findBy('pl_cart_id', $user->current_pl_cart_id)->first();
 
-        $rows = $currentCart->getCartItemsByHybrisFormat();
+        $items = $currentCart->cart_items;
 
-        $cartApi = new CartApi($user->hybris_access_token);
-        $result = $cartApi->update($currentCart->pl_cart_id, $user->email, $rows);
-
-        // convert result to array
-        $result = json_decode(json_encode($result), true);
-
-        if ($result['success'])
+        foreach ($items as $item)
         {
-            $items = $currentCart->cart_items;
-
-            foreach ($items as $item)
+            if (!$item->hasPdfUrl())
             {
-                if (!$item->hasPdfUrl())
+                $failed_counter = 0;
+                $FAILED_LIMIT = 3;
+
+                do
                 {
-                    $failed_counter = 0;
-                    $FAILED_LIMIT = 3;
+                    $pdfApi = new PdfApi($user->hybris_access_token);
+                    $generatePdfResponse = $pdfApi->upload($item->getPdfJson());
 
-                    do
+                    if ($generatePdfResponse->success)
                     {
-                        $pdfApi = new PdfApi($user->hybris_access_token);
-                        $generatePdfResponse = $pdfApi->upload($item->getPdfJson());
-
-                        if ($generatePdfResponse->success)
-                        {
-                            $item->updatePdfUrl($generatePdfResponse->pdfUrl);
-                            break;
-                        }
-                        else
-                        {
-                            Log::error("Error: Generating pdf failed.");
-                            $failed_counter++;
-                        }
-                    } while ($failed_counter < $FAILED_LIMIT);
-
-                    if ($failed_counter === $FAILED_LIMIT)
-                    {
-                        return response()->json([
-                            'success' => false,
-                            'message' => "Cannot submit order this time. Please try again later."
-                        ]);
+                        $item->updatePdfUrl($generatePdfResponse->pdfUrl);
+                        break;
                     }
+                    else
+                    {
+                        Log::error("Error: Generating pdf failed.");
+                        $failed_counter++;
+                    }
+                } while ($failed_counter < $FAILED_LIMIT);
+
+                if ($failed_counter === $FAILED_LIMIT)
+                {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Cannot submit order this time. Please try again later."
+                    ]);
                 }
-            }
-
-            $data = $currentCart->getCartItemsByOrderFormat();
-
-            $client = new Client;
-            $prolookResponse = $client->post("https://api.prolook.com/api/order/new", [
-                'json' => $data
-            ]);
-
-            $prolookResponse = json_decode($prolookResponse->getBody(), 1);
-
-            Log::info("Prolook Response: " . print_r($prolookResponse, true));
-
-            if ($prolookResponse['success'])
-            {
-                // append pl_cart_id
-                $prolookResponse['pl_cart_id'] = $user->current_pl_cart_id;
-
-                $cartApi = new CartApi($user->hybris_access_token);
-                $orderResponse = $cartApi->submitOrder2($prolookResponse);
-
-                Log::info("Order Response: " . print_r($orderResponse, true));
-
-                $currentCart->markAsCompleted();
-
-                return response()->json($orderResponse);
-            }
-            else
-            {
-                Log::error("Error: Submit order on prolook." . print_r($prolookResponse, true));
             }
         }
 
-        return response()->json($result);
+        $data = $currentCart->getCartItemsByOrderFormat();
+
+        $client = new Client;
+        $prolookResponse = $client->post("https://api.prolook.com/api/order/new", [
+            'json' => $data
+        ]);
+
+        $prolookResponse = json_decode($prolookResponse->getBody(), 1);
+
+        Log::info("Prolook Response: " . print_r($prolookResponse, true));
+
+        if ($prolookResponse['success'])
+        {
+            // append pl_cart_id
+            $prolookResponse['pl_cart_id'] = $user->current_pl_cart_id;
+
+            $cartApi = new CartApi($user->hybris_access_token);
+            $orderResponse = $cartApi->submitOrder2($prolookResponse);
+
+            Log::info("Order Response: " . print_r($orderResponse, true));
+
+            $currentCart->markAsCompleted();
+
+            return response()->json($orderResponse);
+        }
+
+        Log::error("Error: Submit order on prolook." . print_r($prolookResponse, true));
     }
 
     /**
