@@ -285,7 +285,7 @@ class CartItem extends Model
             $rosters = json_decode($this->roster, true);
             $sizeBreakdown = array_map(function($roster) {
                 return [
-                    'qty' => $roster['qty'],
+                    'quantity' => $roster['qty'],
                     'size' => $roster['size']
                 ];
             }, $rosters);
@@ -636,12 +636,12 @@ class CartItem extends Model
                     foreach ($subRosters as $subRoster)
                     {
                         $rosterOrderFormat[] = [
-                            'Size' => $subRoster['size'],
-                            'Number' => $subRoster['number'],
+                            'size' => $subRoster['size'],
+                            'number' => $subRoster['number'],
                             'Name' => $subRoster['player_name'],
                             'Sample' => 0,
-                            'LastNameApplication' => "N/A",
-                            'SleeveCut' => !empty($cut_name) ? $cut_name : "",
+                            'lastNameApplication' => "N/A",
+                            'sleeveType' => !empty($cut_name) ? $cut_name : "",
                             'Quantity' => $subRoster['qty']
                         ];
                     }
@@ -649,12 +649,12 @@ class CartItem extends Model
                 else
                 {
                     $rosterOrderFormat[] = [
-                        'Size' => $roster['size'],
-                        'Number' => "",
+                        'size' => $roster['size'],
+                        'number' => "",
                         'Name' => "",
                         'Sample' => 0,
-                        'LastNameApplication' => "N/A",
-                        'SleeveCut' => !empty($cut_name) ? $cut_name : "",
+                        'lastNameApplication' => "N/A",
+                        'sleeveType' => !empty($cut_name) ? $cut_name : "",
                         'Quantity' => $roster['qty']
                     ];
                 }
